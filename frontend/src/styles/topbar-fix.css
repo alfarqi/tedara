@@ -1,0 +1,56 @@
+/* Topbar Background Color Fix */
+/* This file ensures the topbar has the correct white background */
+
+/* Force white background on topbar */
+.app-topbar {
+  background: #ffffff !important;
+  background-image: none !important;
+  background-color: #ffffff !important;
+}
+
+/* Override any gradient backgrounds */
+.app-topbar,
+.app-topbar * {
+  background-image: none !important;
+}
+
+/* Ensure light theme topbar colors */
+html[data-topbar-color="light"] .app-topbar,
+html[data-topbar-color="light"] .topbar-menu {
+  background: #ffffff !important;
+  background-image: none !important;
+  background-color: #ffffff !important;
+}
+
+/* Override any skin-specific gradient backgrounds */
+html[data-skin="classic"][data-topbar-color="light"] .app-topbar,
+html[data-skin="modern"][data-topbar-color="light"] .app-topbar,
+html[data-skin="material"][data-topbar-color="light"] .app-topbar,
+html[data-skin="saas"][data-topbar-color="light"] .app-topbar,
+html[data-skin="minimal"][data-topbar-color="light"] .app-topbar,
+html[data-skin="flat"][data-topbar-color="light"] .app-topbar {
+  background: #ffffff !important;
+  background-image: none !important;
+  background-color: #ffffff !important;
+}
+
+/* Override any gradient backgrounds that might be applied */
+html[data-topbar-color="light"] .app-topbar {
+  background: #ffffff !important;
+  background-image: none !important;
+  background-color: #ffffff !important;
+}
+
+/* Force topbar menu background */
+.topbar-menu {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Ensure no gradient backgrounds are applied */
+.app-topbar,
+.topbar-menu,
+.topbar-menu * {
+  background-image: none !important;
+}
+

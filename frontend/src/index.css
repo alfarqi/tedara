@@ -1,0 +1,11 @@
+/* Reset styles - keeping only essential resets */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove conflicting styles that interfere with Inspinia layout */
