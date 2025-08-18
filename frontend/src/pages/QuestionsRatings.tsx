@@ -199,7 +199,7 @@ const QuestionsRatings: React.FC = () => {
              {/* Stats Cards */}
                <div className="row px-4 mb-0">
                    <div className="col-md-3">
-            <div className="card border-0 shadow-sm">
+            <div className="card">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="flex-grow-1">
@@ -219,7 +219,7 @@ const QuestionsRatings: React.FC = () => {
             </div>
           </div>
                    <div className="col-md-3">
-            <div className="card border-0 shadow-sm">
+            <div className="card">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="flex-grow-1">
@@ -239,7 +239,7 @@ const QuestionsRatings: React.FC = () => {
             </div>
           </div>
                    <div className="col-md-3">
-            <div className="card border-0 shadow-sm">
+            <div className="card">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="flex-grow-1">
@@ -259,7 +259,7 @@ const QuestionsRatings: React.FC = () => {
             </div>
           </div>
                    <div className="col-md-3">
-            <div className="card border-0 shadow-sm">
+            <div className="card">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="flex-grow-1">
@@ -283,7 +283,7 @@ const QuestionsRatings: React.FC = () => {
       {/* Main Content */}
       <div className="row px-4">
         <div className="col-12">
-          <div className="card border-0 shadow-sm">
+          <div className="card">
             {/* Card Header */}
             <div className="card-header border-light justify-content-between">
                              <h5 className="card-title mb-0 fs-5">Questions & Ratings Management</h5>

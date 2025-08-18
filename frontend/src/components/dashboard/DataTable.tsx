@@ -78,7 +78,7 @@ const DataTable: React.FC = () => {
         
         <div className="table-responsive">
           <table className="table table-hover">
-            <thead>
+            <thead className="bg-light">
               <tr>
                 <th>Order ID</th>
                 <th>Customer</th>

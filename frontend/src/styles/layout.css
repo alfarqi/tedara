@@ -246,30 +246,18 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 }
 
 h1, .h1 {
-  font-size: calc(1.32825rem + 0.939vw);
-}
-@media (min-width: 1200px) {
-  h1, .h1 {
-    font-size: 2.0325rem;
-  }
+  font-size: 2.5rem;
+  line-height: 1.2;
 }
 
 h2, .h2 {
-  font-size: calc(1.294104rem + 0.529248vw);
-}
-@media (min-width: 1200px) {
-  h2, .h2 {
-    font-size: 1.69104rem;
-  }
+  font-size: 2rem;
+  line-height: 1.3;
 }
 
 h3, .h3 {
-  font-size: calc(1.2643713705rem + 0.172456446vw);
-}
-@media (min-width: 1200px) {
-  h3, .h3 {
-    font-size: 1.393713705rem;
-  }
+  font-size: 1.5rem;
+  line-height: 1.4;
 }
 
 h4, .h4 {
@@ -287,6 +275,8 @@ h6, .h6 {
 p {
   margin-top: 0;
   margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 abbr[title] {

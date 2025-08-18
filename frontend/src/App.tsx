@@ -10,12 +10,14 @@ import QuestionsRatings from './pages/QuestionsRatings';
 import Pages from './pages/Pages';
 import CustomerDetails from './pages/CustomerDetails';
 import InvoiceDetails from './pages/InvoiceDetails';
+import StoreSettings from './pages/StoreSettings';
 
 import { useRouteIconInitialization } from './hooks/useRouteIconInitialization';
 import './styles/vendors.css';
 import './styles/layout.css';
 import './styles/rtl.css';
 import './styles/topbar-fix.css';
+import './styles/sidebar.css';
 
 function App() {
   return (
@@ -44,6 +46,7 @@ function AppRoutes() {
                     <Route path="/reports" element={<Reports />} />
                     <Route path="/questions-ratings" element={<QuestionsRatings />} />
                     <Route path="/pages" element={<Pages />} />
+                    <Route path="/store-settings" element={<StoreSettings />} />
       
     </Routes>
   );

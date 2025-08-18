@@ -207,9 +207,9 @@ const Orders: React.FC = () => {
       </div>
 
       {/* Stats Cards Row */}
-      <div className="row row-cols-xxl-5 row-cols-md-3 row-cols-1 align-items-center g-1 px-4">
+      <div className="row px-4">
         <div className="col">
-          <div className="card mb-1">
+          <div className="card">
             <div className="card-body">
               <div className="d-flex align-items-center gap-2 mb-3">
                 <div className="avatar-md flex-shrink-0">
@@ -228,7 +228,7 @@ const Orders: React.FC = () => {
         </div>
 
         <div className="col">
-          <div className="card mb-1">
+          <div className="card">
             <div className="card-body">
               <div className="d-flex align-items-center gap-2 mb-3">
                 <div className="avatar-md flex-shrink-0">
@@ -247,7 +247,7 @@ const Orders: React.FC = () => {
         </div>
 
         <div className="col">
-          <div className="card mb-1">
+          <div className="card">
             <div className="card-body">
               <div className="d-flex align-items-center gap-2 mb-3">
                 <div className="avatar-md flex-shrink-0">
@@ -266,7 +266,7 @@ const Orders: React.FC = () => {
         </div>
 
         <div className="col">
-          <div className="card mb-1">
+          <div className="card">
             <div className="card-body">
               <div className="d-flex align-items-center gap-2 mb-3">
                 <div className="avatar-md flex-shrink-0">
@@ -285,7 +285,7 @@ const Orders: React.FC = () => {
         </div>
 
         <div className="col">
-          <div className="card mb-1">
+          <div className="card">
             <div className="card-body">
               <div className="d-flex align-items-center gap-2 mb-3">
                 <div className="avatar-md flex-shrink-0">

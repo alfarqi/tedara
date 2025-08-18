@@ -207,7 +207,7 @@ const InvoiceDetails: React.FC = () => {
                      {/* Invoice Items Table */}
                      <div className="table-responsive mb-4">
                        <table className="table table-bordered">
-                         <thead>
+                         <thead className="bg-light">
                            <tr>
                              <th>#</th>
                              <th>Product Details</th>

@@ -508,7 +508,7 @@ const AddOrder: React.FC = () => {
                {orderForm.products.length > 0 ? (
                  <div className="table-responsive">
                    <table className="table table-hover">
-                     <thead>
+                     <thead className="bg-light">
                        <tr>
                          <th>Product</th>
                          <th>Quantity</th>

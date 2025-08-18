@@ -258,3 +258,5 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ isFilterOpen, toggleFilte
 
 export default ProductFilter;
 
+
+

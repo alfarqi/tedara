@@ -72,3 +72,5 @@ To test the fix:
 - Multiple initialization calls are safe (Lucide handles duplicates gracefully)
 - The delay in `reinitializeIconsDelayed()` ensures DOM is ready before initialization
 
+
+

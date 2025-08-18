@@ -1,0 +1,154 @@
+/* Sidebar Collapsed State Styles */
+html[data-sidenav-size=condensed] .sidenav-menu {
+  width: 70px !important;
+}
+
+html[data-sidenav-size=condensed] .sidenav-menu .logo span.logo-lg {
+  display: none !important;
+}
+
+html[data-sidenav-size=condensed] .sidenav-menu .logo span.logo-sm {
+  display: block !important;
+}
+
+html[data-sidenav-size=condensed] .sidenav-menu .side-nav .side-nav-item .side-nav-link .menu-text,
+html[data-sidenav-size=condensed] .sidenav-menu .side-nav .side-nav-item .side-nav-link .menu-arrow,
+html[data-sidenav-size=condensed] .sidenav-menu .side-nav .side-nav-item .side-nav-link .badge {
+  display: none !important;
+}
+
+html[data-sidenav-size=condensed] .sidenav-menu .side-nav .side-nav-item .side-nav-link .menu-icon {
+  display: flex !important;
+  justify-content: center !important;
+  min-width: 50px !important;
+}
+
+html[data-sidenav-size=condensed] .sidenav-menu .sidenav-user {
+  display: none !important;
+}
+
+html[data-sidenav-size=condensed] .sidenav-menu .side-nav-title {
+  display: none !important;
+}
+
+/* Content adjustment for collapsed sidebar */
+html[data-sidenav-size=condensed] .content-page {
+  margin-left: 70px !important;
+}
+
+html[data-sidenav-size=condensed] .app-topbar {
+  margin-left: 70px !important;
+}
+
+/* Offcanvas state */
+html[data-sidenav-size=offcanvas] .sidenav-menu {
+  position: fixed !important;
+  left: -100% !important;
+}
+
+html[data-sidenav-size=offcanvas].sidebar-enable .sidenav-menu {
+  left: 0 !important;
+}
+
+/* Default state */
+/* Removed margin-left from content-page and app-topbar */
+
+/* Submenu styles */
+.sidenav-menu .submenu {
+  display: none;
+}
+
+.sidenav-menu .submenu.show {
+  display: block;
+}
+
+.sidenav-menu .submenu .sub-menu {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.sidenav-menu .submenu .sub-menu .side-nav-item {
+  padding: 0;
+}
+
+.sidenav-menu .submenu .sub-menu .side-nav-link {
+  padding: 0.5rem 1rem;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sidenav-menu .submenu .sub-menu .side-nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Active menu item styling - full width highlight */
+.sidenav-menu .side-nav .side-nav-item.active {
+  background-color: rgba(111, 66, 193, 0.1) !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.sidenav-menu .side-nav .side-nav-item .side-nav-link.active {
+  border-left: 3px solid #6f42c1 !important;
+  border-radius: 0 !important;
+}
+
+/* Bottom menu positioning */
+.sidenav-menu .scrollbar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidenav-menu .side-nav:last-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 1rem;
+}
+
+/* Settings section positioning */
+.sidenav-menu .settings-section {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+/* Appearance section positioning */
+.sidenav-menu .appearance-section {
+  margin-top: 5px;
+}
+
+/* Ensure submenus are always visible for bottom menu items */
+.sidenav-menu .side-nav:last-child .submenu {
+  display: block !important;
+}
+
+/* Make submenu font size match main menu items */
+.sidenav-menu .side-nav:last-child .submenu .sub-menu .side-nav-link {
+  font-size: inherit;
+  font-weight: inherit;
+  padding-left: 1rem !important;
+  color: white !important;
+}
+
+.sidenav-menu .side-nav:last-child .submenu .sub-menu .side-nav-link .menu-text {
+  font-size: inherit;
+  font-weight: inherit;
+  color: white !important;
+}
+
+.sidenav-menu .side-nav:last-child .submenu .sub-menu .side-nav-link .menu-icon {
+  color: white !important;
+}
+
+/* Remove padding-bottom from side-nav */
+.sidenav-menu .side-nav {
+  padding-bottom: 0 !important;
+}
+
+/* Add border-top to settings and appearance sections */
+.sidenav-menu .settings-section,
+.sidenav-menu .appearance-section {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
