@@ -11,6 +11,9 @@ import Pages from './pages/Pages';
 import CustomerDetails from './pages/CustomerDetails';
 import InvoiceDetails from './pages/InvoiceDetails';
 import StoreSettings from './pages/StoreSettings';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Auth from './pages/Auth';
 
 import { useRouteIconInitialization } from './hooks/useRouteIconInitialization';
 import './styles/vendors.css';
@@ -18,6 +21,7 @@ import './styles/layout.css';
 import './styles/rtl.css';
 import './styles/topbar-fix.css';
 import './styles/sidebar.css';
+import './styles/auth.css';
 
 function App() {
   return (
@@ -36,7 +40,13 @@ function AppRoutes() {
   
   return (
     <Routes>
-                          <Route path="/" element={<Dashboard />} />
+                          {/* Auth Routes */}
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    
+                    {/* Dashboard Routes */}
+                    <Route path="/" element={<Dashboard />} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/orders" element={<Orders />} />
                     <Route path="/orders/new" element={<AddOrder />} />
