@@ -46,7 +46,8 @@ function AppRoutes() {
                     <Route path="/register" element={<Register />} />
                     
                     {/* Dashboard Routes */}
-                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/" element={<Auth />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/orders" element={<Orders />} />
                     <Route path="/orders/new" element={<AddOrder />} />

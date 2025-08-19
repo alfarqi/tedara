@@ -24,7 +24,7 @@ const Auth: React.FC = () => {
       
       // For demonstration, we'll just navigate to dashboard
       // In a real app, you'd validate credentials and set authentication state
-      navigate('/');
+      navigate('/dashboard');
       
     } catch (error) {
       console.error('Login error:', error);
@@ -56,7 +56,7 @@ const Auth: React.FC = () => {
       // 1. Show success message
       // 2. Send verification email
       // 3. Navigate to verification page or auto-login
-      navigate('/');
+      navigate('/dashboard');
       
     } catch (error) {
       console.error('Registration error:', error);
