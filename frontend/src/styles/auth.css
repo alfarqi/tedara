@@ -3,7 +3,8 @@
 /* Base styles */
 .auth-container {
   background-color: #f9fbfd;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Image panel styling */
@@ -22,12 +23,10 @@
   padding: 2rem;
 }
 
-.auth-geeks-image {
-  max-width: 100%;
-  max-height: 80vh;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+.auth-crowd-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   filter: drop-shadow(0 10px 25px rgba(0,0,0,0.1));
 }
 
@@ -39,14 +38,57 @@
   padding: 2rem;
   max-width: 480px;
   width: 100%;
-  margin: 1.5rem auto;
+  margin: 0 auto;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
-/* Form container */
-.auth-form-container {
-  max-width: 100%;
+/* Form card with integrated image */
+.auth-form-card-with-image {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  max-width: 1062px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0;
+  
+  overflow: hidden;
+  display: flex;
+  position: relative;
+}
+
+.auth-form-container {
+  flex: 1;
+  padding: 2rem 4rem;
+  max-width: 542px;
+  overflow-y: auto;
+}
+
+.auth-image-side {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0.75rem 0.75rem 0;
+}
+
+.auth-image-side .auth-crowd-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: drop-shadow(0 10px 25px rgba(0,0,0,0.1));
+}
+
+/* Form container - updated for integrated layout */
+.auth-form-container {
+  flex: 1;
+  padding: 2rem 4rem;
+  max-width: 542px;
+  overflow-y: auto;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 /* Form inputs styling */
@@ -54,7 +96,7 @@
   background-color: #f8f9fa !important;
   border: 1px solid #e9ecef;
   border-radius: 0.375rem;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 1rem;
   font-size: 14px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -69,6 +111,7 @@
   background-color: #f8f9fa;
   border: 1px solid #e9ecef;
   color: #6c757d;
+  padding: 0.6rem 0.75rem;
 }
 
 /* Primary button */
@@ -77,7 +120,7 @@
   border-color: #7754f6;
   color: white;
   font-weight: 500;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 1rem;
   font-size: 14px;
   border-radius: 0.375rem;
   transition: all 0.15s ease-in-out;
@@ -342,6 +385,19 @@
     padding: 0.5rem 1.5rem;
     font-size: 13px;
     min-width: 150px;
+  }
+  
+  .auth-form-card-with-image {
+    max-width: 420px;
+    flex-direction: column;
+  }
+  
+  .auth-image-side {
+    display: none;
+  }
+  
+  .auth-form-container {
+    max-width: 100%;
   }
 }
 

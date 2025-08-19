@@ -8,21 +8,9 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, swapSides = false }) => {
-  const imagePanel = (
-    <div className="col-lg-6 d-none d-lg-flex flex-column justify-content-center align-items-center position-relative auth-image-panel">
-      <div className="auth-image-container">
-        <img 
-          src="/assets/images/geeks.png" 
-          alt="Authentication illustration" 
-          className="auth-geeks-image"
-        />
-      </div>
-    </div>
-  );
-
   const formPanel = (
-    <div className="col-lg-6 d-flex flex-column justify-content-center align-items-center px-4 px-lg-5 min-vh-100">
-      <div className="auth-form-card">
+    <div className="col-lg-12 d-flex flex-column justify-content-center align-items-center px-4 px-lg-5 min-vh-100">
+      <div className="auth-form-card-with-image">
         <div className="auth-form-container w-100">
           {/* Header */}
           <div className="text-center mb-4">
@@ -35,23 +23,20 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, swap
           {/* Form Content */}
           {children}
         </div>
+        <div className="auth-image-side">
+          <img
+            src="/assets/images/crowd.png"
+            alt="Authentication illustration"
+            className="auth-crowd-image"
+          />
+        </div>
       </div>
     </div>
   );
 
   return (
     <div className="auth-container min-vh-100 d-flex">
-      {swapSides ? (
-        <>
-          {imagePanel}
-          {formPanel}
-        </>
-      ) : (
-        <>
-          {formPanel}
-          {imagePanel}
-        </>
-      )}
+      {formPanel}
     </div>
   );
 };
