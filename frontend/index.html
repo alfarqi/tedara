@@ -4,39 +4,16 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>INSPINIA - Dashboard</title>
+    <title>Tedara - E-commerce Platform</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- INSPINIA JavaScript Files -->
-    <script src="/assets/js/vendors.min.js"></script>
-    <script src="/assets/js/config.js"></script>
-    <script src="/assets/js/app.js"></script>
-    
-    <!-- Chart and Map Libraries -->
-    <script src="/assets/plugins/echarts/echarts.min.js"></script>
-    <script src="/assets/plugins/jsvectormap/jsvectormap.min.js"></script>
-    <script src="/assets/js/maps/world.js"></script>
-    
-    <!-- Summernote Plugin CSS -->
-    <link href="/assets/plugins/summernote/summernote-bs5.min.css" rel="stylesheet">
-    
-    <!-- Summernote Plugin JS -->
-    <script src="/assets/plugins/summernote/summernote-bs5.min.js"></script>
-    
-    <script src="/assets/js/pages/dashboard-2-custom.js"></script>
-    
     <!-- Debug Script -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM loaded');
-        console.log('jQuery available:', typeof $ !== 'undefined');
-        console.log('Bootstrap available:', typeof bootstrap !== 'undefined');
-        console.log('Config available:', typeof window.config !== 'undefined');
-        console.log('ECharts available:', typeof echarts !== 'undefined');
-        console.log('jsVectorMap available:', typeof jsVectorMap !== 'undefined');
         
         // Force correct topbar color and clear any cached settings
         console.log('Forcing topbar color to light...');
