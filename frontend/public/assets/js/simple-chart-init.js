@@ -210,3 +210,4 @@
     console.log('World map initialization called');
   };
 })();
+

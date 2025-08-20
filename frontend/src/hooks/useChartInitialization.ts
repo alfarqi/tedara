@@ -43,7 +43,13 @@ export const useChartInitialization = () => {
       // Initialize world map - only if not already initialized
       const worldMap = document.getElementById('map_1');
       if (worldMap && window.initWorldMap && !worldMap.hasAttribute('data-initialized')) {
-        window.initWorldMap!();
+        try {
+          window.initWorldMap!();
+          // Mark as initialized to prevent re-initialization
+          worldMap.setAttribute('data-initialized', 'true');
+        } catch (error) {
+          console.error('Error initializing world map:', error);
+        }
       }
       
       initializedRef.current = true;

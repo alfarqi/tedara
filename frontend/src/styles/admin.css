@@ -1,0 +1,340 @@
+/* Admin-specific styling - Green theme for super admin */
+
+/* Override CSS variables for admin pages */
+.admin-page {
+  --ins-purple: #1f9126 !important;
+  --ins-purple-rgb: 31, 145, 38 !important;
+  --ins-purple-text-emphasis: #187a1f !important;
+  --ins-purple-bg-subtle: rgba(31, 145, 38, 0.1) !important;
+  --ins-purple-border-subtle: rgba(31, 145, 38, 0.3) !important;
+  
+  /* Override sidebar variables for admin pages */
+  --ins-sidenav-bg: #0d333f !important;
+  --ins-sidenav-menu-item-color: #ffffff !important;
+  --ins-sidenav-menu-item-active-color: #1f9126 !important;
+  --ins-sidenav-menu-item-active-bg: rgba(31, 145, 38, 0.1) !important;
+  --ins-sidenav-menu-item-hover-bg: rgba(31, 145, 38, 0.05) !important;
+  --ins-sidenav-menu-item-hover-color: #1f9126 !important;
+  --ins-sidenav-menu-item-border-color: #1f9126 !important;
+  --ins-sidenav-menu-item-icon-color: #ffffff !important;
+  --ins-sidenav-menu-item-active-icon-color: #1f9126 !important;
+  --ins-sidenav-menu-item-hover-icon-color: #1f9126 !important;
+  --ins-sidenav-menu-item-badge-bg: #1f9126 !important;
+  --ins-sidenav-menu-item-badge-color: #ffffff !important;
+  --ins-sidenav-menu-item-title-color: #ffffff !important;
+  --ins-sidenav-menu-item-active-title-color: #1f9126 !important;
+  --ins-sidenav-menu-item-hover-title-color: #1f9126 !important;
+  --ins-sidenav-menu-item-subtitle-color: #a0a0a0 !important;
+  --ins-sidenav-menu-item-active-subtitle-color: #1f9126 !important;
+  --ins-sidenav-menu-item-hover-subtitle-color: #1f9126 !important;
+  --ins-sidenav-menu-item-divider-color: rgba(31, 145, 38, 0.2) !important;
+  --ins-sidenav-menu-item-disabled-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-bg: transparent !important;
+  --ins-sidenav-menu-item-disabled-icon-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-title-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-subtitle-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-border-color: transparent !important;
+  --ins-sidenav-menu-item-disabled-badge-bg: #666666 !important;
+  --ins-sidenav-menu-item-disabled-badge-color: #ffffff !important;
+  --ins-sidenav-menu-item-disabled-hover-bg: transparent !important;
+  --ins-sidenav-menu-item-disabled-hover-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-hover-icon-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-hover-title-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-hover-subtitle-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-hover-border-color: transparent !important;
+  --ins-sidenav-menu-item-disabled-hover-badge-bg: #666666 !important;
+  --ins-sidenav-menu-item-disabled-hover-badge-color: #ffffff !important;
+  --ins-sidenav-menu-item-disabled-active-bg: transparent !important;
+  --ins-sidenav-menu-item-disabled-active-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-icon-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-title-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-subtitle-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-border-color: transparent !important;
+  --ins-sidenav-menu-item-disabled-active-badge-bg: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-badge-color: #ffffff !important;
+  --ins-sidenav-menu-item-disabled-active-hover-bg: transparent !important;
+  --ins-sidenav-menu-item-disabled-active-hover-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-hover-icon-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-hover-title-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-hover-subtitle-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-hover-border-color: transparent !important;
+  --ins-sidenav-menu-item-disabled-active-hover-badge-bg: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-hover-badge-color: #ffffff !important;
+  --ins-sidenav-menu-item-disabled-active-focus-bg: transparent !important;
+  --ins-sidenav-menu-item-disabled-active-focus-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-icon-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-title-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-subtitle-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-border-color: transparent !important;
+  --ins-sidenav-menu-item-disabled-active-focus-badge-bg: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-badge-color: #ffffff !important;
+  --ins-sidenav-menu-item-disabled-active-focus-hover-bg: transparent !important;
+  --ins-sidenav-menu-item-disabled-active-focus-hover-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-hover-icon-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-hover-title-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-hover-subtitle-color: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-hover-border-color: transparent !important;
+  --ins-sidenav-menu-item-disabled-active-focus-hover-badge-bg: #666666 !important;
+  --ins-sidenav-menu-item-disabled-active-focus-hover-badge-color: #ffffff !important;
+  
+  /* Override additional CSS variables from layout.css */
+  --ins-btn-bg: #1f9126 !important;
+  --ins-btn-border-color: #1f9126 !important;
+  --ins-btn-disabled-bg: #1f9126 !important;
+  --ins-btn-disabled-border-color: #1f9126 !important;
+  --ins-btn-color: #1f9126 !important;
+  --ins-btn-hover-border-color: #1f9126 !important;
+  --ins-btn-active-border-color: #1f9126 !important;
+  --ins-btn-disabled-color: #1f9126 !important;
+  --ins-nav-link-hover-color: #1f9126 !important;
+  --ins-nav-pills-link-active-bg: #1f9126 !important;
+  --ins-topbar-bg: linear-gradient(to bottom, #0d333f, #1f9126) !important;
+}
+
+/* Override Bootstrap primary colors */
+.admin-page .btn-primary {
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+  color: white !important;
+}
+
+.admin-page .btn-primary:hover,
+.admin-page .btn-primary:focus,
+.admin-page .btn-primary:active {
+  background-color: #187a1f !important;
+  border-color: #187a1f !important;
+  color: white !important;
+}
+
+.admin-page .bg-primary {
+  background-color: #1f9126 !important;
+}
+
+.admin-page .text-primary {
+  color: #1f9126 !important;
+}
+
+.admin-page .border-primary {
+  border-color: #1f9126 !important;
+}
+
+.admin-page .progress-bar.bg-primary {
+  background-color: #1f9126 !important;
+}
+
+.admin-page .badge.bg-primary {
+  background-color: #1f9126 !important;
+}
+
+.admin-page .form-check-input:checked {
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page .form-select:focus,
+.admin-page .form-control:focus {
+  border-color: #1f9126 !important;
+  box-shadow: 0 0 0 0.2rem rgba(31, 145, 38, 0.25) !important;
+}
+
+.admin-page .nav-pills .nav-link.active {
+  background-color: #1f9126 !important;
+}
+
+.admin-page .page-link {
+  color: #1f9126 !important;
+}
+
+.admin-page .page-item.active .page-link {
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page .dropdown-item:active {
+  background-color: #1f9126 !important;
+}
+
+/* Sidebar specific admin styling - Override hardcoded purple colors */
+.admin-page .side-nav-link.active {
+  background-color: rgba(31, 145, 38, 0.1) !important;
+  color: #1f9126 !important;
+  border-left: 3px solid #1f9126 !important;
+}
+
+.admin-page .side-nav-link:hover {
+  background-color: rgba(31, 145, 38, 0.05) !important;
+  color: #1f9126 !important;
+}
+
+.admin-page .side-nav-item.active {
+  background-color: rgba(31, 145, 38, 0.1) !important;
+}
+
+.admin-page .side-nav-item .side-nav-link.active {
+  border-left: 3px solid #1f9126 !important;
+}
+
+/* Override any hardcoded purple colors in sidebar.css */
+.admin-page .sidenav-menu .side-nav .side-nav-item.active {
+  background-color: rgba(31, 145, 38, 0.1) !important;
+}
+
+.admin-page .sidenav-menu .side-nav .side-nav-item .side-nav-link.active {
+  border-left: 3px solid #1f9126 !important;
+}
+
+/* Card headers and other elements */
+.admin-page .card-header {
+  border-bottom-color: rgba(31, 145, 38, 0.125) !important;
+}
+
+.admin-page .table thead th {
+  border-bottom-color: rgba(31, 145, 38, 0.125) !important;
+}
+
+/* Custom green color utility classes */
+.admin-page .bg-admin-green {
+  background-color: #1f9126 !important;
+}
+
+.admin-page .text-admin-green {
+  color: #1f9126 !important;
+}
+
+.admin-page .border-admin-green {
+  border-color: #1f9126 !important;
+}
+
+/* Override purple-specific classes */
+.admin-page .btn-purple {
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page .btn-outline-purple {
+  color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page .btn-outline-purple:hover {
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page .text-purple {
+  color: #1f9126 !important;
+}
+
+.admin-page .bg-purple {
+  background-color: #1f9126 !important;
+}
+
+.admin-page .border-purple {
+  border-color: #1f9126 !important;
+}
+
+.admin-page .link-purple {
+  color: #1f9126 !important;
+}
+
+.admin-page .link-purple:hover {
+  color: #187a1f !important;
+}
+
+.admin-page .alert-purple {
+  color: #187a1f !important;
+  background-color: rgba(31, 145, 38, 0.1) !important;
+  border-color: rgba(31, 145, 38, 0.3) !important;
+}
+
+.admin-page .list-group-item-purple {
+  color: #187a1f !important;
+  background-color: rgba(31, 145, 38, 0.1) !important;
+  border-color: rgba(31, 145, 38, 0.3) !important;
+}
+
+.admin-page .text-bg-purple {
+  background-color: #1f9126 !important;
+}
+
+.admin-page .focus-ring-purple {
+  --ins-focus-ring-color: rgba(31, 145, 38, 0.25) !important;
+}
+
+.admin-page .bg-purple-subtle {
+  background-color: rgba(31, 145, 38, 0.1) !important;
+}
+
+.admin-page .fill-purple {
+  fill: rgba(31, 145, 38, 0.15) !important;
+}
+
+/* Override any remaining hardcoded purple colors */
+.admin-page *[style*="#6f42c1"] {
+  color: #1f9126 !important;
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page *[style*="#8b5cf6"] {
+  color: #1f9126 !important;
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page *[style*="#7b70ef"] {
+  color: #1f9126 !important;
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page *[style*="#8768cd"] {
+  color: #1f9126 !important;
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page *[style*="#6070cc"] {
+  color: #1f9126 !important;
+  background-color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+/* Override specific layout.css purple color rules */
+.admin-page .nav-link:hover {
+  color: #1f9126 !important;
+}
+
+.admin-page .nav-link.active {
+  color: #1f9126 !important;
+  border-bottom: 1px solid #1f9126 !important;
+}
+
+.admin-page .nav-tabs .nav-link.active {
+  color: #1f9126 !important;
+  border-bottom: 1px solid #1f9126 !important;
+}
+
+/* Override gradient backgrounds */
+.admin-page *[style*="linear-gradient"][style*="#7b70ef"] {
+  background: linear-gradient(90deg, #1ab394, #1f9126) !important;
+}
+
+.admin-page *[style*="-webkit-gradient"][style*="#7b70ef"] {
+  background: -webkit-gradient(linear, left top, right top, from(#1ab394), to(#1f9126)) !important;
+}
+
+/* Override any remaining purple color rules */
+.admin-page .nav-pills .nav-link.active {
+  background-color: #1f9126 !important;
+}
+
+.admin-page .nav-tabs .nav-link.active {
+  color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
+
+.admin-page .nav-tabs .nav-link:hover {
+  color: #1f9126 !important;
+  border-color: #1f9126 !important;
+}
