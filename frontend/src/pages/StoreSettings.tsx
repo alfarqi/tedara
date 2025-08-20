@@ -8,8 +8,7 @@ const StoreSettings: React.FC = () => {
   const [storeName, setStoreName] = useState('Tedara Store');
   const [storeDescription, setStoreDescription] = useState('Your one-stop shop for quality products');
   const [storeEmail, setStoreEmail] = useState('contact@tedara.com');
-  const [storePhone, setStorePhone] = useState('+966 50 123 4567');
-  const [storeAddress, setStoreAddress] = useState('Riyadh, Saudi Arabia');
+
   const [currency, setCurrency] = useState('SAR');
   const [language, setLanguage] = useState('ar');
   const [timezone, setTimezone] = useState('Asia/Riyadh');

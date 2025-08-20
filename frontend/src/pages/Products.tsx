@@ -1,11 +1,10 @@
 import Layout from '../components/layout/Layout';
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import ProductGrid from '../components/products/ProductGrid';
 import ProductList from '../components/products/ProductList';
 import ProductModals from '../components/products/ProductModals';
 import ProductFilter from '../components/products/ProductFilter';
-import type { Product, DetailsFormData, CategoryFormData, AlertsFormData, QuantityFormData } from '../types/product';
+import type { Product } from '../types/product';
 
 const Products: React.FC = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -24,20 +23,7 @@ const Products: React.FC = () => {
   const [youtubeLink, setYoutubeLink] = useState('');
   const [showProductTypeDropdown, setShowProductTypeDropdown] = useState(false);
   
-  const [formData, setFormData] = useState({
-    productName: '',
-    sku: '',
-    stock: '',
-    description: '',
-    basePrice: '',
-    discountType: 'Choose Discount',
-    discountValue: '',
-    brand: '',
-    category: 'Choose Category',
-    subCategory: 'Choose Sub Category',
-    status: 'Choose Status',
-    tags: ''
-  });
+
 
   const [detailsFormData, setDetailsFormData] = useState({
     description: '',
@@ -292,9 +278,7 @@ const Products: React.FC = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
-  const toggleView = () => {
-    setIsListView(!isListView);
-  };
+
 
   const handleInputChange = (productId: number, field: string, value: string) => {
     setProducts(prev => prev.map(product => 

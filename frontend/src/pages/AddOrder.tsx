@@ -251,10 +251,7 @@ const AddOrder: React.FC = () => {
     }));
   };
 
-  const handleSaveOrder = () => {
-    // Handle saving the order
-    console.log('Saving order:', orderForm);
-  };
+
 
   const handleSaveDraft = () => {
     // Handle saving as draft

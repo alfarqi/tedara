@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
@@ -27,7 +27,6 @@ interface MenuChild {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
-  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
   const location = useLocation();
 
   // Helper function to check if a menu item is active
@@ -44,13 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
   // Check if user is on admin routes
   const isAdminRoute = location.pathname.startsWith('/admin');
 
-  const toggleMenu = (menuId: string) => {
-    setExpandedMenus(prev => 
-      prev.includes(menuId) 
-        ? prev.filter(id => id !== menuId)
-        : [...prev, menuId]
-    );
-  };
+
 
   // Regular store menu items (shown when not on admin routes)
   const storeMenuItems: MenuItem[] = [
@@ -233,7 +226,7 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
     }
   ];
 
-  const bottomMenuItems: MenuItem[] = [];
+
 
   const getSidebarClasses = () => {
     const baseClasses = ['sidenav-menu'];

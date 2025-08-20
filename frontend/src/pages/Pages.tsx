@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 
 interface Page {
@@ -58,7 +58,6 @@ const Pages: React.FC = () => {
     showInFooter: false
   });
   const [selectedLanguage, setSelectedLanguage] = useState<'EN' | 'AR'>('EN');
-  const summernoteRef = useRef<any>(null);
 
   const handlePageClick = (page: Page) => {
     setSelectedPage(page);
@@ -248,7 +247,7 @@ const Pages: React.FC = () => {
 
             {/* Pages List */}
             <div className="card-body p-0">
-              {pages.map((page, index) => (
+              {pages.map((page) => (
                 <div key={page.id}>
                   <div className="d-flex align-items-center justify-content-between p-3 border-bottom">
                     <div className="flex-grow-1">

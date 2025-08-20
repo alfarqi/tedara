@@ -71,7 +71,6 @@ const ProductModals: React.FC<ProductModalsProps> = ({
   showImageModal,
   savedProduct,
   productToDelete,
-  selectedProductForImage,
   uploadedImages,
   youtubeLink,
   categories,

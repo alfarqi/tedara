@@ -176,23 +176,7 @@ const CustomerDetails: React.FC = () => {
     }
   };
 
-  const getPaymentStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Paid': return 'badge-soft-success';
-      case 'Pending': return 'badge-soft-warning';
-      case 'Failed': return 'badge-soft-danger';
-      default: return 'badge-soft-secondary';
-    }
-  };
 
-  const getDeliveryStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Delivered': return 'badge-soft-success';
-      case 'In Transit': return 'badge-soft-warning';
-      case 'Pending': return 'badge-soft-info';
-      default: return 'badge-soft-secondary';
-    }
-  };
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {

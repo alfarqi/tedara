@@ -442,7 +442,7 @@ const Reports: React.FC = () => {
                    {/* Simple Chart Visualization */}
                    <div className="bg-light rounded p-4" style={{ height: '300px' }}>
                      <div className="d-flex align-items-end justify-content-between h-100" style={{ gap: '8px' }}>
-                       {filteredSalesReports.slice(0, 7).map((report, index) => {
+                       {filteredSalesReports.slice(0, 7).map((report) => {
                          const height = (parseFloat(report.revenue.replace('$', '').replace(',', '')) / 1000) * 100;
                          return (
                            <div key={report.id} className="flex-grow-1 d-flex flex-column align-items-center">
@@ -560,7 +560,7 @@ const Reports: React.FC = () => {
                         
                         {/* Labels */}
                         <div className="position-relative h-100 d-flex align-items-end justify-content-between" style={{ paddingBottom: '20px' }}>
-                          {filteredProductReports.slice(0, 6).map((product, index) => (
+                          {filteredProductReports.slice(0, 6).map((product) => (
                             <div key={product.id} className="text-center" style={{ width: '16%' }}>
                               <small className="text-muted d-block">{product.views}</small>
                               <small className="text-muted">{product.productName.split(' ')[0]}</small>

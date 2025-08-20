@@ -104,14 +104,7 @@ const InvoiceDetails: React.FC = () => {
     setInvoice(sampleInvoice);
   }, [id]);
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Paid': return 'badge-soft-success';
-      case 'Pending': return 'badge-soft-warning';
-      case 'Overdue': return 'badge-soft-danger';
-      default: return 'badge-soft-secondary';
-    }
-  };
+
 
   if (!invoice) {
     return (

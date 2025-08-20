@@ -4,10 +4,9 @@ interface AuthLayoutProps {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
-  swapSides?: boolean; // When true, purple panel goes on right
 }
 
-const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle, swapSides = false }) => {
+const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) => {
   const formPanel = (
     <div className="col-lg-12 d-flex flex-column justify-content-center align-items-center px-4 px-lg-5 min-vh-100">
       <div className="auth-form-card-with-image">
