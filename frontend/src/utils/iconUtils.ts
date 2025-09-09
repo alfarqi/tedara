@@ -12,9 +12,7 @@ declare global {
  */
 export const reinitializeIcons = () => {
   if (window.lucide && typeof window.lucide.createIcons === 'function') {
-    console.log('Reinitializing Lucide icons...');
     window.lucide.createIcons();
-    console.log('Lucide icons reinitialized');
   } else {
     console.warn('Lucide not available for icon reinitialization');
   }

@@ -1,0 +1,123 @@
+/* Mobile Preview Page Styles */
+.mobile-preview-page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+/* Status Bar */
+.mobile-status-bar {
+  background: #ffffff;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-time {
+  color: #000;
+}
+
+.mobile-indicators {
+  display: flex;
+  gap: 6px;
+  color: #000;
+}
+
+.mobile-indicators i {
+  font-size: 14px;
+}
+
+/* Store Header */
+.mobile-store-header {
+  background: #ffffff;
+  padding: 24px 20px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.store-logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logo-placeholder {
+  color: #6c757d;
+  font-size: 32px;
+}
+
+.store-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+}
+
+.store-description {
+  font-size: 16px;
+  color: #6c757d;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Featured Products */
+.featured-products {
+  padding: 20px;
+}
+
+.featured-products h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.product-placeholder {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.product-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  font-size: 20px;
+  color: #6c757d;
+}
+
+.product-placeholder p {
+  font-size: 12px;
+  margin: 0;
+}

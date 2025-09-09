@@ -16,9 +16,9 @@ interface LanguageProviderProps {
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguageState] = useState<'en' | 'ar'>(() => {
-    // Get language from localStorage or default to English
+    // Get language from localStorage or default to Arabic
     const savedLanguage = localStorage.getItem('language') as 'en' | 'ar';
-    return savedLanguage || 'en';
+    return savedLanguage || 'ar';
   });
 
   const isRTL = language === 'ar';

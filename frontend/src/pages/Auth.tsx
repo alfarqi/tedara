@@ -1,42 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import AuthLayout from '../components/auth/AuthLayout';
 import TabbedAuth from '../components/auth/TabbedAuth';
+import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 
 const Auth: React.FC = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [registerLoading, setRegisterLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { login, register, isAuthenticated, error, clearError } = useAuth();
+  const { showError, showSuccess } = useToast();
 
   // Check if there's a tab parameter in URL (e.g., /auth?tab=register)
   const defaultTab = searchParams.get('tab') === 'register' ? 'register' : 'login';
+  
+  // Clear error when switching tabs
+  const handleTabChange = (tab: 'login' | 'register') => {
+    clearError();
+  };
+
+  // Redirect if already authenticated (but not during login/register operations)
+  useEffect(() => {
+    // Only redirect if user is authenticated and we're not in the middle of a login/register operation
+    // Also prevent redirection during registration error handling
+    // AND don't redirect if this is a new registration (should go to onboarding instead)
+    const isNewRegistration = sessionStorage.getItem('new_registration');
+    if (isAuthenticated && !loginLoading && !registerLoading && !error && !isNewRegistration) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, loginLoading, registerLoading, navigate, error]);
+
+  // Clear error when component unmounts
+  useEffect(() => {
+    return () => {
+      clearError();
+    };
+  }, []); // Remove clearError from dependencies
 
   const handleLogin = async (data: { email: string; password: string; remember: boolean }) => {
     setLoginLoading(true);
+    clearError();
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await login({
+        email: data.email,
+        password: data.password,
+        remember: data.remember,
+      });
       
-      // Here you would typically make an API call to authenticate the user
-      console.log('Login data:', data);
+      // Show success toast
+      showSuccess('Login Successful', 'Welcome back! Redirecting to dashboard...', 3000);
       
-      // For demonstration, we'll just navigate to dashboard
-      // In a real app, you'd validate credentials and set authentication state
-      navigate('/dashboard');
+      // Add a small delay before navigation to ensure toast is visible
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1000);
       
     } catch (error) {
-      console.error('Login error:', error);
-      // Handle login error (show toast, etc.)
+      // Show error toast instead of console logging
+      const errorMessage = error instanceof Error ? error.message : 'Login failed';
+      showError('Login Failed', errorMessage, 5000);
     } finally {
       setLoginLoading(false);
     }
   };
 
   const handleRegister = async (data: { 
-    firstName: string; 
-    lastName: string; 
+    fullName: string; 
     email: string; 
     phone: string;
     password: string; 
@@ -44,23 +76,38 @@ const Auth: React.FC = () => {
   }) => {
     setRegisterLoading(true);
     
+    clearError();
+    
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const result = await register({
+        name: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+        password_confirmation: data.password,
+        // You can add role selection here if needed
+        role: 'store_owner', // Default role
+      });
       
-      // Here you would typically make an API call to register the user
-      console.log('Register data:', data);
-      
-      // For demonstration, we'll just navigate to dashboard
-      // In a real app, you might want to:
-      // 1. Show success message
-      // 2. Send verification email
-      // 3. Navigate to verification page or auto-login
-      navigate('/dashboard');
+      if (result.success) {
+        // Show success toast
+        showSuccess('Registration Successful', 'Account created successfully!', 2000);
+        
+        // Set a flag to indicate this is a new registration (session-only)
+        sessionStorage.setItem('new_registration', 'true');
+        
+        // ProtectedRoute will handle the redirect to onboarding automatically
+        // No need for manual navigation here - let ProtectedRoute detect the flag and redirect
+      } else {
+        // Show error toast
+        showError('Registration Failed', result.error || 'Registration failed', 5000);
+      }
       
     } catch (error) {
-      console.error('Registration error:', error);
-      // Handle registration error (show toast, etc.)
+      // Show error toast
+      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
+      
+      showError('Registration Failed', errorMessage, 5000);
     } finally {
       setRegisterLoading(false);
     }
@@ -77,6 +124,8 @@ const Auth: React.FC = () => {
         loginLoading={loginLoading}
         registerLoading={registerLoading}
         defaultTab={defaultTab}
+        error={error}
+        onTabChange={handleTabChange}
       />
     </AuthLayout>
   );

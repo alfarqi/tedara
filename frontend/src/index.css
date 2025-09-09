@@ -1,3 +1,7 @@
+/* Import custom styles */
+@import './styles/onboarding-progress.css';
+@import './styles/toggle-switch.css';
+
 /* Reset styles - keeping only essential resets */
 * {
   box-sizing: border-box;
@@ -9,3 +13,57 @@ body {
 }
 
 /* Remove conflicting styles that interfere with Inspinia layout */
+
+/* Phone input styles are imported directly in the PhoneInput component */
+
+/* Toast Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.fade-out {
+  animation: slideOutRight 0.3s ease-in;
+}
+
+/* Toast Container */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast-container .toast {
+  pointer-events: auto;
+  margin-bottom: 10px;
+}
+
+/* Ensure toasts don't interfere with other elements */
+.toast {
+  backdrop-filter: blur(10px);
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}

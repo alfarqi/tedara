@@ -1,5 +1,7 @@
 
 
+import React from 'react';
+
 interface OrdersChartCardProps {
   title: string;
 }

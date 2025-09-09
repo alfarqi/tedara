@@ -5,21 +5,29 @@
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tedara - E-commerce Platform</title>
+    
+    <!-- Quill Editor CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script src="/assets/js/lucide.min.js"></script>
     <script src="/assets/js/echarts.min.js"></script>
     <script src="/assets/js/simple-chart-init.js"></script>
     
+    <!-- Quill Editor JavaScript -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
     <!-- Debug Script -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM loaded');
         
         // Force correct topbar color and clear any cached settings
-        console.log('Forcing topbar color to light...');
         document.documentElement.setAttribute('data-topbar-color', 'light');
         
         // Clear any cached config that might override the topbar color
@@ -50,12 +58,10 @@
             element.style.backgroundImage = 'none';
             element.style.backgroundColor = '#ffffff';
           });
-          console.log('Applied delayed topbar background fix');
         }, 100);
         
         // Force the correct topbar color attribute
         document.documentElement.setAttribute('data-topbar-color', 'light');
-        console.log('Set data-topbar-color to light');
       });
     </script>
   </body>

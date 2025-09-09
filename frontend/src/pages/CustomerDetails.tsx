@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
+import { customerService, type Customer as CustomerType } from '../services/customerService';
+import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 
 interface Customer {
   id: string;
@@ -29,7 +32,9 @@ interface Order {
 
 const CustomerDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const { token } = useAuth();
+  const { showError } = useToast();
+  const [customer, setCustomer] = useState<CustomerType | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [paymentStatusFilter, setPaymentStatusFilter] = useState('All');
@@ -37,65 +42,54 @@ const CustomerDetails: React.FC = () => {
   const [dateRangeFilter, setDateRangeFilter] = useState('All');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
 
-  // Sample customer data
-  const sampleCustomers: Customer[] = [
-    {
-      id: '1',
-      customerId: '#CUST001',
-      name: 'Emma Johnson',
-      email: 'emma.johnson@ecomsite.com',
-      phone: '+966 50 123 4567',
-      joinDate: '15 Mar, 2024',
-      totalOrders: 12,
-      totalSpent: '$2,450.00',
-      status: 'Active'
-    },
-    {
-      id: '2',
-      customerId: '#CUST002',
-      name: 'Michael Brown',
-      email: 'michael.brown@shopzone.com',
-      phone: '+966 55 987 6543',
-      joinDate: '22 Jan, 2024',
-      totalOrders: 8,
-      totalSpent: '$1,890.50',
-      status: 'VIP'
-    },
-    {
-      id: '3',
-      customerId: '#CUST003',
-      name: 'Sarah Wilson',
-      email: 'sarah.wilson@onlineshop.com',
-      phone: '+966 54 111 2222',
-      joinDate: '8 Feb, 2024',
-      totalOrders: 5,
-      totalSpent: '$890.25',
-      status: 'Active'
-    },
-    {
-      id: '4',
-      customerId: '#CUST004',
-      name: 'David Lee',
-      email: 'david.lee@ecomstore.com',
-      phone: '+966 56 333 4444',
-      joinDate: '3 Apr, 2024',
-      totalOrders: 3,
-      totalSpent: '$450.75',
-      status: 'Inactive'
-    },
-    {
-      id: '5',
-      customerId: '#CUST005',
-      name: 'Lisa Anderson',
-      email: 'lisa.anderson@shopmail.com',
-      phone: '+966 57 555 6666',
-      joinDate: '19 Dec, 2023',
-      totalOrders: 15,
-      totalSpent: '$3,200.00',
-      status: 'VIP'
+  // Load customer data on component mount
+  useEffect(() => {
+    if (id && token) {
+      loadCustomer();
     }
-  ];
+  }, [id, token]);
+
+  const loadCustomer = async () => {
+    try {
+      setLoading(true);
+      if (!id) return;
+      const response = await customerService.getCustomer(id as string, token);
+      
+      if (response.data) {
+        console.log('Customer API Response:', response.data);
+        setCustomer(response.data);
+        // Set orders from the customer data if available
+        if (response.data.orders) {
+          console.log('Orders from API:', response.data.orders);
+          setOrders(response.data.orders.map((order: any) => ({
+            id: order.id?.toString() || order.order_id?.toString() || '0',
+            orderId: order.order_id || order.id?.toString() || 'N/A',
+            date: order.created_at ? new Date(order.created_at).toLocaleDateString('en-US', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric'
+            }) : 'N/A',
+            time: order.created_at ? new Date(order.created_at).toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit'
+            }) : 'N/A',
+            status: order.status || 'Unknown',
+            total: `$${typeof order.total === 'number' ? order.total.toFixed(2) : order.total || '0.00'}`,
+            paymentStatus: 'Paid', // Default for now
+            deliveryStatus: 'Delivered', // Default for now
+            items: order.order_items?.length || 1 // Use actual items count if available
+          })));
+        }
+      }
+    } catch (error) {
+      console.error('Error loading customer:', error);
+      showError('Error', 'Failed to load customer data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Sample orders data
   const sampleOrders: Order[] = [
@@ -156,15 +150,7 @@ const CustomerDetails: React.FC = () => {
     }
   ];
 
-  useEffect(() => {
-    // Find customer by ID
-    const foundCustomer = sampleCustomers.find(c => c.id === id);
-    if (foundCustomer) {
-      setCustomer(foundCustomer);
-      // For demo purposes, show all sample orders
-      setOrders(sampleOrders);
-    }
-  }, [id]);
+
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -215,6 +201,163 @@ const CustomerDetails: React.FC = () => {
     return matchesSearch && matchesPaymentStatus && matchesOrderStatus;
   });
 
+  if (loading) {
+    return (
+      <Layout>
+        {/* Page Header Skeleton */}
+        <div className="page-title-head d-flex align-items-center">
+          <div className="flex-grow-1">
+            <div className="skeleton-line" style={{ height: '24px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '300px' }}></div>
+          </div>
+          <div className="text-end">
+            <ol className="breadcrumb m-0 py-0">
+              <li className="breadcrumb-item"><a href="/">Home</a></li>
+              <li className="breadcrumb-item"><a href="/customers">Customers</a></li>
+              <li className="breadcrumb-item active">
+                <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '100px' }}></div>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        {/* Compact Customer Info Skeleton */}
+        <div className="card mb-4 border-0 shadow-sm">
+          <div className="card-body p-3">
+            <div className="row g-3 align-items-center">
+              {/* Avatar, Name and ID Skeleton - Left Side */}
+              <div className="col-md-3">
+                <div className="d-flex align-items-center">
+                  <div className="skeleton-circle me-3" style={{ 
+                    width: '80px', 
+                    height: '80px', 
+                    borderRadius: '50%', 
+                    backgroundColor: '#e9ecef'
+                  }}></div>
+                  <div>
+                    <div className="skeleton-line" style={{ height: '24px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '140px', marginBottom: '8px' }}></div>
+                    <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '120px', marginBottom: '8px' }}></div>
+                    <div className="skeleton-line" style={{ height: '20px', backgroundColor: '#e9ecef', borderRadius: '10px', width: '60px' }}></div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Contact Info Skeleton */}
+              <div className="col-md-3">
+                <div className="d-flex flex-column gap-2">
+                  <div className="d-flex align-items-center">
+                    <div className="skeleton-circle" style={{ width: '16px', height: '16px', backgroundColor: '#e9ecef', marginRight: '8px' }}></div>
+                    <div className="skeleton-line" style={{ height: '18px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '160px' }}></div>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <div className="skeleton-circle" style={{ width: '16px', height: '16px', backgroundColor: '#e9ecef', marginRight: '8px' }}></div>
+                    <div className="skeleton-line" style={{ height: '18px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '140px' }}></div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Join Date Skeleton */}
+              <div className="col-md-2">
+                <div className="text-center">
+                  <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '90px', margin: '0 auto 8px' }}></div>
+                  <div className="skeleton-line" style={{ height: '18px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '100px', margin: '0 auto' }}></div>
+                </div>
+              </div>
+              
+              {/* Statistics Skeleton */}
+              <div className="col-md-4">
+                <div className="row g-2 text-center">
+                  <div className="col-6">
+                    <div className="p-3 rounded" style={{ background: '#f8f9fa' }}>
+                      <div className="skeleton-line" style={{ height: '28px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '50px', margin: '0 auto 8px' }}></div>
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '60px', margin: '0 auto' }}></div>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="p-3 rounded" style={{ background: '#f8f9fa' }}>
+                      <div className="skeleton-line" style={{ height: '28px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '70px', margin: '0 auto 8px' }}></div>
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '60px', margin: '0 auto' }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Orders Table Skeleton */}
+        <div className="card">
+          <div className="card-header">
+            <div className="skeleton-line" style={{ height: '24px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '200px' }}></div>
+          </div>
+          <div className="card-body">
+            <div className="table-responsive">
+              <table className="table table-centered table-nowrap mb-0">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '80px' }}></div>
+                    </th>
+                    <th scope="col">
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '100px' }}></div>
+                    </th>
+                    <th scope="col">
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '120px' }}></div>
+                    </th>
+                    <th scope="col">
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '100px' }}></div>
+                    </th>
+                    <th scope="col">
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '80px' }}></div>
+                    </th>
+                    <th scope="col">
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '100px' }}></div>
+                    </th>
+                    <th scope="col">
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '80px' }}></div>
+                    </th>
+                    <th scope="col">
+                      <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '60px' }}></div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...Array(5)].map((_, index) => (
+                    <tr key={index}>
+                      <td>
+                        <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '80px' }}></div>
+                      </td>
+                      <td>
+                        <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '100px' }}></div>
+                      </td>
+                      <td>
+                        <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '120px' }}></div>
+                      </td>
+                      <td>
+                        <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '100px' }}></div>
+                      </td>
+                      <td>
+                        <div className="skeleton-line" style={{ height: '16px', backgroundColor: '#e9ecef', borderRadius: '4px', width: '80px' }}></div>
+                      </td>
+                      <td>
+                        <div className="skeleton-line" style={{ height: '20px', backgroundColor: '#e9ecef', borderRadius: '10px', width: '60px' }}></div>
+                      </td>
+                      <td>
+                        <div className="skeleton-line" style={{ height: '20px', backgroundColor: '#e9ecef', borderRadius: '10px', width: '60px' }}></div>
+                      </td>
+                      <td>
+                        <div className="skeleton-line" style={{ height: '20px', backgroundColor: '#e9ecef', borderRadius: '10px', width: '60px' }}></div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   if (!customer) {
     return (
       <Layout>
@@ -244,62 +387,82 @@ const CustomerDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* Customer Details Card */}
+      {/* Compact Customer Details Card */}
       <div className="row px-4">
         <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="card-title mb-0">Customer Information</h5>
-            </div>
-            <div className="card-body">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="d-flex align-items-center mb-3">
-                    <div className="avatar avatar-lg me-3">
-                      <div className="avatar-title bg-soft-primary text-primary fs-24 rounded">
+          <div className="card border-0 shadow-sm">
+            <div className="card-body p-3">
+              <div className="row g-3 align-items-center">
+                {/* Avatar, Name and ID - Left Side */}
+                <div className="col-md-3">
+                  <div className="d-flex align-items-center">
+                    <div className="avatar me-3" style={{ 
+                      width: '80px',
+                      height: '80px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <div className="text-white" style={{ fontSize: '32px' }}>
                         <i className="ti ti-user"></i>
                       </div>
                     </div>
                     <div>
-                      <h4 className="mb-1">{customer.name}</h4>
-                      <p className="text-muted mb-0">{customer.customerId}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">Email</label>
-                    <p className="mb-0">{customer.email}</p>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">Phone</label>
-                    <p className="mb-0">{customer.phone}</p>
-                  </div>
-                </div>
-                
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">Join Date</label>
-                    <p className="mb-0">{customer.joinDate}</p>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">Status</label>
-                    <div>
-                      <span className={`badge ${getStatusBadge(customer.status)} fs-sm`}>
-                        {customer.status}
+                      <h4 className="mb-1 fw-bold text-dark">{customer.name}</h4>
+                      <p className="text-muted mb-1 small">Customer ID: #{customer.id}</p>
+                      <span className={`badge ${getStatusBadge(customer.status)} fs-xs px-2 py-1`}>
+                        {customer.status === 'vip' ? '👑 VIP' : customer.status}
                       </span>
                     </div>
                   </div>
-                  
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">Total Orders</label>
-                    <p className="mb-0 fs-4 fw-bold">{customer.totalOrders}</p>
+                </div>
+                
+                {/* Contact Info */}
+                <div className="col-md-3">
+                  <div className="d-flex flex-column gap-2">
+                    <div className="d-flex align-items-center">
+                      <i className="ti ti-mail text-primary me-2" style={{ fontSize: '16px' }}></i>
+                      <span className="fw-medium text-dark" style={{ fontSize: '15px' }}>{customer.email}</span>
+                    </div>
+                    <div className="d-flex align-items-center">
+                      <i className="ti ti-phone text-success me-2" style={{ fontSize: '16px' }}></i>
+                      <span className="fw-medium text-dark" style={{ fontSize: '15px' }}>{customer.phone}</span>
+                    </div>
                   </div>
-                  
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">Total Spent</label>
-                    <p className="mb-0 fs-4 fw-bold text-success">{customer.totalSpent}</p>
+                </div>
+                
+                {/* Join Date */}
+                <div className="col-md-2">
+                  <div className="text-center">
+                    <div className="text-muted mb-1" style={{ fontSize: '14px' }}>Member Since</div>
+                    <div className="text-dark fw-medium" style={{ fontSize: '15px' }}>
+                      {new Date(customer.join_date).toLocaleDateString('en-US', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Statistics */}
+                <div className="col-md-4">
+                  <div className="row g-2 text-center">
+                    <div className="col-6">
+                      <div className="p-3 rounded" style={{ background: '#f8f9fa' }}>
+                        <div className="fw-bold text-primary" style={{ fontSize: '24px' }}>{customer.total_orders}</div>
+                        <div className="text-muted" style={{ fontSize: '14px' }}>Orders</div>
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div className="p-3 rounded" style={{ background: '#f8f9fa' }}>
+                        <div className="fw-bold text-success" style={{ fontSize: '24px' }}>${typeof customer.total_spent === 'number' ? customer.total_spent.toFixed(2) : customer.total_spent || '0.00'}</div>
+                        <div className="text-muted" style={{ fontSize: '14px' }}>Spent</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -430,9 +593,9 @@ const CustomerDetails: React.FC = () => {
                       </td>
                       <td>
                         <h5 className="fs-sm mb-0 fw-medium">
-                          <Link to={`/orders/new?edit=${order.id}`} className="link-reset text-decoration-none">
-                            {order.orderId}
-                          </Link>
+                                                      <Link to={`/orders/${order.id}`} className="link-reset text-decoration-none">
+                              {order.orderId}
+                            </Link>
                         </h5>
                       </td>
                       <td>{order.date} <small className="text-muted">{order.time}</small></td>

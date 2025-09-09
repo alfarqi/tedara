@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useMemo, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
+import { useUserStore } from '../../hooks/useUserStore';
+import { useAuth } from '../../contexts/AuthContext';
+import LanguageSwitcher from '../common/LanguageSwitcher';
 
 interface SidebarProps {
   size: 'default' | 'condensed' | 'compact' | 'offcanvas';
@@ -26,8 +29,47 @@ interface MenuChild {
   icon?: ReactNode;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
+const Sidebar: React.FC<SidebarProps> = memo(({ size, onToggle }) => {
   const location = useLocation();
+  const { user } = useAuth();
+  const { store, loading: storeLoading } = useUserStore();
+
+  // Check if user is on admin routes
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  // Memoize user display data to prevent unnecessary re-renders
+  const userDisplayData = useMemo(() => {
+    if (isAdminRoute) {
+      return {
+        displayName: 'Super Admin',
+        displayInitial: 'S',
+        hasStoreLogo: false,
+        isLoading: false
+      };
+    }
+
+    // For store owners, show loading state until we have definitive data
+    if (storeLoading) {
+      return {
+        displayName: 'Loading...',
+        displayInitial: null,
+        hasStoreLogo: false,
+        isLoading: true
+      };
+    }
+
+    // Once store data is loaded, use store name if available, otherwise user name
+    // But prioritize store name to avoid the switching effect
+    const finalName = store?.name || user?.name || 'Store';
+    const finalInitial = store?.name?.charAt(0)?.toUpperCase() || user?.name?.charAt(0)?.toUpperCase() || 'S';
+    
+    return {
+      displayName: finalName,
+      displayInitial: finalInitial,
+      hasStoreLogo: !!(store && store.logo),
+      isLoading: false
+    };
+  }, [isAdminRoute, store, storeLoading, user?.name]);
 
   // Helper function to check if a menu item is active
   const isActive = (href: string) => {
@@ -40,8 +82,6 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
     return location.pathname.startsWith(href);
   };
 
-  // Check if user is on admin routes
-  const isAdminRoute = location.pathname.startsWith('/admin');
 
 
 
@@ -176,18 +216,11 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
       active: isActive('/store-settings')
     },
     {
-      id: 'packages',
-      title: 'Packages',
-      icon: <i className="ti ti-package"></i>,
-      href: '/packages',
-      active: isActive('/packages')
-    },
-    {
-      id: 'payment',
-      title: 'Payment',
-      icon: <i className="ti ti-credit-card"></i>,
-      href: '/payment',
-      active: isActive('/payment')
+      id: 'theme-design',
+      title: 'Theme & Design',
+      icon: <i className="ti ti-palette"></i>,
+      href: '/theme-design',
+      active: isActive('/theme-design')
     }
   ];
 
@@ -216,15 +249,6 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
     }
   ];
 
-  const appearanceMenuItems: MenuItem[] = [
-    {
-      id: 'theme-design',
-      title: 'Theme & Design',
-      icon: <i className="ti ti-palette"></i>,
-      href: '/theme-design',
-      active: isActive('/theme-design')
-    }
-  ];
 
 
 
@@ -254,15 +278,21 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
   return (
     <div 
       className={getSidebarClasses()}
-      style={isAdminRoute ? { backgroundColor: '#0d333f' } : {}}
+      style={{ 
+        backgroundColor: '#f8f9fa', 
+        borderRight: '1px solid #e9ecef',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
     >
       {/* Brand Logo */}
       <Link to={isAdminRoute ? "/admin" : "/dashboard"} className="logo">
-        <span className="logo logo-light">
+        <span className="logo logo-light" style={{ display: 'none' }}>
           <span className="logo-lg"><img src="/assets/images/logo.png" alt="logo" /></span>
           <span className="logo-sm"><img src="/assets/images/logo-sm.png" alt="small logo" /></span>
         </span>
-        <span className="logo logo-dark">
+        <span className="logo logo-dark" style={{ display: 'block' }}>
           <span className="logo-lg"><img src="/assets/images/logo-black.png" alt="dark logo" /></span>
           <span className="logo-sm"><img src="/assets/images/logo-sm.png" alt="small logo" /></span>
         </span>
@@ -278,67 +308,107 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
         <i className="ti ti-x align-middle"></i>
       </button>
 
-      <div className="scrollbar">
-        {/* User */}
+      <div className="scrollbar" style={{ flex: 1, overflowY: 'auto' }}>
+        {/* Store Profile */}
         {shouldShowUser && (
-          <div className="sidenav-user">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <Link to="/profile" className="link-reset">
-                  <img src="/assets/images/users/user-2.jpg" alt="user-image" className="rounded-circle mb-2 avatar-md" />
-                  <span className="sidenav-user-name fw-bold">
-                    {isAdminRoute ? 'Super Admin' : 'Damian D.'}
-                  </span>
-                  <span className="fs-12 fw-semibold">
-                    {isAdminRoute ? 'Platform Administrator' : 'Art Director'}
-                  </span>
-                </Link>
-              </div>
-              <div>
-                <a className="dropdown-toggle drop-arrow-none link-reset sidenav-user-set-icon" data-bs-toggle="dropdown" data-bs-offset="0,12" href="#!" aria-haspopup="false" aria-expanded="false">
-                  <i className="ti ti-settings fs-24 align-middle ms-1"></i>
-                </a>
-                <div className="dropdown-menu">
-                  <div className="dropdown-header noti-title">
-                    <h6 className="text-overflow m-0">
-                      {isAdminRoute ? 'Welcome Super Admin!' : 'Welcome back!'}
-                    </h6>
+          <div className="sidenav-user" style={{ 
+            padding: '1.5rem 1rem',
+            borderTop: '1px solid #e9ecef',
+            borderBottom: '1px solid #e9ecef',
+            margin: 0,
+            borderRadius: 0
+          }}>
+            <div className="d-flex flex-column align-items-center text-center">
+              {/* Store Logo - centered */}
+              <Link to="/store-settings" className="link-reset mb-3">
+                {userDisplayData.hasStoreLogo ? (
+                  <img 
+                    src={store!.logo} 
+                    alt="store-logo" 
+                    className="rounded-circle" 
+                    style={{ 
+                      width: '64px', 
+                      height: '64px', 
+                      objectFit: 'cover',
+                      border: '2px solid #e9ecef'
+                    }} 
+                  />
+                ) : (
+                  <div 
+                    className="rounded-circle d-flex align-items-center justify-content-center bg-primary text-white"
+                    style={{ 
+                      width: '64px', 
+                      height: '64px', 
+                      fontSize: '1.5rem',
+                      fontWeight: 'bold',
+                      border: '2px solid #e9ecef'
+                    }}
+                  >
+                    {userDisplayData.isLoading ? (
+                      <div className="spinner-border spinner-border-sm" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    ) : (
+                      userDisplayData.displayInitial
+                    )}
                   </div>
-                  <Link to="/profile" className="dropdown-item">
-                    <i className="ti ti-user-circle me-2 fs-17 align-middle"></i>
-                    <span className="align-middle">Profile</span>
-                  </Link>
-                  <Link to="/notifications" className="dropdown-item">
-                    <i className="ti ti-bell-ringing me-2 fs-17 align-middle"></i>
-                    <span className="align-middle">Notifications</span>
-                  </Link>
-                  {!isAdminRoute && (
-                    <Link to="/wallet" className="dropdown-item">
-                      <i className="ti ti-credit-card me-2 fs-17 align-middle"></i>
-                      <span className="align-middle">Balance: <span className="fw-semibold">$985.25</span></span>
-                    </Link>
-                  )}
-                  <Link to="/settings" className="dropdown-item">
-                    <i className="ti ti-settings-2 me-2 fs-17 align-middle"></i>
-                    <span className="align-middle">Account Settings</span>
-                  </Link>
-                  <div className="dropdown-divider"></div>
-                  <Link to="/lock-screen" className="dropdown-item">
-                    <i className="ti ti-lock me-2 fs-17 align-middle"></i>
-                    <span className="align-middle">Lock Screen</span>
-                  </Link>
-                  <Link to="/logout" className="dropdown-item text-danger fw-semibold">
-                    <i className="ti ti-logout-2 me-2 fs-17 align-middle"></i>
-                    <span className="align-middle">Log Out</span>
-                  </Link>
-                </div>
+                )}
+              </Link>
+              
+              {/* Store Info - centered below avatar */}
+              <div className="w-100">
+                {/* Store Name */}
+                <Link to="/store-settings" className="link-reset">
+                  <div className="sidenav-user-name fw-bold" style={{ color: '#343a40', fontSize: '0.875rem', lineHeight: '1.2' }}>
+                    {userDisplayData.displayName}
+                  </div>
+                </Link>
+
+                {/* Store Link */}
+                {!isAdminRoute && user?.role === 'store_owner' ? (
+                  <div className="mt-0">
+                    <a
+                      href={store?.domain ? `https://${store.domain}.tedara.com` : '#'}
+                      target={store?.domain ? "_blank" : "_self"}
+                      rel="noopener noreferrer"
+                      className="text-decoration-none"
+                      style={{
+                        fontSize: '0.8rem',
+                        color: '#6c757d',
+                        opacity: store?.domain ? 1 : 0.6
+                      }}
+                      title={store?.domain ? "Visit Store" : "Store not set up yet"}
+                      onClick={!store?.domain ? (e) => e.preventDefault() : undefined}
+                    >
+                      {storeLoading ? 'Loading...' : (store?.domain ? `tedara.com/${store.domain}` : 'tedara.com/yourstore')}
+                    </a>
+                  </div>
+                ) : (
+                  // Show category for admin or when no store
+                  isAdminRoute ? (
+                    <div className="mt-0">
+                      <span className="fs-12 fw-semibold" style={{ color: '#6c757d' }}>
+                        Platform Administrator
+                      </span>
+                    </div>
+                  ) : (
+                    !storeLoading && store?.category && (
+                      <div className="mt-0">
+                        <span className="fs-12 fw-semibold" style={{ color: '#6c757d' }}>
+                          {store.category}
+                        </span>
+                      </div>
+                    )
+                  )
+                )}
               </div>
             </div>
           </div>
         )}
 
+
         {/* Main Menu Items */}
-        <ul className="side-nav">
+        <ul className="side-nav" style={{ paddingTop: '1rem' }}>
           {currentMenuItems.map((item) => (
             <li key={item.id} className={`side-nav-item ${item.active ? 'active' : ''}`}>
               <Link 
@@ -346,11 +416,15 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
                 className={`side-nav-link ${item.active ? 'active' : ''}`}
                 style={item.active ? {
                   borderLeft: `3px solid ${isAdminRoute ? '#1f9126' : '#6f42c1'}`,
-                  borderRadius: '0'
-                } : {}}
+                  borderRadius: '0',
+                  backgroundColor: 'rgba(108, 117, 125, 0.1)',
+                  color: '#495057'
+                } : {
+                  color: '#6c757d'
+                }}
               >
-                <span className="menu-icon">{item.icon}</span>
-                {shouldShowText && <span className="menu-text">{item.title}</span>}
+                <span className="menu-icon" style={{ color: item.active ? '#495057' : '#6c757d' }}>{item.icon}</span>
+                {shouldShowText && <span className="menu-text" style={{ color: item.active ? '#495057' : '#6c757d' }}>{item.title}</span>}
                 {shouldShowText && item.badge && <span className="badge bg-danger rounded-pill" style={{ fontSize: '0.7rem', padding: '0.35em 0.65em', fontWeight: 'normal' }}>{item.badge}</span>}
               </Link>
             </li>
@@ -359,7 +433,7 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
 
         {/* Settings Menu Items */}
         <ul className="side-nav settings-section">
-          {shouldShowText && <li className="side-nav-title">
+          {shouldShowText && <li className="side-nav-title" style={{ color: '#495057' }}>
             {isAdminRoute ? 'Admin Settings' : 'Settings'}
           </li>}
           
@@ -370,56 +444,52 @@ const Sidebar: React.FC<SidebarProps> = ({ size, onToggle }) => {
                 className={`side-nav-link ${item.active ? 'active' : ''}`}
                 style={item.active ? {
                   borderLeft: `3px solid ${isAdminRoute ? '#1f9126' : '#6f42c1'}`,
-                  borderRadius: '0'
-                } : {}}
+                  borderRadius: '0',
+                  backgroundColor: 'rgba(108, 117, 125, 0.1)',
+                  color: '#495057'
+                } : {
+                  color: '#6c757d'
+                }}
               >
-                <span className="menu-icon">{item.icon}</span>
-                {shouldShowText && <span className="menu-text">{item.title}</span>}
+                <span className="menu-icon" style={{ color: item.active ? '#495057' : '#6c757d' }}>{item.icon}</span>
+                {shouldShowText && <span className="menu-text" style={{ color: item.active ? '#495057' : '#6c757d' }}>{item.title}</span>}
                 {shouldShowText && item.badge && <span className="badge bg-danger rounded-pill" style={{ fontSize: '0.7rem', padding: '0.35em 0.65em', fontWeight: 'normal' }}>{item.badge}</span>}
               </Link>
             </li>
           ))}
         </ul>
 
-        {/* Appearance Menu Items - Only show for store routes, not admin */}
-        {!isAdminRoute && (
-          <ul className="side-nav appearance-section">
-            {shouldShowText && <li className="side-nav-title">Appearance</li>}
-            
-            {appearanceMenuItems.map((item) => (
-              <li key={item.id} className={`side-nav-item ${item.active ? 'active' : ''}`}>
-                <Link 
-                  to={item.href || '#'} 
-                  className={`side-nav-link ${item.active ? 'active' : ''}`}
-                  style={item.active ? {
-                    borderLeft: `3px solid ${isAdminRoute ? '#1f9126' : '#6f42c1'}`,
-                    borderRadius: '0'
-                  } : {}}
-                >
-                  <span className="menu-icon">{item.icon}</span>
-                  {shouldShowText && <span className="menu-text">{item.title}</span>}
-                  {shouldShowText && item.badge && <span className="badge bg-danger rounded-pill" style={{ fontSize: '0.7rem', padding: '0.35em 0.65em', fontWeight: 'normal' }}>{item.badge}</span>}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
 
         {/* Quick Switch Section for Admin */}
         {isAdminRoute && (
           <ul className="side-nav quick-switch-section">
-            {shouldShowText && <li className="side-nav-title">Quick Switch</li>}
+            {shouldShowText && <li className="side-nav-title" style={{ color: '#495057' }}>Quick Switch</li>}
             <li className="side-nav-item">
-              <Link to="/dashboard" className="side-nav-link">
-                <span className="menu-icon"><i className="ti ti-arrow-left"></i></span>
-                {shouldShowText && <span className="menu-text">Back to Store</span>}
+              <Link to="/dashboard" className="side-nav-link" style={{ color: '#6c757d' }}>
+                <span className="menu-icon" style={{ color: '#6c757d' }}><i className="ti ti-arrow-left"></i></span>
+                {shouldShowText && <span className="menu-text" style={{ color: '#6c757d' }}>Back to Store</span>}
               </Link>
             </li>
           </ul>
         )}
+
       </div>
+
+      {/* Language Switcher - Bottom Fixed */}
+      {shouldShowText && (
+        <div className="language-switcher-section" style={{ 
+          padding: '1rem', 
+          backgroundColor: '#f8f9fa',
+          borderTop: '1px solid #e9ecef',
+          flexShrink: 0
+        }}>
+          <LanguageSwitcher />
+        </div>
+      )}
     </div>
   );
-};
+});
+
+Sidebar.displayName = 'Sidebar';
 
 export default Sidebar;

@@ -5,8 +5,7 @@ import RegisterForm from './RegisterForm';
 interface TabbedAuthProps {
   onLoginSubmit: (data: { email: string; password: string; remember: boolean }) => void;
   onRegisterSubmit: (data: { 
-    firstName: string; 
-    lastName: string; 
+    fullName: string; 
     email: string; 
     phone: string;
     password: string; 
@@ -15,6 +14,8 @@ interface TabbedAuthProps {
   loginLoading?: boolean;
   registerLoading?: boolean;
   defaultTab?: 'login' | 'register';
+  error?: string | null;
+  onTabChange?: (tab: 'login' | 'register') => void;
 }
 
 const TabbedAuth: React.FC<TabbedAuthProps> = ({ 
@@ -22,7 +23,9 @@ const TabbedAuth: React.FC<TabbedAuthProps> = ({
   onRegisterSubmit, 
   loginLoading = false, 
   registerLoading = false,
-  defaultTab = 'login'
+  defaultTab = 'login',
+  error,
+  onTabChange
 }) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(defaultTab);
 
@@ -33,7 +36,10 @@ const TabbedAuth: React.FC<TabbedAuthProps> = ({
         <nav className="nav nav-pills nav-justified auth-nav-pills">
           <button
             className={`nav-link auth-tab ${activeTab === 'login' ? 'active' : ''}`}
-            onClick={() => setActiveTab('login')}
+            onClick={() => {
+              setActiveTab('login');
+              onTabChange?.('login');
+            }}
             type="button"
           >
             <i className="ti ti-login me-2"></i>
@@ -41,7 +47,10 @@ const TabbedAuth: React.FC<TabbedAuthProps> = ({
           </button>
           <button
             className={`nav-link auth-tab ${activeTab === 'register' ? 'active' : ''}`}
-            onClick={() => setActiveTab('register')}
+            onClick={() => {
+              setActiveTab('register');
+              onTabChange?.('register');
+            }}
             type="button"
           >
             <i className="ti ti-user-plus me-2"></i>
@@ -49,6 +58,14 @@ const TabbedAuth: React.FC<TabbedAuthProps> = ({
           </button>
         </nav>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="alert alert-danger mb-4" role="alert">
+          <i className="ti ti-alert-circle me-2"></i>
+          {error}
+        </div>
+      )}
 
       {/* Tab Content */}
       <div className="auth-tab-content">

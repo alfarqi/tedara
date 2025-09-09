@@ -199,6 +199,5 @@
   // Initialize world map (placeholder)
   window.initWorldMap = function() {
     // This is a placeholder - implement if needed
-    console.log('World map initialization called');
   };
 })();

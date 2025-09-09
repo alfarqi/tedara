@@ -8,8 +8,7 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
 
   const handleRegister = async (data: { 
-    firstName: string; 
-    lastName: string; 
+    fullName: string; 
     email: string; 
     phone: string;
     password: string; 

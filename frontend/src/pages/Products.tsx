@@ -4,9 +4,23 @@ import ProductGrid from '../components/products/ProductGrid';
 import ProductList from '../components/products/ProductList';
 import ProductModals from '../components/products/ProductModals';
 import ProductFilter from '../components/products/ProductFilter';
-import type { Product } from '../types/product';
+import ProductSkeleton from '../components/products/ProductSkeleton';
+import { productService, type Product as ApiProduct, type ProductStatistics } from '../services/productService';
+import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 
 const Products: React.FC = () => {
+  const { token } = useAuth();
+  const { showError, showSuccess } = useToast();
+  
+  // API State
+  const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [statistics, setStatistics] = useState<ProductStatistics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // UI State
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isListView, setIsListView] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -22,6 +36,60 @@ const Products: React.FC = () => {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [youtubeLink, setYoutubeLink] = useState('');
   const [showProductTypeDropdown, setShowProductTypeDropdown] = useState(false);
+
+  // Load products and statistics
+  useEffect(() => {
+    if (token) {
+      loadProducts();
+      loadStatistics();
+    }
+  }, [token]);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await productService.getProducts({}, token);
+      
+      if (response.data && Array.isArray(response.data)) {
+        const formattedProducts = response.data.map((product: ApiProduct) => 
+          productService.formatProductForDisplay(product)
+        );
+        setProducts(formattedProducts);
+        
+        // Extract unique categories
+        const uniqueCategories = [...new Set(
+          response.data
+            .map((product: ApiProduct) => product.category?.name)
+            .filter(Boolean)
+        )];
+        setCategories(uniqueCategories);
+      } else {
+        console.log('Unexpected response format:', response);
+        setProducts([]);
+        setCategories([]);
+      }
+    } catch (err) {
+      console.error('Error loading products:', err);
+      setError('Failed to load products');
+      showError('Error', 'Failed to load products');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadStatistics = async () => {
+    try {
+      const response = await productService.getStatistics(token);
+      if (response.data) {
+        setStatistics(response.data);
+      }
+    } catch (err) {
+      console.error('Error loading statistics:', err);
+      // Don't show error for statistics as it's not critical
+    }
+  };
   
 
 
@@ -64,122 +132,7 @@ const Products: React.FC = () => {
     ]
   });
 
-  const [categories, setCategories] = useState([
-    'Furniture',
-    'Electronics', 
-    'Fashion',
-    'Home & Garden',
-    'Sports',
-    'Books'
-  ]);
 
-  // Product data for all items
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      productName: 'Modern Minimalist Fabric Sofa Single Seater',
-      basePrice: '764.15',
-      originalPrice: '899.00',
-      stock: '12',
-      category: 'Furniture',
-      image: '/assets/images/products/1.png',
-      rating: 4.5,
-      reviews: 45,
-      discount: '15% OFF',
-      discountType: 'percentage'
-    },
-    {
-      id: 2,
-      productName: 'Funky Streetwear Sneakers - Neon Splash',
-      basePrice: '44.99',
-      originalPrice: '59.99',
-      stock: '8',
-      category: 'Fashion',
-      image: '/assets/images/products/2.png',
-      rating: 3.0,
-      reviews: 32,
-      discount: '25% OFF',
-      discountType: 'percentage'
-    },
-    {
-      id: 3,
-      productName: 'Noise Canceling Wireless Earbuds - Black Edition',
-      basePrice: '42.49',
-      originalPrice: '49.99',
-      stock: '15',
-      category: 'Electronics',
-      image: '/assets/images/products/3.png',
-      rating: 3.0,
-      reviews: 58,
-      discount: '15% OFF',
-      discountType: 'percentage'
-    },
-    {
-      id: 4,
-      productName: 'Minimalist Solid Wood Dining Chair',
-      basePrice: '96.00',
-      originalPrice: '120.00',
-      stock: '6',
-      category: 'Furniture',
-      image: '/assets/images/products/4.png',
-      rating: 4.0,
-      reviews: 46,
-      discount: '20% OFF',
-      discountType: 'percentage'
-    },
-    {
-      id: 5,
-      productName: 'Modern Black Minimalist Wall Clock',
-      basePrice: '39.99',
-      originalPrice: '49.99',
-      stock: '10',
-      category: 'Home & Garden',
-      image: '/assets/images/products/5.png',
-      rating: 4.0,
-      reviews: 62,
-      discount: '20% OFF',
-      discountType: 'percentage'
-    },
-    {
-      id: 6,
-      productName: 'Elegant Brown Wooden Chair',
-      basePrice: '96.00',
-      originalPrice: '120.00',
-      stock: '7',
-      category: 'Furniture',
-      image: '/assets/images/products/6.png',
-      rating: 4.0,
-      reviews: 48,
-      discount: '20% OFF',
-      discountType: 'percentage'
-    },
-    {
-      id: 7,
-      productName: 'Apple iMac 24" Retina 4.5K Display',
-      basePrice: '1039.20',
-      originalPrice: '1299.00',
-      stock: '3',
-      category: 'Electronics',
-      image: '/assets/images/products/7.png',
-      rating: 4.5,
-      reviews: 65,
-      discount: '20% OFF',
-      discountType: 'percentage'
-    },
-    {
-      id: 8,
-      productName: 'Coolest Ergonomic Lounge Chair',
-      basePrice: '256.00',
-      originalPrice: '320.00',
-      stock: '5',
-      category: 'Furniture',
-      image: '/assets/images/products/8.png',
-      rating: 4.0,
-      reviews: 52,
-      discount: '20% OFF',
-      discountType: 'percentage'
-    }
-  ]);
 
   // Product types for dropdown
   const productTypes = [
@@ -311,9 +264,52 @@ const Products: React.FC = () => {
     }
   };
 
-  const handleSubmit = (productId: number) => {
-    // Handle form submission for individual product
-    console.log('Saving product:', productId);
+  const handleSubmit = async (productId: number) => {
+    try {
+      console.log('handleSubmit called with productId:', productId);
+      const product = products.find(p => p.id === productId);
+      console.log('Found product:', product);
+      if (!product) return;
+
+      // Check if product has required fields
+      if (!product.productName || !product.basePrice) {
+        showError('Error', 'Please fill in product name and price');
+        return;
+      }
+
+      const productData = {
+        name: product.productName,
+        price: parseFloat(product.basePrice),
+        original_price: parseFloat(product.originalPrice || product.basePrice),
+        stock: parseInt(product.stock) || 0,
+        category_id: 1, // Default category, could be enhanced
+        status: 'active',
+        brand: product.brand || '',
+        weight: product.weight || 0,
+        dimensions: product.dimensions || '',
+        description: product.description || ''
+      };
+
+      // Check if this is an existing product (has a valid ID and is not a placeholder)
+      console.log('Decision logic - productId:', productId, 'productName:', product.productName, 'basePrice:', product.basePrice);
+      if (productId && productId > 0 && product.productName && product.basePrice) {
+        // Update existing product
+        console.log('Updating existing product with ID:', productId);
+        await productService.updateProduct(productId, productData, token);
+        showSuccess('Success', 'Product updated successfully');
+      } else {
+        // Create new product
+        console.log('Creating new product');
+        await productService.createProduct(productData, token);
+        showSuccess('Success', 'Product created successfully');
+      }
+
+      // Reload products
+      await loadProducts();
+    } catch (err) {
+      console.error('Error saving product:', err);
+      showError('Error', 'Failed to save product');
+    }
   };
 
   const handleDetailsSubmit = (e: React.FormEvent) => {
@@ -379,11 +375,39 @@ const Products: React.FC = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (productToDelete) {
-      setProducts(prev => prev.filter(p => p.id !== productToDelete.id));
-      setShowDeleteModal(false);
-      setProductToDelete(null);
+      try {
+        // Check if this is an unsaved product (new product that hasn't been saved to DB yet)
+        // An unsaved product has 'NEW' discount and empty required fields
+        const isUnsavedProduct = productToDelete.discount === 'NEW' && 
+                                (!productToDelete.productName || !productToDelete.basePrice);
+        
+        console.log('Delete logic - isUnsavedProduct:', isUnsavedProduct, 'product:', productToDelete);
+        
+        if (isUnsavedProduct) {
+          // For unsaved products, just remove from local state
+          console.log('Removing unsaved product from local state');
+          setProducts(prevProducts => prevProducts.filter(p => p.id !== productToDelete.id));
+          showSuccess('Success', 'Unsaved product removed');
+        } else {
+          // For saved products, delete from database
+          console.log('Deleting saved product from database');
+          await productService.deleteProduct(productToDelete.id, token);
+          showSuccess('Success', 'Product deleted successfully');
+        }
+        
+        setShowDeleteModal(false);
+        setProductToDelete(null);
+        
+        // Only reload products if we deleted from database
+        if (!isUnsavedProduct) {
+          await loadProducts();
+        }
+      } catch (err) {
+        console.error('Error deleting product:', err);
+        showError('Error', 'Failed to delete product');
+      }
     }
   };
 
@@ -516,24 +540,23 @@ const Products: React.FC = () => {
 
   return (
     <Layout>
-      <div className="container-fluid">
-        {/* Page Title */}
-        <div className="page-title-head d-flex align-items-center">
-          <div className="flex-grow-1">
-            <h4 className="fs-sm text-uppercase fw-bold m-0">Products Grid</h4>
-          </div>
-
-          <div className="text-end">
-            <ol className="breadcrumb m-0 py-0">
-              <li className="breadcrumb-item"><a href="javascript: void(0);">Inspinia</a></li>
-              <li className="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
-              <li className="breadcrumb-item active">Products Grid</li>
-            </ol>
-          </div>
+      {/* Page Title */}
+      <div className="page-title-head d-flex align-items-center">
+        <div className="flex-grow-1">
+          <h4 className="fs-sm text-uppercase fw-bold m-0">Products Grid</h4>
         </div>
 
-        {/* Header Section */}
-        <div className="row mb-2 px-4">
+        <div className="text-end">
+          <ol className="breadcrumb m-0 py-0">
+            <li className="breadcrumb-item"><a href="javascript: void(0);">Inspinia</a></li>
+            <li className="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
+            <li className="breadcrumb-item active">Products Grid</li>
+          </ol>
+        </div>
+      </div>
+
+      {/* Header Section */}
+      <div className="row mb-2 px-4">
           <div className="col-lg-12">
             <form className="bg-light-subtle rounded border p-3">
                              <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -636,7 +659,20 @@ const Products: React.FC = () => {
         <div className="row g-2 px-4">
           {/* Products Grid/List */}
           <div className="col-12">
-            {!isListView ? (
+            {loading ? (
+              <ProductSkeleton view={isListView ? 'list' : 'grid'} count={8} />
+            ) : error ? (
+              <div className="text-center" style={{ padding: '4rem 2rem' }}>
+                <div className="mb-4">
+                  <i className="ti ti-alert-circle text-danger" style={{ fontSize: '4rem' }}></i>
+                </div>
+                <h4 className="text-danger mb-3">Failed to load products</h4>
+                <p className="text-muted mb-4">{error}</p>
+                <button className="btn btn-primary" onClick={loadProducts}>
+                  <i className="ti ti-refresh me-2"></i>Try Again
+                </button>
+              </div>
+            ) : !isListView ? (
               <ProductGrid
                 products={products}
                 categories={categories}
@@ -679,7 +715,6 @@ const Products: React.FC = () => {
             </ul>
           </div>
         </div>
-      </div>
 
       {/* Filter Component */}
       <ProductFilter isFilterOpen={isFilterOpen} toggleFilter={toggleFilter} />

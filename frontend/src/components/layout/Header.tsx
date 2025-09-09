@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import LanguageSwitcher from '../common/LanguageSwitcher';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface HeaderProps {
   onSidebarToggle: () => void;
@@ -7,11 +7,67 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-
+  const [searchCategory, setSearchCategory] = useState('products');
+  const [searchQuery, setSearchQuery] = useState('');
+  const { user, logout } = useAuth();
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      console.log(`Searching for "${searchQuery}" in ${searchCategory}`);
+      // TODO: Implement actual search functionality
+      // This would typically navigate to a search results page or filter current data
+    }
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSearchCategory(category);
+  };
+
+  const getSearchPlaceholder = () => {
+    switch (searchCategory) {
+      case 'products':
+        return 'Search by product name, category name, product description';
+      case 'orders':
+        return 'Search orders...';
+      case 'customers':
+        return 'Search customers...';
+      default:
+        return 'Search by product name, category name, product description';
+    }
+  };
+
+  const getCategoryDisplayName = () => {
+    switch (searchCategory) {
+      case 'products':
+        return 'Products';
+      case 'orders':
+        return 'Orders';
+      case 'customers':
+        return 'Customers';
+      default:
+        return 'Products';
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      console.log('Logout button clicked');
+      await logout();
+      // The logout function in AuthContext will handle clearing the token and redirecting
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
 
   return (
     <header className="app-topbar">
@@ -50,85 +106,116 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
             <i className="ti ti-menu-4 fs-22"></i>
           </button>
 
-          {/* Search */}
+          {/* Search with Category Dropdown */}
           <div className="app-search d-none d-xl-flex">
-            <input type="search" className="form-control topbar-search" name="search" placeholder="Search for something..." />
-            <i data-lucide="search" className="app-search-icon text-muted"></i>
+            <form onSubmit={handleSearch} className="d-flex align-items-stretch">
+              {/* Search Input */}
+              <div className="position-relative">
+                <input 
+                  type="search" 
+                  className="form-control topbar-search rounded-0 rounded-start" 
+                  name="search" 
+                  placeholder={getSearchPlaceholder()}
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  style={{ 
+                    minWidth: '250px',
+                    height: '38px',
+                    paddingLeft: '0.75rem'
+                  }}
+                />
+              </div>
+
+              {/* Separator */}
+              <div 
+                style={{
+                  width: '1px',
+                  height: '38px',
+                  backgroundColor: '#dee2e6',
+                  flexShrink: 0
+                }}
+              ></div>
+
+              {/* Search Category Dropdown */}
+              <div className="dropdown">
+                <button 
+                  className="btn btn-outline-secondary dropdown-toggle rounded-0" 
+                  type="button" 
+                  data-bs-toggle="dropdown" 
+                  aria-expanded="false"
+                  style={{ 
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    minWidth: '120px',
+                    fontSize: '0.875rem',
+                    height: '38px',
+                    paddingTop: '0.4rem',
+                    paddingBottom: '0.4rem'
+                  }}
+                >
+                  {getCategoryDisplayName()}
+                </button>
+                <ul className="dropdown-menu">
+                  <li>
+                    <button 
+                      className={`dropdown-item ${searchCategory === 'products' ? 'active' : ''}`}
+                      type="button"
+                      onClick={() => handleCategoryChange('products')}
+                    >
+                      <i className="ti ti-package me-2"></i>
+                      Products
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      className={`dropdown-item ${searchCategory === 'orders' ? 'active' : ''}`}
+                      type="button"
+                      onClick={() => handleCategoryChange('orders')}
+                    >
+                      <i className="ti ti-shopping-cart me-2"></i>
+                      Orders
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      className={`dropdown-item ${searchCategory === 'customers' ? 'active' : ''}`}
+                      type="button"
+                      onClick={() => handleCategoryChange('customers')}
+                    >
+                      <i className="ti ti-users me-2"></i>
+                      Customers
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Search Button */}
+              <button 
+                type="submit"
+                className="btn btn-primary rounded-0 rounded-end"
+                style={{ 
+                  borderLeft: 'none',
+                  height: '38px',
+                  minWidth: '50px',
+                  paddingLeft: '0.75rem',
+                  paddingRight: '0.75rem'
+                }}
+              >
+                <i data-lucide="search" className="fs-16"></i>
+              </button>
+            </form>
           </div>
 
-          {/* Mega Menu Dropdown */}
-          <div className="topbar-item d-none d-md-flex">
-            <div className="dropdown">
-              <button className="topbar-link btn fw-medium btn-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,16" type="button" aria-haspopup="false" aria-expanded="false">
-                Boom Boom! 😍<i className="ti ti-chevron-down ms-1"></i>
-              </button>
-              <div className="dropdown-menu dropdown-menu-xxl p-0">
-                <div className="h-100" style={{ maxHeight: '380px' }} data-simplebar>
-                  <div className="row g-0">
-                    <div className="col-12">
-                      <div className="p-3 text-center bg-light bg-opacity-50">
-                        <h4 className="mb-0 fs-lg fw-semibold">Welcome to <span className="text-primary">INSPINIA+</span> Admin Theme.</h4>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="d-flex align-items-center gap-2">
-          {/* Language Switcher */}
-          <div className="topbar-item">
-            <LanguageSwitcher />
-          </div>
-
-          {/* Messages Dropdown */}
+          {/* Notifications Dropdown */}
           <div className="topbar-item">
             <div className="dropdown">
-                             <button className="topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,22" type="button" data-bs-auto-close="outside" aria-haspopup="false" aria-expanded="false">
-                 <i data-lucide="mails" className="fs-xxl"></i>
-                 <span className="badge text-bg-success badge-circle topbar-badge">7</span>
-               </button>
-              <div className="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg">
-                <div className="px-3 py-2 border-bottom">
-                  <div className="row align-items-center">
-                    <div className="col">
-                      <h6 className="m-0 fs-md fw-semibold">Messages</h6>
-                    </div>
-                    <div className="col text-end">
-                      <a href="#!" className="badge badge-soft-success badge-label py-1">09 Notifications</a>
-                    </div>
-                  </div>
-                </div>
-                <div style={{ maxHeight: '300px' }} data-simplebar>
-                  <div className="dropdown-item notification-item py-2 text-wrap active">
-                    <span className="d-flex gap-3">
-                      <span className="flex-shrink-0">
-                        <img src="/assets/images/users/user-1.jpg" className="avatar-md rounded-circle" alt="User Avatar" />
-                      </span>
-                      <span className="flex-grow-1 text-muted">
-                        <span className="fw-medium text-body">Liam Carter</span> uploaded a new document
-                        <br />
-                        <span className="fs-xs">5 minutes ago</span>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                <a href="javascript:void(0);" className="dropdown-item text-center text-reset text-decoration-underline link-offset-2 fw-bold notify-item border-top border-light py-2">
-                  Read All Messages
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Notification Dropdown */}
-          <div className="topbar-item">
-            <div className="dropdown">
-                             <button className="topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,22" type="button" data-bs-auto-close="outside" aria-haspopup="false" aria-expanded="false">
-                 <i data-lucide="bell" className="fs-xxl"></i>
-                 <span className="badge badge-square text-bg-warning topbar-badge">14</span>
-               </button>
+              <button className="topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,22" type="button" data-bs-auto-close="outside" aria-haspopup="false" aria-expanded="false">
+                <i data-lucide="bell" className="fs-xxl"></i>
+                <span className="badge text-bg-danger badge-circle topbar-badge">3</span>
+              </button>
               <div className="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg">
                 <div className="px-3 py-2 border-bottom">
                   <div className="row align-items-center">
@@ -136,17 +223,43 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
                       <h6 className="m-0 fs-md fw-semibold">Notifications</h6>
                     </div>
                     <div className="col text-end">
-                      <a href="#!" className="badge text-bg-light badge-label py-1">14 Alerts</a>
+                      <a href="#!" className="badge badge-soft-danger badge-label py-1">03 Notifications</a>
                     </div>
                   </div>
                 </div>
-                <div style={{ maxHeight: '300px' }} data-simplebar>
-                  <div className="dropdown-item notification-item py-2 text-wrap">
-                    <span className="d-flex gap-2">
-                      <span className="avatar-md flex-shrink-0">
-                                                 <span className="avatar-title bg-danger-subtle text-danger rounded fs-22">
-                           <i data-lucide="server-crash" className="fs-xl fill-danger"></i>
-                         </span>
+                <div className="px-2" style={{ maxHeight: '300px' }} data-simplebar>
+                  <a href="#!" className="dropdown-item py-2">
+                    <span className="d-flex">
+                      <span className="flex-shrink-0">
+                        <i className="ti ti-device-laptop fs-xxl text-primary"></i>
+                      </span>
+                      <span className="flex-grow-1 text-muted">
+                        <span className="fw-medium text-body">Your order is placed</span>
+                        <br />
+                        <span className="fs-xs">If several languages coalesce the grammar</span>
+                        <br />
+                        <span className="fs-xs">3 min ago</span>
+                      </span>
+                    </span>
+                  </a>
+                  <a href="#!" className="dropdown-item py-2">
+                    <span className="d-flex">
+                      <span className="flex-shrink-0">
+                        <i className="ti ti-user-check fs-xxl text-success"></i>
+                      </span>
+                      <span className="flex-grow-1 text-muted">
+                        <span className="fw-medium text-body">Your item is shipped</span>
+                        <br />
+                        <span className="fs-xs">If several languages coalesce the grammar</span>
+                        <br />
+                        <span className="fs-xs">1 hour ago</span>
+                      </span>
+                    </span>
+                  </a>
+                  <a href="#!" className="dropdown-item py-2">
+                    <span className="d-flex">
+                      <span className="flex-shrink-0">
+                        <i className="ti ti-alert-triangle fs-xxl text-danger"></i>
                       </span>
                       <span className="flex-grow-1 text-muted">
                         <span className="fw-medium text-body">Critical alert: Server crash detected</span>
@@ -154,7 +267,7 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
                         <span className="fs-xs">30 minutes ago</span>
                       </span>
                     </span>
-                  </div>
+                  </a>
                 </div>
                 <a href="javascript:void(0);" className="dropdown-item text-center text-reset text-decoration-underline link-offset-2 fw-bold notify-item border-top border-light py-2">
                   View All Alerts
@@ -163,12 +276,6 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
             </div>
           </div>
 
-          {/* Button Trigger Customizer Offcanvas */}
-          <div className="topbar-item d-none d-sm-flex">
-                         <button className="topbar-link" data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas" type="button">
-               <i data-lucide="settings" className="fs-xxl"></i>
-             </button>
-          </div>
 
           {/* Light/Dark Mode Button */}
           <div className="topbar-item d-none d-sm-flex">
@@ -180,17 +287,25 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
           {/* User Dropdown */}
           <div className="topbar-item nav-user">
             <div className="dropdown">
-              <a className="topbar-link dropdown-toggle drop-arrow-none px-2" data-bs-toggle="dropdown" data-bs-offset="0,16" href="#!" aria-haspopup="false" aria-expanded="false">
+              <button 
+                className="topbar-link dropdown-toggle drop-arrow-none px-2" 
+                data-bs-toggle="dropdown" 
+                data-bs-offset="0,16" 
+                type="button"
+                aria-haspopup="true" 
+                aria-expanded="false"
+                style={{ border: 'none', background: 'transparent' }}
+              >
                 <img src="/assets/images/users/user-2.jpg" width="32" className="rounded-circle me-lg-2 d-flex" alt="user-image" />
                 <div className="d-lg-flex align-items-center gap-1 d-none">
-                  <h5 className="my-0">Damian D.</h5>
+                  <h5 className="my-0">{user?.name || 'User'}</h5>
                   <i className="ti ti-chevron-down align-middle"></i>
                 </div>
-              </a>
-              <div className="dropdown-menu dropdown-menu-end">
+              </button>
+              <div className="dropdown-menu dropdown-menu-end" style={{ zIndex: 9999 }}>
                 {/* Header */}
                 <div className="dropdown-header noti-title">
-                  <h6 className="text-overflow m-0">Welcome back!</h6>
+                  <h6 className="text-overflow m-0">Welcome back, {user?.name || 'User'}!</h6>
                 </div>
 
                 {/* My Profile */}
@@ -233,10 +348,10 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
                 </a>
 
                 {/* Logout */}
-                <a href="/logout" className="dropdown-item text-danger fw-semibold">
+                <button onClick={handleLogout} className="dropdown-item text-danger fw-semibold border-0 bg-transparent w-100 text-start">
                   <i className="ti ti-logout-2 me-2 fs-17 align-middle"></i>
                   <span className="align-middle">Log Out</span>
-                </a>
+                </button>
               </div>
             </div>
           </div>

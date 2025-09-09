@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
+import { orderService } from '../services/orderService';
+import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 
 interface Product {
   id: string;
@@ -41,6 +44,8 @@ const AddOrder: React.FC = () => {
   const [searchParams] = useSearchParams();
   const editOrderId = searchParams.get('edit');
   const isEditMode = !!editOrderId;
+  const { token } = useAuth();
+  const { showError, showSuccess } = useToast();
 
   // Sample order data for edit mode
   const sampleOrders = {
@@ -190,7 +195,10 @@ const AddOrder: React.FC = () => {
 
   // Load order data when in edit mode
   useEffect(() => {
-    if (isEditMode && editOrderId && sampleOrders[editOrderId as keyof typeof sampleOrders]) {
+    if (isEditMode && editOrderId && token) {
+      loadOrderForEdit();
+    } else if (isEditMode && editOrderId && sampleOrders[editOrderId as keyof typeof sampleOrders]) {
+      // Fallback to sample data if no token (for demo purposes)
       const orderData = sampleOrders[editOrderId as keyof typeof sampleOrders];
       setOrderForm(orderData);
       
@@ -220,7 +228,92 @@ const AddOrder: React.FC = () => {
         setCustomerSearchTerm(orderData.customer.name);
       }
     }
-  }, [isEditMode, editOrderId]);
+  }, [isEditMode, editOrderId, token]);
+
+  const loadOrderForEdit = async () => {
+    try {
+      if (!editOrderId || !token) return;
+      
+      const response = await orderService.getOrder(parseInt(editOrderId), token);
+      if (response.data) {
+        const order = response.data;
+        console.log('Loading order for edit:', order);
+        
+        // Convert API order data to form format
+        const orderData: OrderForm = {
+          orderId: order.order_id,
+          orderDate: new Date(order.created_at).toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }) + ' | ' + new Date(order.created_at).toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+          }),
+          orderStatus: order.status || 'Processing',
+          customer: {
+            name: order.customer?.name || '',
+            email: order.customer?.email || '',
+            phone: order.customer?.phone || '',
+            address: order.shipping_address?.street || ''
+          },
+          shipping: {
+            method: 'Standard Shipping', // Default, could be enhanced
+            address: order.shipping_address?.street || '',
+            cost: parseFloat(order.shipping_cost || '0')
+          },
+          payment: {
+            method: order.payment_method || 'Credit Card',
+            status: order.payment_status || 'Pending'
+          },
+          products: order.order_items?.map((item: any) => ({
+            id: item.id?.toString() || '',
+            name: item.product?.name || 'Unknown Product',
+            quantity: item.quantity || 0,
+            unitWeight: 0, // Could be enhanced
+            price: parseFloat(item.price || item.unit_price || '0'),
+            totalWeight: 0, // Could be enhanced
+            total: parseFloat(item.total || item.total_price || '0')
+          })) || [],
+          tags: [] // Could be enhanced
+        };
+        
+        setOrderForm(orderData);
+        
+        // Set modal states based on loaded data
+        if (orderData.shipping.method !== 'No shipping / delivery required') {
+          setShippingRequirement('yes');
+          // Parse address if available
+          if (orderData.shipping.address) {
+            const addressParts = orderData.shipping.address.split(', ');
+            setShippingAddress({
+              street: addressParts[0] || '',
+              neighborhood: addressParts[1] || '',
+              city: addressParts[2] || '',
+              country: addressParts[3] || '',
+              houseDescription: '',
+              postalCode: ''
+            });
+          }
+        }
+        
+        if (orderData.payment.method) {
+          setPaymentMethod(orderData.payment.method);
+          setPaymentStatus(orderData.payment.status);
+        }
+        
+        if (orderData.customer.name) {
+          setCustomerSearchTerm(orderData.customer.name);
+        }
+        
+        showSuccess('Success', 'Order loaded for editing');
+      }
+    } catch (error) {
+      console.error('Error loading order for edit:', error);
+      showError('Error', 'Failed to load order for editing');
+    }
+  };
 
   const calculateOrderSummary = () => {
     const subtotal = orderForm.products.reduce((sum, product) => sum + product.total, 0);

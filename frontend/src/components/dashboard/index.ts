@@ -8,3 +8,4 @@ export { default as OrdersChartCard } from './OrdersChartCard';
 export { default as ProductInventoryTable } from './ProductInventoryTable';
 export { default as RecentOrdersTable } from './RecentOrdersTable';
 export { default as TransactionsTable } from './TransactionsTable';
+export { default as OnboardingProgressCard } from './OnboardingProgressCard';
