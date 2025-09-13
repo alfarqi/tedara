@@ -1,0 +1,114 @@
+[
+  {
+    "id": 1,
+    "name": "Manama Branch",
+    "slug": "manama",
+    "address": "Block 123, Road 456, Manama, Bahrain",
+    "phone": "+973 1234 5678",
+    "email": "manama@yummyliciousbh.com",
+    "coordinates": {
+      "lat": 26.2285,
+      "lng": 50.5860
+    },
+    "hours": {
+      "monday": "10:00 AM - 11:00 PM",
+      "tuesday": "10:00 AM - 11:00 PM",
+      "wednesday": "10:00 AM - 11:00 PM",
+      "thursday": "10:00 AM - 11:00 PM",
+      "friday": "10:00 AM - 12:00 AM",
+      "saturday": "10:00 AM - 12:00 AM",
+      "sunday": "10:00 AM - 11:00 PM"
+    },
+    "services": ["dine-in", "takeaway", "delivery"],
+    "deliveryRadius": 15,
+    "deliveryFee": 1.500,
+    "minimumOrder": 5.000,
+    "estimatedDeliveryTime": "30-45 mins",
+    "estimatedPickupTime": "15-20 mins",
+    "featured": true
+  },
+  {
+    "id": 2,
+    "name": "Riffa Branch",
+    "slug": "riffa",
+    "address": "Block 789, Road 101, Riffa, Bahrain",
+    "phone": "+973 2345 6789",
+    "email": "riffa@yummyliciousbh.com",
+    "coordinates": {
+      "lat": 26.1300,
+      "lng": 50.5550
+    },
+    "hours": {
+      "monday": "10:00 AM - 11:00 PM",
+      "tuesday": "10:00 AM - 11:00 PM",
+      "wednesday": "10:00 AM - 11:00 PM",
+      "thursday": "10:00 AM - 11:00 PM",
+      "friday": "10:00 AM - 12:00 AM",
+      "saturday": "10:00 AM - 12:00 AM",
+      "sunday": "10:00 AM - 11:00 PM"
+    },
+    "services": ["dine-in", "takeaway", "delivery"],
+    "deliveryRadius": 12,
+    "deliveryFee": 1.250,
+    "minimumOrder": 4.500,
+    "estimatedDeliveryTime": "25-40 mins",
+    "estimatedPickupTime": "15-20 mins",
+    "featured": false
+  },
+  {
+    "id": 3,
+    "name": "Muharraq Branch",
+    "slug": "muharraq",
+    "address": "Block 456, Road 789, Muharraq, Bahrain",
+    "phone": "+973 3456 7890",
+    "email": "muharraq@yummyliciousbh.com",
+    "coordinates": {
+      "lat": 26.2574,
+      "lng": 50.6119
+    },
+    "hours": {
+      "monday": "10:00 AM - 11:00 PM",
+      "tuesday": "10:00 AM - 11:00 PM",
+      "wednesday": "10:00 AM - 11:00 PM",
+      "thursday": "10:00 AM - 11:00 PM",
+      "friday": "10:00 AM - 12:00 AM",
+      "saturday": "10:00 AM - 12:00 AM",
+      "sunday": "10:00 AM - 11:00 PM"
+    },
+    "services": ["dine-in", "takeaway", "delivery"],
+    "deliveryRadius": 10,
+    "deliveryFee": 1.000,
+    "minimumOrder": 4.000,
+    "estimatedDeliveryTime": "20-35 mins",
+    "estimatedPickupTime": "15-20 mins",
+    "featured": false
+  },
+  {
+    "id": 4,
+    "name": "Seef Branch",
+    "slug": "seef",
+    "address": "Block 321, Road 654, Seef, Bahrain",
+    "phone": "+973 4567 8901",
+    "email": "seef@yummyliciousbh.com",
+    "coordinates": {
+      "lat": 26.0667,
+      "lng": 50.5500
+    },
+    "hours": {
+      "monday": "10:00 AM - 11:00 PM",
+      "tuesday": "10:00 AM - 11:00 PM",
+      "wednesday": "10:00 AM - 11:00 PM",
+      "thursday": "10:00 AM - 11:00 PM",
+      "friday": "10:00 AM - 12:00 AM",
+      "saturday": "10:00 AM - 12:00 AM",
+      "sunday": "10:00 AM - 11:00 PM"
+    },
+    "services": ["dine-in", "takeaway", "delivery"],
+    "deliveryRadius": 18,
+    "deliveryFee": 2.000,
+    "minimumOrder": 6.000,
+    "estimatedDeliveryTime": "35-50 mins",
+    "estimatedPickupTime": "15-20 mins",
+    "featured": true
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "Burgers",
+    "slug": "burgers",
+    "description": "Delicious burgers made with fresh ingredients",
+    "image": "/images/categories/burgers.jpg",
+    "icon": "🍔",
+    "featured": true,
+    "order": 1
+  },
+  {
+    "id": 2,
+    "name": "Pizza",
+    "slug": "pizza",
+    "description": "Authentic Italian-style pizzas",
+    "image": "/images/categories/pizza.jpg",
+    "icon": "🍕",
+    "featured": true,
+    "order": 2
+  },
+  {
+    "id": 3,
+    "name": "Pasta",
+    "slug": "pasta",
+    "description": "Fresh pasta dishes with rich sauces",
+    "image": "/images/categories/pasta.jpg",
+    "icon": "🍝",
+    "featured": true,
+    "order": 3
+  },
+  {
+    "id": 4,
+    "name": "Salads",
+    "slug": "salads",
+    "description": "Fresh and healthy salad options",
+    "image": "/images/categories/salads.jpg",
+    "icon": "🥗",
+    "featured": false,
+    "order": 4
+  },
+  {
+    "id": 5,
+    "name": "Desserts",
+    "slug": "desserts",
+    "description": "Sweet treats and desserts",
+    "image": "/images/categories/desserts.jpg",
+    "icon": "🍰",
+    "featured": false,
+    "order": 5
+  },
+  {
+    "id": 6,
+    "name": "Beverages",
+    "slug": "beverages",
+    "description": "Refreshing drinks and beverages",
+    "image": "/images/categories/beverages.jpg",
+    "icon": "🥤",
+    "featured": false,
+    "order": 6
+  },
+  {
+    "id": 7,
+    "name": "Appetizers",
+    "slug": "appetizers",
+    "description": "Perfect starters for your meal",
+    "image": "/images/categories/appetizers.jpg",
+    "icon": "🥘",
+    "featured": false,
+    "order": 7
+  },
+  {
+    "id": 8,
+    "name": "Sides",
+    "slug": "sides",
+    "description": "Delicious side dishes",
+    "image": "/images/categories/sides.jpg",
+    "icon": "🍟",
+    "featured": false,
+    "order": 8
+  }
+]

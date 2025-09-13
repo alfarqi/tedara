@@ -187,7 +187,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                     <span className="text-2xl font-bold text-gray-900">
                       ${product.price.toFixed(2)}
                     </span>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                    <button className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors duration-200">
                       Add to Cart
                     </button>
                   </div>
@@ -204,7 +204,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
                 Previous
               </button>
-              <button className="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md">
+              <button className="px-3 py-2 text-sm font-medium text-primary-foreground bg-primary border border-transparent rounded-md">
                 1
               </button>
               <button className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">

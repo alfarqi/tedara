@@ -1,0 +1,285 @@
+[
+  {
+    "id": 1,
+    "name": "Classic Cheeseburger",
+    "slug": "classic-cheeseburger",
+    "description": "Juicy beef patty with melted cheese, lettuce, tomato, and our special sauce",
+    "price": 4.500,
+    "currency": "BD",
+    "categoryId": 1,
+    "categorySlug": "burgers",
+    "images": [
+      "/images/products/classic-cheeseburger-1.jpg",
+      "/images/products/classic-cheeseburger-2.jpg"
+    ],
+    "featured": true,
+    "available": true,
+    "preparationTime": "15-20 mins",
+    "calories": 650,
+    "allergens": ["gluten", "dairy"],
+    "ingredients": ["Beef patty", "Cheddar cheese", "Lettuce", "Tomato", "Onion", "Special sauce", "Sesame bun"],
+    "customizations": [
+      {
+        "name": "Cooking Level",
+        "options": ["Medium Rare", "Medium", "Medium Well", "Well Done"],
+        "default": "Medium"
+      },
+      {
+        "name": "Extra Toppings",
+        "options": ["Bacon", "Avocado", "Mushrooms", "Jalapeños"],
+        "default": []
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "BBQ Bacon Burger",
+    "slug": "bbq-bacon-burger",
+    "description": "Smoky BBQ sauce, crispy bacon, and caramelized onions on a premium beef patty",
+    "price": 5.750,
+    "currency": "BD",
+    "categoryId": 1,
+    "categorySlug": "burgers",
+    "images": [
+      "/images/products/bbq-bacon-burger-1.jpg",
+      "/images/products/bbq-bacon-burger-2.jpg"
+    ],
+    "featured": true,
+    "available": true,
+    "preparationTime": "18-22 mins",
+    "calories": 780,
+    "allergens": ["gluten", "dairy"],
+    "ingredients": ["Beef patty", "Bacon", "BBQ sauce", "Caramelized onions", "Cheddar cheese", "Lettuce", "Brioche bun"],
+    "customizations": [
+      {
+        "name": "Cooking Level",
+        "options": ["Medium Rare", "Medium", "Medium Well", "Well Done"],
+        "default": "Medium"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Margherita Pizza",
+    "slug": "margherita-pizza",
+    "description": "Classic Italian pizza with fresh mozzarella, tomato sauce, and basil",
+    "price": 6.250,
+    "currency": "BD",
+    "categoryId": 2,
+    "categorySlug": "pizza",
+    "images": [
+      "/images/products/margherita-pizza-1.jpg",
+      "/images/products/margherita-pizza-2.jpg"
+    ],
+    "featured": true,
+    "available": true,
+    "preparationTime": "20-25 mins",
+    "calories": 520,
+    "allergens": ["gluten", "dairy"],
+    "ingredients": ["Pizza dough", "Tomato sauce", "Fresh mozzarella", "Basil", "Olive oil"],
+    "customizations": [
+      {
+        "name": "Size",
+        "options": ["Small (10\")", "Medium (12\")", "Large (14\")"],
+        "default": "Medium (12\")"
+      },
+      {
+        "name": "Extra Toppings",
+        "options": ["Extra cheese", "Mushrooms", "Olives", "Pepperoni"],
+        "default": []
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Pepperoni Pizza",
+    "slug": "pepperoni-pizza",
+    "description": "Spicy pepperoni with mozzarella cheese on our signature pizza dough",
+    "price": 7.500,
+    "currency": "BD",
+    "categoryId": 2,
+    "categorySlug": "pizza",
+    "images": [
+      "/images/products/pepperoni-pizza-1.jpg",
+      "/images/products/pepperoni-pizza-2.jpg"
+    ],
+    "featured": true,
+    "available": true,
+    "preparationTime": "20-25 mins",
+    "calories": 680,
+    "allergens": ["gluten", "dairy"],
+    "ingredients": ["Pizza dough", "Tomato sauce", "Mozzarella cheese", "Pepperoni", "Oregano"],
+    "customizations": [
+      {
+        "name": "Size",
+        "options": ["Small (10\")", "Medium (12\")", "Large (14\")"],
+        "default": "Medium (12\")"
+      },
+      {
+        "name": "Extra Toppings",
+        "options": ["Extra cheese", "Mushrooms", "Olives", "Bell peppers"],
+        "default": []
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Spaghetti Carbonara",
+    "slug": "spaghetti-carbonara",
+    "description": "Creamy pasta with pancetta, eggs, and parmesan cheese",
+    "price": 5.250,
+    "currency": "BD",
+    "categoryId": 3,
+    "categorySlug": "pasta",
+    "images": [
+      "/images/products/spaghetti-carbonara-1.jpg",
+      "/images/products/spaghetti-carbonara-2.jpg"
+    ],
+    "featured": true,
+    "available": true,
+    "preparationTime": "15-18 mins",
+    "calories": 580,
+    "allergens": ["gluten", "dairy", "eggs"],
+    "ingredients": ["Spaghetti", "Pancetta", "Eggs", "Parmesan cheese", "Black pepper", "Olive oil"],
+    "customizations": [
+      {
+        "name": "Pasta Type",
+        "options": ["Spaghetti", "Fettuccine", "Penne"],
+        "default": "Spaghetti"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Caesar Salad",
+    "slug": "caesar-salad",
+    "description": "Fresh romaine lettuce with parmesan cheese, croutons, and caesar dressing",
+    "price": 3.750,
+    "currency": "BD",
+    "categoryId": 4,
+    "categorySlug": "salads",
+    "images": [
+      "/images/products/caesar-salad-1.jpg",
+      "/images/products/caesar-salad-2.jpg"
+    ],
+    "featured": false,
+    "available": true,
+    "preparationTime": "8-10 mins",
+    "calories": 320,
+    "allergens": ["gluten", "dairy", "eggs"],
+    "ingredients": ["Romaine lettuce", "Parmesan cheese", "Croutons", "Caesar dressing", "Lemon"],
+    "customizations": [
+      {
+        "name": "Add Protein",
+        "options": ["Grilled chicken", "Shrimp", "Salmon"],
+        "default": []
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Chocolate Lava Cake",
+    "slug": "chocolate-lava-cake",
+    "description": "Warm chocolate cake with a molten chocolate center, served with vanilla ice cream",
+    "price": 4.250,
+    "currency": "BD",
+    "categoryId": 5,
+    "categorySlug": "desserts",
+    "images": [
+      "/images/products/chocolate-lava-cake-1.jpg",
+      "/images/products/chocolate-lava-cake-2.jpg"
+    ],
+    "featured": true,
+    "available": true,
+    "preparationTime": "12-15 mins",
+    "calories": 450,
+    "allergens": ["gluten", "dairy", "eggs"],
+    "ingredients": ["Dark chocolate", "Butter", "Eggs", "Sugar", "Flour", "Vanilla ice cream"],
+    "customizations": [
+      {
+        "name": "Ice Cream Flavor",
+        "options": ["Vanilla", "Chocolate", "Strawberry"],
+        "default": "Vanilla"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Fresh Lemonade",
+    "slug": "fresh-lemonade",
+    "description": "Freshly squeezed lemonade with a hint of mint",
+    "price": 1.500,
+    "currency": "BD",
+    "categoryId": 6,
+    "categorySlug": "beverages",
+    "images": [
+      "/images/products/fresh-lemonade-1.jpg"
+    ],
+    "featured": false,
+    "available": true,
+    "preparationTime": "3-5 mins",
+    "calories": 120,
+    "allergens": [],
+    "ingredients": ["Fresh lemons", "Sugar", "Water", "Mint leaves"],
+    "customizations": [
+      {
+        "name": "Sweetness",
+        "options": ["Less Sweet", "Regular", "Extra Sweet"],
+        "default": "Regular"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Buffalo Wings",
+    "slug": "buffalo-wings",
+    "description": "Crispy chicken wings tossed in spicy buffalo sauce",
+    "price": 4.750,
+    "currency": "BD",
+    "categoryId": 7,
+    "categorySlug": "appetizers",
+    "images": [
+      "/images/products/buffalo-wings-1.jpg",
+      "/images/products/buffalo-wings-2.jpg"
+    ],
+    "featured": true,
+    "available": true,
+    "preparationTime": "12-15 mins",
+    "calories": 420,
+    "allergens": ["dairy"],
+    "ingredients": ["Chicken wings", "Buffalo sauce", "Butter", "Celery", "Blue cheese dip"],
+    "customizations": [
+      {
+        "name": "Spice Level",
+        "options": ["Mild", "Medium", "Hot", "Extra Hot"],
+        "default": "Medium"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "French Fries",
+    "slug": "french-fries",
+    "description": "Crispy golden french fries seasoned with sea salt",
+    "price": 2.250,
+    "currency": "BD",
+    "categoryId": 8,
+    "categorySlug": "sides",
+    "images": [
+      "/images/products/french-fries-1.jpg"
+    ],
+    "featured": false,
+    "available": true,
+    "preparationTime": "8-10 mins",
+    "calories": 280,
+    "allergens": [],
+    "ingredients": ["Potatoes", "Sea salt", "Vegetable oil"],
+    "customizations": [
+      {
+        "name": "Seasoning",
+        "options": ["Sea Salt", "Cajun", "Garlic Parmesan", "Truffle"],
+        "default": "Sea Salt"
+      }
+    ]
+  }
+]
