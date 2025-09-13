@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storefront Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .demo-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .url {
+            color: #3182ce;
+            font-weight: bold;
+        }
+        .feature {
+            background: #e6fffa;
+            border-left: 4px solid #38b2ac;
+            padding: 15px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏪 Storefront React App Demo</h1>
+    
+    <div class="demo-section">
+        <h2>📋 Project Overview</h2>
+        <p>This is a multi-tenant storefront application built with React, TypeScript, and Vite. The app automatically detects the tenant from the URL path and fetches content from the Laravel API.</p>
+        
+        <div class="feature">
+            <strong>✅ Features Implemented:</strong>
+            <ul>
+                <li>Multi-tenant architecture with automatic tenant detection</li>
+                <li>React Router with tenant-aware routing</li>
+                <li>Theme system with classic theme and extensible registry</li>
+                <li>API integration hooks (useTheme, usePage)</li>
+                <li>Responsive design with Tailwind CSS</li>
+                <li>TypeScript for full type safety</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🌐 URL Structure</h2>
+        <p>The app automatically detects the tenant from the first path segment:</p>
+        
+        <div class="code">
+<span class="url">https://example.com/salmeen-electronics/</span> → Tenant: salmeen-electronics
+<span class="url">https://example.com/fatooma-store/catalog</span> → Tenant: fatooma-store  
+<span class="url">https://example.com/demo-store/product/sample-product</span> → Tenant: demo-store
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🛣️ Routes</h2>
+        <ul>
+            <li><code>/</code> - Home page (fetches page with slug 'home')</li>
+            <li><code>/catalog</code> - Product catalog page</li>
+            <li><code>/product/:slug</code> - Individual product page</li>
+            <li><code>/:slug</code> - Dynamic page (about, contact, etc.)</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>🔌 API Integration</h2>
+        <p>The app fetches data from these Laravel API endpoints:</p>
+        
+        <div class="code">
+GET /api/storefront/{tenant}/theme - Theme settings and configuration
+GET /api/storefront/{tenant}/page/{slug} - Page content with sections  
+GET /api/storefront/{tenant}/products - Product list
+GET /api/storefront/{tenant}/products/{slug} - Individual product
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🎨 Theme System</h2>
+        <p>The theme system is fully extensible with a registry pattern:</p>
+        
+        <div class="code">
+// Theme Registry
+export const themeRegistry = {
+  classic: {
+    Layout: ClassicLayout,
+    sections: {
+      hero: ClassicHero,
+      product_grid: ClassicProductGrid,
+      content: ClassicRichText,
+    },
+  },
+};
+        </div>
+        
+        <p><strong>Section Types Available:</strong></p>
+        <ul>
+            <li><code>hero</code> - Hero banner with title, subtitle, CTA</li>
+            <li><code>product_grid</code> - Product listing with filters and pagination</li>
+            <li><code>featured_products</code> - Featured products showcase</li>
+            <li><code>content</code> - Rich text content with optional image</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>⚡ Development Commands</h2>
+        
+        <div class="code">
+npm install          # Install dependencies
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🏗️ Project Structure</h2>
+        
+        <div class="code">
+src/
+├── theme/
+│   ├── registry.ts          # Theme registry and component mapping
+│   └── classic/
+│       ├── Layout.tsx       # Main layout component
+│       └── sections/
+│           ├── Hero.tsx     # Hero section component
+│           ├── ProductGrid.tsx # Product grid section
+│           └── RichText.tsx # Rich text content section
+├── hooks/
+│   ├── useTheme.ts          # Hook for fetching theme data
+│   └── usePage.ts           # Hook for fetching page data
+├── pages/
+│   ├── Home.tsx             # Home page component
+│   ├── Catalog.tsx          # Product catalog page
+│   ├── Product.tsx          # Individual product page
+│   └── Dynamic.tsx          # Dynamic page component
+├── App.tsx                  # Main app with routing
+├── main.tsx                 # Entry point with tenant detection
+└── index.css                # Global styles with Tailwind
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🚀 Getting Started</h2>
+        <ol>
+            <li>Ensure your Laravel API is running with the multi-tenant storefront endpoints</li>
+            <li>Run <code>npm run dev</code> to start the development server</li>
+            <li>Visit <code>http://localhost:5173/demo-store/</code> to see the demo tenant</li>
+            <li>The app will automatically fetch theme and page data from the API</li>
+        </ol>
+        
+        <p><strong>Note:</strong> The app includes sample data fallbacks when the API is not available, so it will work even without the Laravel backend.</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>📱 Responsive Design</h2>
+        <p>The app is fully responsive and works on:</p>
+        <ul>
+            <li>Desktop computers</li>
+            <li>Tablets</li>
+            <li>Mobile phones</li>
+        </ul>
+        <p>Built with Tailwind CSS for consistent, mobile-first design.</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>🔧 Customization</h2>
+        <p>To add new themes or sections:</p>
+        <ol>
+            <li>Create new theme folder: <code>src/theme/modern/</code></li>
+            <li>Implement Layout and section components</li>
+            <li>Register in <code>theme/registry.ts</code></li>
+            <li>The theme will be automatically available</li>
+        </ol>
+    </div>
+
+    <footer style="text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid #ddd;">
+        <p>🏪 <strong>Storefront React App</strong> - Multi-tenant e-commerce storefront</p>
+        <p>Built with React, TypeScript, Vite, and Tailwind CSS</p>
+    </footer>
+</body>
+</html>
+

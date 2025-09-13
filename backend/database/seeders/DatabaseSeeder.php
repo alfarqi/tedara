@@ -22,6 +22,10 @@ class DatabaseSeeder extends Seeder
             SalmeenTestDataSeeder::class,
             SalmeenProductsSeeder::class,
             FatoomaStoreSeeder::class,
+            // Multi-tenant storefront seeders
+            TenantSeeder::class,
+            ThemeSeeder::class,
+            StorefrontSeeder::class,
         ]);
     }
 }

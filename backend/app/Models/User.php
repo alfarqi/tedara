@@ -27,6 +27,8 @@ class User extends Authenticatable
         'location',
         'avatar',
         'force_password_change',
+        'store_handle',
+        'store_name',
     ];
 
     /**
