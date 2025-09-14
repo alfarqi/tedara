@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
-import { orderService, type Order, type OrderFilters, type OrderStatistics } from '../services/orderService';
+import { orderService, type OrderFilters, type OrderStatistics } from '../services/orderService';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import OrdersSkeleton from '../components/orders/OrdersSkeleton';
@@ -27,14 +27,14 @@ interface DisplayOrder {
 }
 
 const Orders: React.FC = () => {
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const { showError, showSuccess } = useToast();
   const navigate = useNavigate();
-  const [orders, setOrders] = useState<Order[]>([]);
+  // const [orders, setOrders] = useState<any[]>([]);
   const [displayOrders, setDisplayOrders] = useState<DisplayOrder[]>([]);
   const [statistics, setStatistics] = useState<OrderStatistics | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   
   // Filters and pagination
   const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
@@ -58,7 +58,7 @@ const Orders: React.FC = () => {
   const loadOrders = async () => {
     try {
       setLoading(true);
-      setError(null);
+      // setError(null);
 
       const filters: OrderFilters = {
         search: searchTerm || undefined,
@@ -103,9 +103,9 @@ const Orders: React.FC = () => {
       
       // Ensure we have an array of orders
       const ordersData = Array.isArray(response.data) ? response.data : [];
-      setOrders(ordersData);
-      setTotalOrders(response.meta?.pagination?.total || 0);
-      setTotalPages(response.meta?.pagination?.last_page || 1);
+      // setOrders(ordersData);
+      setTotalOrders(response.meta?.total || 0);
+      setTotalPages(response.meta?.last_page || 1);
       
       // Format orders for display - ensure we're mapping over an array
       const formattedOrders = ordersData.map(order => orderService.formatOrderForDisplay(order));
@@ -114,11 +114,11 @@ const Orders: React.FC = () => {
     } catch (err) {
       console.error('Error loading orders:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to load orders. Please try again.';
-      setError(errorMessage);
+      // setError(errorMessage);
       showError('Error', errorMessage, 5000);
       
       // Set empty arrays on error to prevent map errors
-      setOrders([]);
+      // setOrders([]);
       setDisplayOrders([]);
     } finally {
       setLoading(false);
@@ -267,7 +267,7 @@ const Orders: React.FC = () => {
   // Filter orders based on current filters (this is now mostly handled by the API, but client-side filtering for search term on displayOrders is still here)
   const filteredOrders = displayOrders.filter(order => {
     // Add safety checks to prevent undefined errors
-    const orderId = order.orderId || order.order_id || '';
+    const orderId = order.orderId || '';
     const customerName = order.customer?.name || '';
     const customerEmail = order.customer?.email || '';
     

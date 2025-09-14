@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, ChevronRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import { useTenant } from '../../../hooks/useTenant';
+import { useFulfillmentStore } from '../stores/fulfillmentStore';
 
 interface DeliveryLocationProps {
   onLocationSelect?: () => void;
@@ -10,6 +12,8 @@ interface DeliveryLocationProps {
 
 export function DeliveryLocation({ onLocationSelect, currentLocation: propCurrentLocation }: DeliveryLocationProps) {
   const navigate = useNavigate();
+  const tenant = useTenant();
+  const { selectedOption, selectedBranch } = useFulfillmentStore();
   const [currentLocation, setCurrentLocation] = useState<string | null>(propCurrentLocation || 'Capital');
   const [isDetecting, setIsDetecting] = useState(false);
 
@@ -21,8 +25,11 @@ export function DeliveryLocation({ onLocationSelect, currentLocation: propCurren
   }, [propCurrentLocation]);
 
   useEffect(() => {
-    // Simulate location detection only if no prop is provided
-    if (!propCurrentLocation) {
+    // Update location based on selected branch from fulfillment store
+    if (selectedBranch) {
+      setCurrentLocation(selectedBranch.name);
+    } else if (!propCurrentLocation) {
+      // Simulate location detection only if no prop is provided and no branch selected
       const detectLocation = async () => {
         setIsDetecting(true);
         
@@ -37,14 +44,14 @@ export function DeliveryLocation({ onLocationSelect, currentLocation: propCurren
 
       detectLocation();
     }
-  }, [propCurrentLocation]);
+  }, [propCurrentLocation, selectedBranch]);
 
   const handleLocationClick = () => {
     if (onLocationSelect) {
       onLocationSelect();
     } else {
       // Navigate to location selection page
-      navigate('/location-selection');
+      navigate(`/${tenant}/location-selection`);
     }
   };
 
@@ -58,7 +65,9 @@ export function DeliveryLocation({ onLocationSelect, currentLocation: propCurren
         >
           <div className="flex flex-col items-start space-y-1">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-600">Deliver to</span>
+              <span className="text-sm font-medium text-gray-600">
+                {selectedOption?.type === 'pickup' ? 'Pick up from' : 'Deliver to'}
+              </span>
               <ChevronRight className="h-4 w-4 text-gray-400" />
             </div>
             
@@ -69,7 +78,9 @@ export function DeliveryLocation({ onLocationSelect, currentLocation: propCurren
               ) : currentLocation ? (
                 <span className="text-sm font-medium text-gray-900">{currentLocation}</span>
               ) : (
-                <span className="text-sm text-gray-500">Select delivery location</span>
+                <span className="text-sm text-gray-500">
+                  {selectedOption?.type === 'pickup' ? 'Select pickup location' : 'Select delivery location'}
+                </span>
               )}
             </div>
           </div>

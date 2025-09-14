@@ -12,7 +12,7 @@ const LanguageSwitcher: React.FC = () => {
 
   const currentLanguage = languages.find(lang => lang.code === language) || languages[0];
 
-  const handleLanguageChange = (langCode: string) => {
+  const handleLanguageChange = (langCode: 'en' | 'ar') => {
     setLanguage(langCode);
     setIsOpen(false);
   };
@@ -69,7 +69,7 @@ const LanguageSwitcher: React.FC = () => {
           {languages.map((lang) => (
             <button
               key={lang.code}
-              onClick={() => handleLanguageChange(lang.code)}
+              onClick={() => handleLanguageChange(lang.code as 'en' | 'ar')}
               className="btn btn-link w-100 d-flex align-items-center gap-2 text-start"
               style={{
                 padding: '0.5rem 0.75rem',

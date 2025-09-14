@@ -3,10 +3,12 @@ import { Button } from '../components/ui/button';
 import { EmptyState } from '../components/EmptyState';
 import { useCartStore } from '../stores/cartStore';
 import { useFulfillmentStore } from '../stores/fulfillmentStore';
+import { useTenant } from '../../../hooks/useTenant';
 
 export function Cart() {
   const { items, clearCart, getSubtotal, updateQuantity, removeItem } = useCartStore();
   const { getDeliveryFee, getMinimumOrder, selectedBranch } = useFulfillmentStore();
+  const tenant = useTenant();
   
   const deliveryFee = getDeliveryFee();
   const minimumOrder = getMinimumOrder();
@@ -23,7 +25,7 @@ export function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="min-h-screen bg-gray-50">
         <div className="px-4 py-6">
           <div className="max-w-2xl mx-auto">
             <EmptyState
@@ -32,7 +34,7 @@ export function Cart() {
               description="Add some delicious items to get started with your order."
               action={{
                 label: "Browse Menu",
-                onClick: () => window.location.href = '/'
+                onClick: () => window.location.href = `/${tenant}/`
               }}
             />
           </div>
@@ -42,7 +44,7 @@ export function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50">
       <div className="px-4 py-6 space-y-4">
         
         {/* Cart Items Section */}
@@ -120,7 +122,7 @@ export function Cart() {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="h-[30px] w-[30px] rounded-full border-gray-300 hover:bg-gray-100 min-h-[30px] min-w-[30px]"
+                      className="quantity-btn h-[25px] w-[25px] md:h-[30px] md:w-[30px] rounded-full border-gray-300 hover:bg-gray-100 min-h-[25px] min-w-[25px] md:min-h-[30px] md:min-w-[30px]"
                       onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
                     >
                       <Minus className="h-3 w-3" />
@@ -131,7 +133,7 @@ export function Cart() {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="h-[30px] w-[30px] rounded-full border-gray-300 hover:bg-gray-100 min-h-[30px] min-w-[30px]"
+                      className="quantity-btn h-[25px] w-[25px] md:h-[30px] md:w-[30px] rounded-full border-gray-300 hover:bg-gray-100 min-h-[25px] min-w-[25px] md:min-h-[30px] md:min-w-[30px]"
                       onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
                     >
                       <Plus className="h-3 w-3" />

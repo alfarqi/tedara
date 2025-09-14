@@ -3,14 +3,19 @@ import { useLocation } from 'react-router-dom';
 import { Instagram } from 'lucide-react';
 import whatsappIcon from '../../../assets/whatsapp.svg';
 import { Button } from '../components/ui/button';
+import { Skeleton } from '../components/ui/skeleton';
 import { FulfillmentModal } from '../components/FulfillmentModal';
 import { ProductGrid } from '../components/ProductGrid';
 import { DeliveryLocation } from '../components/DeliveryLocation';
+import { useTenant } from '../../../hooks/useTenant';
+import { usePage } from '../hooks/usePage';
 import type { Product } from '../types';
 import productsData from '../data/products.json';
 
 export function Home() {
   const location = useLocation();
+  const tenant = useTenant();
+  const { loading, error } = usePage(tenant || '', 'home');
   const [isFulfillmentModalOpen, setIsFulfillmentModalOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string>('Capital');
@@ -30,6 +35,73 @@ export function Home() {
 
   // Get products for display
   const displayProducts = products.slice(0, 8); // Show first 8 products in grid
+
+  // Show loading state while fetching page data
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Hero Section Skeleton */}
+        <section className="relative">
+          <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
+            <div className="relative h-64 md:h-80 overflow-hidden">
+              <Skeleton className="w-full h-full" />
+              <div className="absolute inset-0 bg-black/60" />
+              
+              {/* Mobile: Centered Logo and Company Name Skeleton */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white md:hidden">
+                <Skeleton className="h-16 w-16 rounded-full mb-4 bg-white/20" />
+                <Skeleton className="h-8 w-48 mb-2 bg-white/20" />
+                <Skeleton className="h-4 w-32 bg-white/20" />
+              </div>
+              
+              {/* Desktop: Left-aligned Logo and Company Name Skeleton */}
+              <div className="absolute inset-0 hidden md:flex items-center text-white">
+                <div className="ml-8 lg:ml-16">
+                  <Skeleton className="h-20 w-20 rounded-full mb-4 bg-white/20" />
+                  <Skeleton className="h-10 w-64 mb-3 bg-white/20" />
+                  <Skeleton className="h-5 w-48 bg-white/20" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+        {/* Featured Products Skeleton */}
+        <section className="px-4 py-6">
+          <div className="max-w-2xl mx-auto">
+            <Skeleton className="h-6 w-40 mb-4" />
+            <div className="grid grid-cols-2 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <Skeleton className="h-32 w-full" />
+                  <div className="p-3">
+                    <Skeleton className="h-4 w-3/4 mb-2" />
+                    <Skeleton className="h-3 w-1/2 mb-2" />
+                    <Skeleton className="h-8 w-20" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+      </div>
+    );
+  }
+
+  // Show error state if page fetch failed
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Page Not Found</h1>
+          <p className="text-gray-600 mb-4">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">

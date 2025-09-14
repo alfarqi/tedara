@@ -288,3 +288,5 @@ Both will work correctly with the tenant middleware resolving the appropriate st
 2. Include `tenant_id` in migrations
 3. Models will automatically be scoped to the current tenant
 
+
+

@@ -127,7 +127,7 @@ const InvoiceDetails: React.FC = () => {
             country: order.shipping_address?.country || 'No country',
             zipCode: order.shipping_address?.postal_code || 'No postal code'
           },
-          items: order.order_items?.map((item: any) => ({
+          items: order.orderItems?.map((item: any) => ({
             id: item.id?.toString() || '',
             product: item.product?.name || 'Unknown Product',
             description: `SKU: ${item.product?.sku || 'N/A'}`,

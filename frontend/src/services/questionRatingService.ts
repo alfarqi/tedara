@@ -32,20 +32,22 @@ class QuestionRatingService {
     const queryString = params.toString();
     const endpoint = queryString ? `/api/questions-ratings?${queryString}` : '/api/questions-ratings';
     
-    return apiRequest<PaginatedResponse<QuestionRating>>(endpoint, {
+    const response = await apiRequest<PaginatedResponse<QuestionRating>>(endpoint, {
       method: 'GET',
       headers: getAuthHeaders(token),
     });
+    return response.data || { success: true, data: [], pagination: { current_page: 1, last_page: 1, per_page: 10, total: 0 } };
   }
 
   /**
    * Get a specific question or rating by ID
    */
   async getQuestionRating(id: number, token?: string): Promise<ApiResponse<QuestionRating>> {
-    return apiRequest<ApiResponse<QuestionRating>>(`/api/questions-ratings/${id}`, {
+    const response = await apiRequest<ApiResponse<QuestionRating>>(`/api/questions-ratings/${id}`, {
       method: 'GET',
       headers: getAuthHeaders(token),
     });
+    return response.data || { success: false, data: {} as QuestionRating };
   }
 
   /**
@@ -58,11 +60,12 @@ class QuestionRatingService {
     product_id?: number;
     store_id: number;
   }, token?: string): Promise<ApiResponse<QuestionRating>> {
-    return apiRequest<ApiResponse<QuestionRating>>('/api/questions-ratings', {
+    const response = await apiRequest<ApiResponse<QuestionRating>>('/api/questions-ratings', {
       method: 'POST',
       headers: getAuthHeaders(token),
       body: JSON.stringify(data),
     });
+    return response.data || { success: false, data: {} as QuestionRating };
   }
 
   /**
@@ -73,53 +76,58 @@ class QuestionRatingService {
     rating?: number;
     status?: 'published' | 'unpublished';
   }, token?: string): Promise<ApiResponse<QuestionRating>> {
-    return apiRequest<ApiResponse<QuestionRating>>(`/api/questions-ratings/${id}`, {
+    const response = await apiRequest<ApiResponse<QuestionRating>>(`/api/questions-ratings/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(token),
       body: JSON.stringify(data),
     });
+    return response.data || { success: false, data: {} as QuestionRating };
   }
 
   /**
    * Delete a question or rating
    */
   async deleteQuestionRating(id: number, token?: string): Promise<ApiResponse<void>> {
-    return apiRequest<ApiResponse<void>>(`/api/questions-ratings/${id}`, {
+    const response = await apiRequest<ApiResponse<void>>(`/api/questions-ratings/${id}`, {
       method: 'DELETE',
       headers: getAuthHeaders(token),
     });
+    return response.data || { success: false, data: undefined };
   }
 
   /**
    * Get statistics for questions and ratings
    */
   async getStatistics(token?: string): Promise<ApiResponse<QuestionRatingStatistics>> {
-    return apiRequest<ApiResponse<QuestionRatingStatistics>>('/api/questions-ratings/statistics', {
+    const response = await apiRequest<ApiResponse<QuestionRatingStatistics>>('/api/questions-ratings/statistics', {
       method: 'GET',
       headers: getAuthHeaders(token),
     });
+    return response.data || { success: false, data: {} as QuestionRatingStatistics };
   }
 
   /**
    * Bulk update status of questions and ratings
    */
   async bulkUpdateStatus(ids: number[], status: 'published' | 'unpublished', token?: string): Promise<ApiResponse<{ updated_count: number }>> {
-    return apiRequest<ApiResponse<{ updated_count: number }>>('/api/questions-ratings/bulk-update-status', {
+    const response = await apiRequest<ApiResponse<{ updated_count: number }>>('/api/questions-ratings/bulk-update-status', {
       method: 'POST',
       headers: getAuthHeaders(token),
       body: JSON.stringify({ ids, status }),
     });
+    return response.data || { success: false, data: { updated_count: 0 } };
   }
 
   /**
    * Bulk delete questions and ratings
    */
   async bulkDelete(ids: number[], token?: string): Promise<ApiResponse<{ deleted_count: number }>> {
-    return apiRequest<ApiResponse<{ deleted_count: number }>>('/api/questions-ratings/bulk-delete', {
+    const response = await apiRequest<ApiResponse<{ deleted_count: number }>>('/api/questions-ratings/bulk-delete', {
       method: 'POST',
       headers: getAuthHeaders(token),
       body: JSON.stringify({ ids }),
     });
+    return response.data || { success: false, data: { deleted_count: 0 } };
   }
 
   /**
@@ -163,52 +171,57 @@ class QuestionRatingService {
    * Get replies for a specific question/rating
    */
   async getReplies(questionRatingId: number, token?: string): Promise<ApiResponse<Reply[]>> {
-    return apiRequest<ApiResponse<Reply[]>>(`/api/questions-ratings/${questionRatingId}/replies`, {
+    const response = await apiRequest<ApiResponse<Reply[]>>(`/api/questions-ratings/${questionRatingId}/replies`, {
       method: 'GET',
       headers: getAuthHeaders(token),
     });
+    return response.data || { success: false, data: [] };
   }
 
   /**
    * Create a new reply
    */
   async createReply(replyData: CreateReplyRequest, token?: string): Promise<ApiResponse<Reply>> {
-    return apiRequest<ApiResponse<Reply>>('/api/replies', {
+    const response = await apiRequest<ApiResponse<Reply>>('/api/replies', {
       method: 'POST',
       headers: getAuthHeaders(token),
       body: JSON.stringify(replyData),
     });
+    return response.data || { success: false, data: {} as Reply };
   }
 
   /**
    * Get a specific reply
    */
   async getReply(id: number, token?: string): Promise<ApiResponse<Reply>> {
-    return apiRequest<ApiResponse<Reply>>(`/api/replies/${id}`, {
+    const response = await apiRequest<ApiResponse<Reply>>(`/api/replies/${id}`, {
       method: 'GET',
       headers: getAuthHeaders(token),
     });
+    return response.data || { success: false, data: {} as Reply };
   }
 
   /**
    * Update a reply
    */
   async updateReply(id: number, replyData: UpdateReplyRequest, token?: string): Promise<ApiResponse<Reply>> {
-    return apiRequest<ApiResponse<Reply>>(`/api/replies/${id}`, {
+    const response = await apiRequest<ApiResponse<Reply>>(`/api/replies/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(token),
       body: JSON.stringify(replyData),
     });
+    return response.data || { success: false, data: {} as Reply };
   }
 
   /**
    * Delete a reply
    */
   async deleteReply(id: number, token?: string): Promise<ApiResponse<void>> {
-    return apiRequest<ApiResponse<void>>(`/api/replies/${id}`, {
+    const response = await apiRequest<ApiResponse<void>>(`/api/replies/${id}`, {
       method: 'DELETE',
       headers: getAuthHeaders(token),
     });
+    return response.data || { success: false, data: undefined };
   }
 }
 

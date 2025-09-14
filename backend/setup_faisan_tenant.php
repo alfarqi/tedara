@@ -1,5 +1,5 @@
 <?php
-// backend/setup_feras_tenant.php
+// backend/setup_faisan_tenant.php
 
 require_once 'vendor/autoload.php';
 
@@ -16,20 +16,20 @@ use Illuminate\Support\Str;
 $app = require_once 'bootstrap/app.php';
 $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
-echo "Setting up Feras tenant...\n";
+echo "Setting up Faisan tenant...\n";
 
 try {
     // Create or find user
     $user = User::firstOrCreate(
-        ['email' => 'feras@example.com'],
+        ['email' => 'faisan@example.com'],
         [
-            'name' => 'Feras',
-            'phone' => '+966501234567',
+            'name' => 'Faisan',
+            'phone' => '+966501234568',
             'password' => bcrypt('password123'),
             'role' => 'store_owner',
             'status' => 'active',
-            'store_handle' => 'feras',
-            'store_name' => 'Feras Store',
+            'store_handle' => 'faisan',
+            'store_name' => 'Faisan Store',
             'email_verified_at' => now(),
         ]
     );
@@ -38,9 +38,9 @@ try {
 
     // Create tenant
     $tenant = Tenant::firstOrCreate(
-        ['handle' => 'feras'],
+        ['handle' => 'faisan'],
         [
-            'display_name' => 'Feras Store',
+            'display_name' => 'Faisan Store',
             'status' => 'active',
         ]
     );
@@ -49,7 +49,7 @@ try {
 
     // Create tenant domain
     TenantDomain::firstOrCreate(
-        ['domain' => 'feras.localhost', 'tenant_id' => $tenant->id],
+        ['domain' => 'faisan.localhost', 'tenant_id' => $tenant->id],
         ['is_primary' => true]
     );
 
@@ -71,12 +71,12 @@ try {
         ['tenant_id' => $tenant->id, 'theme_id' => $theme->id],
         [
             'settings' => [
-                'primary_color' => '#6f42c1',
+                'primary_color' => '#059669',
                 'secondary_color' => '#6c757d',
                 'font_family' => 'Inter, sans-serif',
-                'store_name' => 'Feras Store',
-                'contact_email' => 'feras@example.com',
-                'contact_phone' => '+966501234567',
+                'store_name' => 'Faisan Store',
+                'contact_email' => 'faisan@example.com',
+                'contact_phone' => '+966501234568',
             ]
         ]
     );
@@ -87,7 +87,7 @@ try {
     $pages = [
         [
             'slug' => 'home',
-            'title' => 'Welcome to Feras Store',
+            'title' => 'Welcome to Faisan Store',
             'template' => 'default',
             'is_home' => true,
             'sections' => [
@@ -95,7 +95,7 @@ try {
                     'type' => 'hero',
                     'sort' => 1,
                     'props' => [
-                        'title' => 'Welcome to Feras Store',
+                        'title' => 'Welcome to Faisan Store',
                         'subtitle' => 'Your trusted partner for quality products',
                         'cta_text' => 'Shop Now',
                         'cta_link' => '/catalog',
@@ -141,7 +141,7 @@ try {
                     'type' => 'content',
                     'sort' => 1,
                     'props' => [
-                        'title' => 'About Feras Store',
+                        'title' => 'About Faisan Store',
                         'content' => 'We are a trusted retailer providing quality products and exceptional service to our customers.',
                     ]
                 ]
@@ -174,7 +174,7 @@ try {
                 'is_home' => $pageData['is_home'],
                 'seo' => [
                     'title' => $pageData['title'],
-                    'description' => "{$pageData['title']} - Feras Store",
+                    'description' => "{$pageData['title']} - Faisan Store",
                 ]
             ]
         );
@@ -191,12 +191,13 @@ try {
     }
 
     echo "\n✅ Setup complete! You can now test the storefront at:\n";
-    echo "http://localhost:5174/feras/\n";
-    echo "http://localhost:5174/feras/catalog\n";
-    echo "http://localhost:5174/feras/about\n";
-    echo "http://localhost:5174/feras/contact\n\n";
+    echo "http://localhost:5173/faisan/\n";
+    echo "http://localhost:5173/faisan/catalog\n";
+    echo "http://localhost:5173/faisan/about\n";
+    echo "http://localhost:5173/faisan/contact\n\n";
 
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";
     echo "Stack trace: " . $e->getTraceAsString() . "\n";
 }
+

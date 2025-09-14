@@ -4,6 +4,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardTitle } from '../components/ui/card';
 import { useCartStore } from '../stores/cartStore';
 import { useToast } from '../hooks/use-toast';
+import { useTenant } from '../../../hooks/useTenant';
 import type { Product } from '../types';
 
 interface ProductCardProps {
@@ -13,6 +14,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCartStore();
   const { toast } = useToast();
+  const tenant = useTenant();
 
   const handleAddToCart = () => {
     addItem(product);
@@ -25,7 +27,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Card className="group transition-all duration-200 overflow-hidden">
-      <Link to={`/product/${product.categorySlug}/${product.slug}`}>
+      <Link to={`/${tenant}/product/${product.categorySlug}/${product.slug}`}>
         <div className="aspect-w-16 aspect-h-12 bg-muted rounded-t-lg overflow-hidden">
           {product.images[0] ? (
             <img
@@ -45,7 +47,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="space-y-2">
           {/* Product Name */}
           <CardTitle className="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
-            <Link to={`/product/${product.categorySlug}/${product.slug}`}>
+            <Link to={`/${tenant}/product/${product.categorySlug}/${product.slug}`}>
               {product.name}
             </Link>
           </CardTitle>

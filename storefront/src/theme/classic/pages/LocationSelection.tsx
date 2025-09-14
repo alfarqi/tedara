@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, ArrowLeft, Check, ChevronDown, ChevronUp, Truck, Store } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import { useTenant } from '../../../hooks/useTenant';
+import { useFulfillmentStore } from '../stores/fulfillmentStore';
+import type { FulfillmentOption, Branch } from '../types';
 
 interface LocationItem {
   id: string;
@@ -17,7 +20,7 @@ interface Location {
   items: LocationItem[];
 }
 
-interface Branch {
+interface BranchItem {
   id: string;
   name: string;
   address: string;
@@ -73,7 +76,7 @@ const locations: Location[] = [
   },
 ];
 
-const branches: Branch[] = [
+const branches: BranchItem[] = [
   {
     id: '1',
     name: 'Manama Main Branch',
@@ -115,9 +118,11 @@ const branches: Branch[] = [
 
 export function LocationSelection() {
   const navigate = useNavigate();
+  const tenant = useTenant();
+  const { setFulfillmentOption, setBranch } = useFulfillmentStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState<LocationItem | null>(null);
-  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
+  const [selectedBranch, setSelectedBranch] = useState<BranchItem | null>(null);
   const [expandedAccordions, setExpandedAccordions] = useState<Set<string>>(new Set());
   const [fulfillmentType, setFulfillmentType] = useState<'delivery' | 'pickup'>('delivery');
 
@@ -149,7 +154,7 @@ export function LocationSelection() {
     setSelectedLocation(locationItem);
   };
 
-  const handleBranchSelect = (branch: Branch) => {
+  const handleBranchSelect = (branch: BranchItem) => {
     setSelectedBranch(branch);
   };
 
@@ -158,7 +163,58 @@ export function LocationSelection() {
     const hasSelection = isDelivery ? selectedLocation : selectedBranch;
     
     if (hasSelection) {
-      // In a real app, you would save the selected location/branch to state/context
+      // Update the fulfillment store with the selected option and branch
+      const fulfillmentOption: FulfillmentOption = {
+        type: fulfillmentType,
+        branchId: isDelivery ? undefined : parseInt(selectedBranch?.id || '0'),
+        branch: isDelivery ? undefined : selectedBranch ? {
+          id: parseInt(selectedBranch.id),
+          name: selectedBranch.name,
+          slug: selectedBranch.name.toLowerCase().replace(/\s+/g, '-'),
+          address: selectedBranch.address,
+          phone: selectedBranch.phone,
+          email: '',
+          coordinates: { lat: 0, lng: 0 },
+          hours: {},
+          services: [],
+          deliveryRadius: 10,
+          estimatedDeliveryTime: '30-45 min',
+          estimatedPickupTime: '15-20 min',
+          deliveryFee: 2.5,
+          minimumOrder: 0,
+          featured: selectedBranch.featured || false
+        } : undefined,
+        address: isDelivery ? `${selectedLocation?.name}, ${selectedLocation?.area}` : selectedBranch?.address,
+        phone: isDelivery ? undefined : selectedBranch?.phone,
+        estimatedTime: isDelivery ? '30-45 min' : '15-20 min',
+        fee: isDelivery ? 2.5 : 0
+      };
+      
+      // Set the fulfillment option in the store
+      setFulfillmentOption(fulfillmentOption);
+      
+      // If it's pickup, also set the branch
+      if (!isDelivery && selectedBranch) {
+        const branchForStore: Branch = {
+          id: parseInt(selectedBranch.id),
+          name: selectedBranch.name,
+          slug: selectedBranch.name.toLowerCase().replace(/\s+/g, '-'),
+          address: selectedBranch.address,
+          phone: selectedBranch.phone,
+          email: '',
+          coordinates: { lat: 0, lng: 0 },
+          hours: {},
+          services: [],
+          deliveryRadius: 10,
+          estimatedDeliveryTime: '30-45 min',
+          estimatedPickupTime: '15-20 min',
+          deliveryFee: 2.5,
+          minimumOrder: 0,
+          featured: selectedBranch.featured || false
+        };
+        setBranch(branchForStore);
+      }
+      
       console.log('Selected:', isDelivery ? selectedLocation : selectedBranch);
       
       // Check if we came from checkout or home page
@@ -173,12 +229,12 @@ export function LocationSelection() {
       
       if (fromCheckout) {
         // Navigate back to checkout with the selected location/branch
-        navigate('/checkout', { 
+        navigate(`/${tenant}/checkout`, { 
           state: selectionData
         });
       } else {
         // Navigate back to home page with the selected location/branch
-        navigate('/', { 
+        navigate(`/${tenant}/`, { 
           state: selectionData
         });
       }
@@ -218,7 +274,12 @@ export function LocationSelection() {
             <div className="flex space-x-2">
               <Button
                 variant={fulfillmentType === 'delivery' ? 'default' : 'outline'}
-                onClick={() => setFulfillmentType('delivery')}
+                onClick={() => {
+                  setFulfillmentType('delivery');
+                  // Clear previous selections when switching
+                  setSelectedLocation(null);
+                  setSelectedBranch(null);
+                }}
                 className="flex-1 h-12 rounded-xl"
               >
                 <Truck className="h-4 w-4 mr-2" />
@@ -226,7 +287,12 @@ export function LocationSelection() {
               </Button>
               <Button
                 variant={fulfillmentType === 'pickup' ? 'default' : 'outline'}
-                onClick={() => setFulfillmentType('pickup')}
+                onClick={() => {
+                  setFulfillmentType('pickup');
+                  // Clear previous selections when switching
+                  setSelectedLocation(null);
+                  setSelectedBranch(null);
+                }}
                 className="flex-1 h-12 rounded-xl"
               >
                 <Store className="h-4 w-4 mr-2" />

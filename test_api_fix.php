@@ -36,3 +36,5 @@ echo "🎯 The storefront should now work at: http://localhost:5174/feras-store/
 echo "The JSON parsing errors should be resolved!\n";
 ?>
 
+
+

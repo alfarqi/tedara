@@ -234,3 +234,5 @@ Migrations executed:
 3. Check browser console for frontend errors
 4. Verify database migrations are up to date
 
+
+

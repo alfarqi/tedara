@@ -189,7 +189,7 @@ const OnboardingProgressCard: React.FC<OnboardingProgressCardProps> = ({
 
             {/* Steps */}
             <div className="d-flex flex-column gap-3">
-              {steps.map((step, index) => (
+              {steps.map((step) => (
                 <Link 
                   key={step.id}
                   to={step.link} 

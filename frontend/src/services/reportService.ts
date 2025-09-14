@@ -1,5 +1,5 @@
 import { apiRequest } from './api';
-import { API_CONFIG, getAuthHeaders } from '../config/api';
+import { getAuthHeaders } from '../config/api';
 
 export interface SalesReport {
   id: string;
@@ -125,7 +125,7 @@ class ReportService {
       headers: getAuthHeaders(token),
     });
 
-    return response.data;
+    return response.data as SalesReportResponse;
   }
 
   /**
@@ -142,7 +142,7 @@ class ReportService {
       headers: getAuthHeaders(token),
     });
 
-    return response.data;
+    return response.data as ProductReportResponse;
   }
 
   /**
@@ -154,7 +154,7 @@ class ReportService {
       headers: getAuthHeaders(token),
     });
 
-    return response.data;
+    return response.data as CustomerReportResponse;
   }
 
   /**
@@ -166,7 +166,7 @@ class ReportService {
       headers: getAuthHeaders(token),
     });
 
-    return response.data;
+    return response.data as VisitReportResponse;
   }
 
   /**
@@ -178,7 +178,7 @@ class ReportService {
       headers: getAuthHeaders(token),
     });
 
-    return response.data;
+    return response.data as TrendingProductResponse;
   }
 
   /**
@@ -197,7 +197,7 @@ class ReportService {
       headers: getAuthHeaders(token),
     });
 
-    return response.data.url;
+    return (response.data as any).url;
   }
 }
 

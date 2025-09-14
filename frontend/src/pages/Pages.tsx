@@ -8,20 +8,20 @@ import type { Page, CreatePageRequest, PageFilters } from '../types/page';
 
 const Pages: React.FC = () => {
   const { showError, showSuccess } = useToast();
-  const { user, token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated } = useAuth();
   const [pages, setPages] = useState<Page[]>([]);
   const [loading, setLoading] = useState(true);
   const [noStore, setNoStore] = useState(false);
-  const [filters, setFilters] = useState<PageFilters>({
+  const [filters] = useState<PageFilters>({
     per_page: 15,
     page: 1
   });
-  const [pagination, setPagination] = useState({
-    current_page: 1,
-    last_page: 1,
-    per_page: 15,
-    total: 0
-  });
+  // const [pagination] = useState({
+  //   current_page: 1,
+  //   last_page: 1,
+  //   per_page: 15,
+  //   total: 0
+  // });
 
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showNewPageModal, setShowNewPageModal] = useState<boolean>(false);
@@ -60,12 +60,12 @@ const Pages: React.FC = () => {
       console.log('📄 Pages response:', response);
 
       setPages(response.data);
-      setPagination({
-        current_page: response.meta.current_page,
-        last_page: response.meta.last_page,
-        per_page: response.meta.per_page,
-        total: response.meta.total
-      });
+      // setPagination({
+      //   current_page: response.meta.current_page,
+      //   last_page: response.meta.last_page,
+      //   per_page: response.meta.per_page,
+      //   total: response.meta.total
+      // });
     } catch (error: any) {
       console.error('❌ Error loading pages:', error);
       
@@ -145,12 +145,12 @@ const Pages: React.FC = () => {
     try {
       const response = await pageService.updatePage(selectedPage.id, editForm, token);
       
-      if (response.success) {
+      if (response.data) {
         showSuccess('Page updated successfully', 'Page updated successfully');
         loadPages(); // Reload pages
         handleCloseEditModal();
       } else {
-        showError('Failed to update page', response.message || 'Failed to update page');
+        showError('Failed to update page', 'Failed to update page');
       }
     } catch (error) {
       console.error('❌ Error updating page:', error);
@@ -164,12 +164,12 @@ const Pages: React.FC = () => {
     try {
       const response = await pageService.createPage(editForm, token);
       
-      if (response.success) {
+      if (response.data) {
         showSuccess('Page created successfully', 'Page created successfully');
         loadPages(); // Reload pages
         handleCloseNewPageModal();
       } else {
-        showError('Failed to create page', response.message || 'Failed to create page');
+        showError('Failed to create page', 'Failed to create page');
       }
     } catch (error) {
       console.error('❌ Error creating page:', error);
@@ -183,11 +183,11 @@ const Pages: React.FC = () => {
     try {
       const response = await pageService.togglePageStatus(pageId, token);
       
-      if (response.success) {
+      if (response.data) {
         showSuccess('Page status updated successfully', 'Page status updated successfully');
         loadPages(); // Reload pages
       } else {
-        showError('Failed to update page status', response.message || 'Failed to update page status');
+        showError('Failed to update page status', 'Failed to update page status');
       }
     } catch (error) {
       console.error('❌ Error toggling page status:', error);
@@ -205,11 +205,11 @@ const Pages: React.FC = () => {
     try {
       const response = await pageService.deletePage(pageId, token);
       
-      if (response.success) {
+      if (response.data !== undefined) {
         showSuccess('Page deleted successfully', 'Page deleted successfully');
         loadPages(); // Reload pages
       } else {
-        showError('Failed to delete page', response.message || 'Failed to delete page');
+        showError('Failed to delete page', 'Failed to delete page');
       }
     } catch (error) {
       console.error('❌ Error deleting page:', error);

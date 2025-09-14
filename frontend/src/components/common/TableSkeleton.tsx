@@ -18,18 +18,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
   showBadge = false
 }) => {
   const renderSkeletonCell = (columnIndex: number) => {
-    const getColumnStyle = (index: number) => {
-      const columnWidths = ['120px', '280px', '120px', '120px', '120px', '100px', '200px'];
-      const isCentered = [false, false, false, true, true, true, false];
-      
-      return {
-        padding: '12px 16px',
-        width: columnWidths[index] || '120px',
-        textAlign: isCentered[index] ? 'center' : 'left'
-      };
-    };
 
-    const cellStyle = getColumnStyle(columnIndex);
 
     switch (columnIndex) {
       case 0:
@@ -87,7 +76,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
 
   return (
     <div className={`table-skeleton-container ${className}`}>
-      <style jsx>{`
+      <style>{`
         .table-skeleton-container {
           animation: skeleton-loading 1.5s ease-in-out infinite;
         }
@@ -158,7 +147,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
                 return {
                   padding: '12px 16px',
                   width: columnWidths[index] || '120px',
-                  textAlign: isCentered[index] ? 'center' : 'left'
+                  textAlign: (isCentered[index] ? 'center' : 'left') as 'center' | 'left'
                 };
               };
 

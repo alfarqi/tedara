@@ -7,6 +7,9 @@ import type {
   PaginatedResponse
 } from '../types/order';
 
+// Re-export types for convenience
+export type { Order, OrderFilters, OrderStatistics };
+
 class OrderService {
   /**
    * Get all orders with optional filters

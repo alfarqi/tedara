@@ -80,7 +80,6 @@ const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({ limit = 5 }) => {
     }
     // Generate a default avatar based on customer name
     const name = order.customer?.name || 'Customer';
-    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff&size=40`;
   };
 

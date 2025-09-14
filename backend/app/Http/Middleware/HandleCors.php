@@ -17,8 +17,15 @@ class HandleCors
     {
         $response = $next($request);
 
-        // Add CORS headers
-        $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5173');
+        // Add CORS headers - allow both common Vite ports
+        $origin = $request->header('Origin');
+        $allowedOrigins = ['http://localhost:5173', 'http://localhost:5176', 'http://localhost:3000'];
+        
+        if (in_array($origin, $allowedOrigins)) {
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+        } else {
+            $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5176');
+        }
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
         $response->headers->set('Access-Control-Allow-Credentials', 'true');
@@ -32,6 +39,8 @@ class HandleCors
         return $response;
     }
 }
+
+
 
 
 

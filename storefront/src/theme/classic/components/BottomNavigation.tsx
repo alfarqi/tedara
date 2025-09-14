@@ -1,28 +1,30 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Package, User } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useTenant } from '../../../hooks/useTenant';
 
 export function BottomNavigation() {
   const location = useLocation();
+  const tenant = useTenant();
 
   const navItems = [
     {
       label: 'Home',
       icon: Home,
-      path: '/',
-      isActive: location.pathname === '/'
+      path: `/${tenant}/`,
+      isActive: location.pathname === `/${tenant}/`
     },
     {
       label: 'Orders',
       icon: Package,
-      path: '/orders',
-      isActive: location.pathname.startsWith('/orders')
+      path: `/${tenant}/orders`,
+      isActive: location.pathname.startsWith(`/${tenant}/orders`)
     },
     {
       label: 'My Account',
       icon: User,
-      path: '/account',
-      isActive: location.pathname.startsWith('/account')
+      path: `/${tenant}/account`,
+      isActive: location.pathname.startsWith(`/${tenant}/account`)
     }
   ];
 

@@ -101,3 +101,5 @@ You should now see:
 
 The storefront should now look professional and beautiful with proper Tailwind CSS styling! 🎉
 
+
+

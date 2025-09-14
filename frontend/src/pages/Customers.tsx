@@ -5,18 +5,18 @@ import { customerService, type Customer as CustomerType, type CustomerStatistics
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 
-interface Customer {
-  id: string;
-  customerId: string;
-  name: string;
-  email: string;
-  phone: string;
-  joinDate: string;
-  totalOrders: number;
-  totalSpent: string;
-  status: 'Active' | 'Inactive' | 'VIP';
-  avatar?: string;
-}
+// interface Customer {
+//   id: string;
+//   customerId: string;
+//   name: string;
+//   email: string;
+//   phone: string;
+//   joinDate: string;
+//   totalOrders: number;
+//   totalSpent: string;
+//   status: 'Active' | 'Inactive' | 'VIP';
+//   avatar?: string;
+// }
 
 const Customers: React.FC = () => {
   const { token, user } = useAuth();
@@ -34,7 +34,7 @@ const Customers: React.FC = () => {
     name: '',
     email: '',
     phone: '',
-    status: 'active' as const,
+    status: 'active' as 'active' | 'inactive' | 'vip',
     join_date: new Date().toISOString().split('T')[0]
   });
 
@@ -45,7 +45,7 @@ const Customers: React.FC = () => {
         search: searchTerm,
         status: statusFilter === 'All' ? undefined : statusFilter.toLowerCase(),
         per_page: rowsPerPage
-      }, token);
+      }, token || undefined);
       
       if (response.data) {
         setCustomers(response.data);
@@ -60,7 +60,7 @@ const Customers: React.FC = () => {
 
   const loadStatistics = async () => {
     try {
-      const response = await customerService.getCustomerStatistics(token);
+      const response = await customerService.getCustomerStatistics(token || undefined);
       if (response.data) {
         setStatistics(response.data);
       }
@@ -128,18 +128,18 @@ const Customers: React.FC = () => {
 
   const handleAddCustomer = async () => {
     try {
-      if (!user?.ownedStores?.[0]?.id) {
-        showError('Error', 'No store found. Please create a store first.');
+      if (!user?.id) {
+        showError('Error', 'User not found. Please login again.');
         return;
       }
 
       const customerData = {
         ...customerForm,
-        store_id: user.ownedStores[0].id,
+        store_id: user.id, // Using user ID as store ID for now
         phone: customerForm.phone.startsWith('+') ? customerForm.phone : `+966${customerForm.phone}`
       };
 
-      const response = await customerService.createCustomer(customerData, token);
+      const response = await customerService.createCustomer(customerData, token || undefined);
       
       if (response.data) {
         showSuccess('Success', 'Customer created successfully!');

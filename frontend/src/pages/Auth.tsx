@@ -17,20 +17,12 @@ const Auth: React.FC = () => {
   const defaultTab = searchParams.get('tab') === 'register' ? 'register' : 'login';
   
   // Clear error when switching tabs
-  const handleTabChange = (tab: 'login' | 'register') => {
+  const handleTabChange = (_tab: 'login' | 'register') => {
     clearError();
   };
 
-  // Redirect if already authenticated (but not during login/register operations)
-  useEffect(() => {
-    // Only redirect if user is authenticated and we're not in the middle of a login/register operation
-    // Also prevent redirection during registration error handling
-    // AND don't redirect if this is a new registration (should go to onboarding instead)
-    const isNewRegistration = sessionStorage.getItem('new_registration');
-    if (isAuthenticated && !loginLoading && !registerLoading && !error && !isNewRegistration) {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, loginLoading, registerLoading, navigate, error]);
+  // Let ProtectedRoute handle all redirects - don't interfere here
+  // This allows ProtectedRoute to properly handle new registration -> onboarding flow
 
   // Clear error when component unmounts
   useEffect(() => {

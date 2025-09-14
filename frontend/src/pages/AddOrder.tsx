@@ -261,13 +261,13 @@ const AddOrder: React.FC = () => {
           shipping: {
             method: 'Standard Shipping', // Default, could be enhanced
             address: order.shipping_address?.street || '',
-            cost: parseFloat(order.shipping_cost || '0')
+            cost: parseFloat(String(order.shipping_cost || '0'))
           },
           payment: {
             method: order.payment_method || 'Credit Card',
             status: order.payment_status || 'Pending'
           },
-          products: order.order_items?.map((item: any) => ({
+          products: order.orderItems?.map((item: any) => ({
             id: item.id?.toString() || '',
             name: item.product?.name || 'Unknown Product',
             quantity: item.quantity || 0,

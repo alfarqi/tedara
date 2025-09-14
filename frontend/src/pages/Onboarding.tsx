@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useOnboarding } from '../contexts/OnboardingContext';
 
 import ShopNameStep from '../components/onboarding/ShopNameStep';
@@ -8,8 +8,8 @@ import LogoUploadStep from '../components/onboarding/LogoUploadStep';
 import ProcessingStep from '../components/onboarding/ProcessingStep';
 
 const Onboarding: React.FC = () => {
-  const { data, steps, isLoading, error } = useOnboarding();
-  const navigate = useNavigate();
+  const { data, error } = useOnboarding();
+  // const navigate = useNavigate();
 
   const renderCurrentStep = () => {
     switch (data.step) {

@@ -4,6 +4,7 @@ import { ShoppingCart, Menu, X, Package, ShoppingBag, User, MapPin, LogOut, Arro
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { useCartStore } from '../stores/cartStore';
+import { useTenant } from '../../../hooks/useTenant';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,15 +12,16 @@ export function Header() {
   
   const navigate = useNavigate();
   const location = useLocation();
+  const tenant = useTenant();
   const { getItemCount } = useCartStore();
   
   const itemCount = getItemCount();
-  const isProductPage = location.pathname.startsWith('/product/');
-  const isCartPage = location.pathname === '/cart';
-  const isCheckoutPage = location.pathname === '/checkout';
-  const isAccountPage = location.pathname === '/account';
-  const isOrdersPage = location.pathname === '/orders';
-  const isAddressesPage = location.pathname === '/addresses';
+  const isProductPage = location.pathname.includes('/product/');
+  const isCartPage = location.pathname.endsWith('/cart');
+  const isCheckoutPage = location.pathname.endsWith('/checkout');
+  const isAccountPage = location.pathname.endsWith('/account');
+  const isOrdersPage = location.pathname.endsWith('/orders') || location.pathname.includes('/orders/');
+  const isAddressesPage = location.pathname.endsWith('/addresses');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,17 +48,17 @@ export function Header() {
 
   const handleMyOrders = () => {
     setIsMenuOpen(false);
-    navigate('/orders');
+    navigate(`/${tenant}/orders`);
   };
 
   const handleMyCart = () => {
     setIsMenuOpen(false);
-    navigate('/cart');
+    navigate(`/${tenant}/cart`);
   };
 
   const handleSavedAddresses = () => {
     setIsMenuOpen(false);
-    navigate('/addresses');
+    navigate(`/${tenant}/addresses`);
   };
 
   const handleLogout = () => {
@@ -67,12 +69,12 @@ export function Header() {
 
   const handleLogin = () => {
     setIsMenuOpen(false);
-    navigate('/login');
+    navigate(`/${tenant}/login`);
   };
 
   const handleRegister = () => {
     setIsMenuOpen(false);
-    navigate('/register');
+    navigate(`/${tenant}/register`);
   };
 
   return (
@@ -125,7 +127,7 @@ export function Header() {
               <div className={`flex items-center transition-opacity duration-300 ${
                 isScrolled ? 'opacity-100' : 'opacity-0'
               }`}>
-                <Link to="/" className="flex items-center space-x-2">
+                <Link to={`/${tenant}/`} className="flex items-center space-x-2">
                   <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
                     <span className="text-primary-foreground font-bold text-lg">Y</span>
                   </div>
@@ -151,7 +153,7 @@ export function Header() {
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => navigate('/cart')}
+                  onClick={() => navigate(`/${tenant}/cart`)}
                   className="relative"
                 >
                   <ShoppingCart className="h-4 w-4" />

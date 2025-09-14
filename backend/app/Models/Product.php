@@ -14,6 +14,7 @@ class Product extends Model
 
     protected $fillable = [
         'tenant_id',
+        'store_id',
         'name',
         'slug',
         'description',
@@ -33,5 +34,13 @@ class Product extends Model
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    /**
+     * Get the store that owns the product.
+     */
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class);
     }
 }

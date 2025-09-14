@@ -241,3 +241,5 @@ echo "http://localhost:5174/{$tenant->handle}/catalog\n";
 echo "http://localhost:5174/{$tenant->handle}/about\n";
 echo "http://localhost:5174/{$tenant->handle}/contact\n\n";
 
+
+

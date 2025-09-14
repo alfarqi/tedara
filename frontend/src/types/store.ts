@@ -15,6 +15,14 @@ export interface Store {
     auto_backup: boolean;
     email_notifications: boolean;
     sms_notifications: boolean;
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+    linkedin?: string;
+    youtube?: string;
+    tiktok?: string;
+    whatsapp?: string;
+    telegram?: string;
   };
   created_at: string;
   updated_at: string;

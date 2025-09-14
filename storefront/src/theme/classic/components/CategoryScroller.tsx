@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '../components/ui/badge';
+import { useTenant } from '../../../hooks/useTenant';
 import type { Category } from '../types';
 
 interface CategoryScrollerProps {
@@ -9,6 +10,8 @@ interface CategoryScrollerProps {
 }
 
 export function CategoryScroller({ categories, selectedCategory, onCategorySelect }: CategoryScrollerProps) {
+  const tenant = useTenant();
+  
   return (
     <div className="space-y-4">
       <h3 className="font-semibold text-lg hidden lg:block">Categories</h3>
@@ -38,7 +41,7 @@ export function CategoryScroller({ categories, selectedCategory, onCategorySelec
         {categories.map((category) => (
           <Link
             key={category.id}
-            to={`/category/${category.slug}`}
+            to={`/${tenant}/category/${category.slug}`}
             onClick={() => onCategorySelect(category.slug)}
             className={`block w-full text-left p-3 rounded-lg transition-colors ${
               selectedCategory === category.slug

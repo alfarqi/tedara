@@ -6,15 +6,16 @@ import type { BusinessCategory } from '../types/businessCategory';
 export const businessCategoryService = {
   // Get all business categories
   async getCategories(token?: string): Promise<{ data: BusinessCategory[] }> {
-    return apiRequest<{ data: BusinessCategory[] }>(API_CONFIG.ENDPOINTS.BUSINESS_CATEGORIES, {
+    const response = await apiRequest<{ data: BusinessCategory[] }>(API_CONFIG.ENDPOINTS.BUSINESS_CATEGORIES, {
       method: 'GET',
       headers: getAuthHeaders(token),
     });
+    return response.data || { data: [] };
   },
 
   // Create or get existing business category
   async createCategory(name: string, description?: string, token?: string): Promise<{ data: BusinessCategory }> {
-    return apiRequest<{ data: BusinessCategory }>(API_CONFIG.ENDPOINTS.BUSINESS_CATEGORIES, {
+    const response = await apiRequest<{ data: BusinessCategory }>(API_CONFIG.ENDPOINTS.BUSINESS_CATEGORIES, {
       method: 'POST',
       headers: getAuthHeaders(token),
       body: JSON.stringify({
@@ -22,14 +23,16 @@ export const businessCategoryService = {
         description,
       }),
     });
+    return response.data || { data: {} as BusinessCategory };
   },
 
   // Get category by ID
   async getCategory(id: number, token?: string): Promise<{ data: BusinessCategory }> {
-    return apiRequest<{ data: BusinessCategory }>(`${API_CONFIG.ENDPOINTS.BUSINESS_CATEGORIES}/${id}`, {
+    const response = await apiRequest<{ data: BusinessCategory }>(`${API_CONFIG.ENDPOINTS.BUSINESS_CATEGORIES}/${id}`, {
       method: 'GET',
       headers: getAuthHeaders(token),
     });
+    return response.data || { data: {} as BusinessCategory };
   },
 };
 

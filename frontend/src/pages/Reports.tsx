@@ -23,14 +23,14 @@ const Reports: React.FC = () => {
   
   // Data states
   const [salesReports, setSalesReports] = useState<SalesReport[]>([]);
-  const [salesSummary, setSalesSummary] = useState<any>(null);
+  // const [salesSummary, setSalesSummary] = useState<any>(null);
   const [productReports, setProductReports] = useState<ProductReport[]>([]);
   const [customerReports, setCustomerReports] = useState<CustomerReport[]>([]);
   const [visitReports, setVisitReports] = useState<VisitReport[]>([]);
   const [trendingProducts, setTrendingProducts] = useState<TrendingProduct[]>([]);
   
   // Loading states
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [salesLoading, setSalesLoading] = useState(false);
   const [productsLoading, setProductsLoading] = useState(false);
   const [customersLoading, setCustomersLoading] = useState(false);
@@ -49,7 +49,7 @@ const Reports: React.FC = () => {
 
   const loadTabData = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       
       switch (activeTab) {
         case 'sales':
@@ -72,16 +72,16 @@ const Reports: React.FC = () => {
       console.error('Error loading tab data:', error);
       showError('Error', 'Failed to load report data');
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
   const loadSalesReports = async () => {
     try {
       setSalesLoading(true);
-      const response = await reportService.getSalesReports(undefined, undefined, token);
+      const response = await reportService.getSalesReports(undefined, undefined, token || undefined);
       setSalesReports(response.daily_stats);
-      setSalesSummary(response.summary);
+      // setSalesSummary(response.summary);
     } catch (error) {
       console.error('Error loading sales reports:', error);
       showError('Error', 'Failed to load sales reports');
@@ -93,7 +93,7 @@ const Reports: React.FC = () => {
   const loadProductReports = async () => {
     try {
       setProductsLoading(true);
-      const response = await reportService.getProductReports(performanceFilter, token);
+      const response = await reportService.getProductReports(performanceFilter, token || undefined);
       setProductReports(response.products);
     } catch (error) {
       console.error('Error loading product reports:', error);
@@ -106,7 +106,7 @@ const Reports: React.FC = () => {
   const loadCustomerReports = async () => {
     try {
       setCustomersLoading(true);
-      const response = await reportService.getCustomerReports(token);
+      const response = await reportService.getCustomerReports(token || undefined);
       setCustomerReports(response.customers);
     } catch (error) {
       console.error('Error loading customer reports:', error);
@@ -119,7 +119,7 @@ const Reports: React.FC = () => {
   const loadVisitReports = async () => {
     try {
       setVisitsLoading(true);
-      const response = await reportService.getVisitReports(token);
+      const response = await reportService.getVisitReports(token || undefined);
       setVisitReports(response.visits);
     } catch (error) {
       console.error('Error loading visit reports:', error);
@@ -132,7 +132,7 @@ const Reports: React.FC = () => {
   const loadTrendingProducts = async () => {
     try {
       setTrendingLoading(true);
-      const response = await reportService.getTrendingProducts(token);
+      const response = await reportService.getTrendingProducts(token || undefined);
       setTrendingProducts(response.trending_products);
     } catch (error) {
       console.error('Error loading trending products:', error);
@@ -171,15 +171,15 @@ const Reports: React.FC = () => {
           downloadUrl = await reportService.exportReport('orders', { 
             from_date: dateRange.split(' - ')[0], 
             to_date: dateRange.split(' - ')[1] 
-          }, token);
+          }, token || undefined);
           break;
         case 'products':
           downloadUrl = await reportService.exportReport('products', { 
             performance_filter: performanceFilter 
-          }, token);
+          }, token || undefined);
           break;
         case 'customers':
-          downloadUrl = await reportService.exportReport('customers', undefined, token);
+          downloadUrl = await reportService.exportReport('customers', undefined, token || undefined);
           break;
         default:
           showError('Error', 'Export not available for this report type');
@@ -441,7 +441,7 @@ const Reports: React.FC = () => {
                                colors: ['#1ab394'], // Primary color (teal)
                                series: [{
                                  name: 'Orders',
-                                 data: filteredSalesReports.slice(0, 7).map(report => parseInt(report.orders) || 0)
+                                 data: filteredSalesReports.slice(0, 7).map(report => parseInt(String(report.orders)) || 0)
                                }],
                                grid: {
                                  borderColor: '#e9ecef',
@@ -483,10 +483,10 @@ const Reports: React.FC = () => {
                                  }
                                },
                                annotations: {
-                                 points: filteredSalesReports.slice(0, 7).map((report, index) => {
-                                   const ordersCount = parseInt(report.orders) || 0;
+                                 points: filteredSalesReports.slice(0, 7).map((report) => {
+                                    const ordersCount = parseInt(String(report.orders)) || 0;
                                    // Add annotation for highest order count
-                                   if (ordersCount === Math.max(...filteredSalesReports.slice(0, 7).map(r => parseInt(r.orders) || 0))) {
+                                   if (ordersCount === Math.max(...filteredSalesReports.slice(0, 7).map(r => parseInt(String(r.orders)) || 0))) {
                                      return {
                                        x: report.date.split(',')[0],
                                        y: ordersCount,
@@ -503,12 +503,12 @@ const Reports: React.FC = () => {
                                      };
                                    }
                                    return null;
-                                 }).filter(Boolean)
+                                 }).filter((point): point is NonNullable<typeof point> => point !== null)
                                }
                              }}
                              series={[{
                                name: 'Orders',
-                               data: filteredSalesReports.slice(0, 7).map(report => parseInt(report.orders) || 0)
+                                data: filteredSalesReports.slice(0, 7).map(report => parseInt(String(report.orders)) || 0)
                              }]}
                                                             type="bar"
                                height={350}

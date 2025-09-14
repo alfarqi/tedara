@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { useCartStore } from '../stores/cartStore';
 import { useFulfillmentStore } from '../stores/fulfillmentStore';
+import { useTenant } from '../../../hooks/useTenant';
 
 export function CheckoutFixedBar() {
   const navigate = useNavigate();
+  const tenant = useTenant();
   const { items, getSubtotal } = useCartStore();
   const { getDeliveryFee } = useFulfillmentStore();
 
@@ -13,7 +15,7 @@ export function CheckoutFixedBar() {
   const total = subtotal + deliveryFee;
 
   const handleProceedToCheckout = () => {
-    navigate('/checkout');
+    navigate(`/${tenant}/checkout`);
   };
 
   if (items.length === 0) {

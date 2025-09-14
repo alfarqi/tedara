@@ -5,18 +5,18 @@ import { customerService, type Customer as CustomerType } from '../services/cust
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 
-interface Customer {
-  id: string;
-  customerId: string;
-  name: string;
-  email: string;
-  phone: string;
-  joinDate: string;
-  totalOrders: number;
-  totalSpent: string;
-  status: 'Active' | 'Inactive' | 'VIP';
-  avatar?: string;
-}
+// interface Customer {
+//   id: string;
+//   customerId: string;
+//   name: string;
+//   email: string;
+//   phone: string;
+//   joinDate: string;
+//   totalOrders: number;
+//   totalSpent: string;
+//   status: 'Active' | 'Inactive' | 'VIP';
+//   avatar?: string;
+// }
 
 interface Order {
   id: string;
@@ -55,7 +55,7 @@ const CustomerDetails: React.FC = () => {
     try {
       setLoading(true);
       if (!id) return;
-      const response = await customerService.getCustomer(id as string, token);
+      const response = await customerService.getCustomer(id as string, token || undefined);
       
       if (response.data) {
         console.log('Customer API Response:', response.data);
@@ -91,64 +91,64 @@ const CustomerDetails: React.FC = () => {
     }
   };
 
-  // Sample orders data
-  const sampleOrders: Order[] = [
-    {
-      id: '1',
-      orderId: '#WB20100',
-      date: '15 Mar, 2024',
-      time: '10:10 AM',
-      status: 'Completed',
-      total: '$245.00',
-      paymentStatus: 'Paid',
-      deliveryStatus: 'Delivered',
-      items: 3
-    },
-    {
-      id: '2',
-      orderId: '#WB20101',
-      date: '10 Mar, 2024',
-      time: '2:30 PM',
-      status: 'Processing',
-      total: '$189.50',
-      paymentStatus: 'Pending',
-      deliveryStatus: 'In Transit',
-      items: 2
-    },
-    {
-      id: '3',
-      orderId: '#WB20102',
-      date: '5 Mar, 2024',
-      time: '9:15 AM',
-      status: 'Cancelled',
-      total: '$320.00',
-      paymentStatus: 'Failed',
-      deliveryStatus: 'Cancelled',
-      items: 4
-    },
-    {
-      id: '4',
-      orderId: '#WB20103',
-      date: '1 Mar, 2024',
-      time: '4:45 PM',
-      status: 'Shipped',
-      total: '$156.75',
-      paymentStatus: 'Paid',
-      deliveryStatus: 'Shipped',
-      items: 1
-    },
-    {
-      id: '5',
-      orderId: '#WB20104',
-      date: '25 Feb, 2024',
-      time: '11:20 AM',
-      status: 'Completed',
-      total: '$89.25',
-      paymentStatus: 'Paid',
-      deliveryStatus: 'Delivered',
-      items: 2
-    }
-  ];
+  // Sample orders data - commented out as unused
+  // const sampleOrders: Order[] = [
+  //   {
+  //     id: '1',
+  //     orderId: '#WB20100',
+  //     date: '15 Mar, 2024',
+  //     time: '10:10 AM',
+  //     status: 'Completed',
+  //     total: '$245.00',
+  //     paymentStatus: 'Paid',
+  //     deliveryStatus: 'Delivered',
+  //     items: 3
+  //   },
+  //   {
+  //     id: '2',
+  //     orderId: '#WB20101',
+  //     date: '10 Mar, 2024',
+  //     time: '2:30 PM',
+  //     status: 'Processing',
+  //     total: '$189.50',
+  //     paymentStatus: 'Pending',
+  //     deliveryStatus: 'In Transit',
+  //     items: 2
+  //   },
+  //   {
+  //     id: '3',
+  //     orderId: '#WB20102',
+  //     date: '5 Mar, 2024',
+  //     time: '9:15 AM',
+  //     status: 'Cancelled',
+  //     total: '$320.00',
+  //     paymentStatus: 'Failed',
+  //     deliveryStatus: 'Cancelled',
+  //     items: 4
+  //   },
+  //   {
+  //     id: '4',
+  //     orderId: '#WB20103',
+  //     date: '1 Mar, 2024',
+  //     time: '4:45 PM',
+  //     status: 'Shipped',
+  //     total: '$156.75',
+  //     paymentStatus: 'Paid',
+  //     deliveryStatus: 'Shipped',
+  //     items: 1
+  //   },
+  //   {
+  //     id: '5',
+  //     orderId: '#WB20104',
+  //     date: '25 Feb, 2024',
+  //     time: '11:20 AM',
+  //     status: 'Completed',
+  //     total: '$89.25',
+  //     paymentStatus: 'Paid',
+  //     deliveryStatus: 'Delivered',
+  //     items: 2
+  //   }
+  // ];
 
 
 

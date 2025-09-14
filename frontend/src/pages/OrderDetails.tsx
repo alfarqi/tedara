@@ -82,7 +82,7 @@ const OrderDetails: React.FC = () => {
   const loadOrderDetails = async () => {
     try {
       setLoading(true);
-      const response = await orderService.getOrder(parseInt(orderId!), token);
+      const response = await orderService.getOrder(parseInt(orderId!), token || undefined);
       
       if (response.data) {
         const order = response.data;
@@ -113,13 +113,13 @@ const OrderDetails: React.FC = () => {
             method: order.shipping_cost > 0 ? 'Shipping Required' : 'No Shipping Required',
             address: order.shipping_address ? 
               `${order.shipping_address.street}, ${order.shipping_address.city}, ${order.shipping_address.state}` : '',
-            cost: parseFloat(order.shipping_cost) || 0
+            cost: parseFloat(String(order.shipping_cost)) || 0
           },
           payment: {
             method: order.payment_method || '',
             status: order.payment_status || ''
           },
-          products: order.order_items?.map((item: any) => {
+          products: order.orderItems?.map((item: any) => {
             console.log('Order item:', item);
             return {
               id: item.id?.toString() || '',

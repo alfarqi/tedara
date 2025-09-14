@@ -5,7 +5,7 @@ import ProductList from '../components/products/ProductList';
 import ProductModals from '../components/products/ProductModals';
 import ProductFilter from '../components/products/ProductFilter';
 import ProductSkeleton from '../components/products/ProductSkeleton';
-import { productService, type Product as ApiProduct, type ProductStatistics } from '../services/productService';
+import { productService, type Product as ApiProduct } from '../services/productService';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 
@@ -16,7 +16,7 @@ const Products: React.FC = () => {
   // API State
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [statistics, setStatistics] = useState<ProductStatistics | null>(null);
+  // const [statistics, setStatistics] = useState<ProductStatistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -50,7 +50,7 @@ const Products: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      const response = await productService.getProducts({}, token);
+      const response = await productService.getProducts({}, token || undefined);
       
       if (response.data && Array.isArray(response.data)) {
         const formattedProducts = response.data.map((product: ApiProduct) => 
@@ -62,7 +62,7 @@ const Products: React.FC = () => {
         const uniqueCategories = [...new Set(
           response.data
             .map((product: ApiProduct) => product.category?.name)
-            .filter(Boolean)
+            .filter((name): name is string => Boolean(name))
         )];
         setCategories(uniqueCategories);
       } else {
@@ -81,9 +81,9 @@ const Products: React.FC = () => {
 
   const loadStatistics = async () => {
     try {
-      const response = await productService.getStatistics(token);
+      const response = await productService.getStatistics(token || undefined);
       if (response.data) {
-        setStatistics(response.data);
+        // setStatistics(response.data as ProductStatistics);
       }
     } catch (err) {
       console.error('Error loading statistics:', err);
@@ -295,12 +295,12 @@ const Products: React.FC = () => {
       if (productId && productId > 0 && product.productName && product.basePrice) {
         // Update existing product
         console.log('Updating existing product with ID:', productId);
-        await productService.updateProduct(productId, productData, token);
+        await productService.updateProduct(productId, productData, token || undefined);
         showSuccess('Success', 'Product updated successfully');
       } else {
         // Create new product
         console.log('Creating new product');
-        await productService.createProduct(productData, token);
+        await productService.createProduct(productData, token || undefined);
         showSuccess('Success', 'Product created successfully');
       }
 
@@ -393,7 +393,7 @@ const Products: React.FC = () => {
         } else {
           // For saved products, delete from database
           console.log('Deleting saved product from database');
-          await productService.deleteProduct(productToDelete.id, token);
+          await productService.deleteProduct(productToDelete.id, token || undefined);
           showSuccess('Success', 'Product deleted successfully');
         }
         

@@ -118,7 +118,7 @@ const GeneralSettings: React.FC = () => {
         name: storeName,
         description: storeDescription,
         category: storeLocation,
-        logo: storeLogo,
+        logo: storeLogo || undefined,
         settings: {
           ...store.settings,
           facebook: socialAccounts.facebook,

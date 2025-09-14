@@ -38,13 +38,22 @@ const Dashboard: React.FC = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('auth_token');
+      
+      console.log('🔍 Loading dashboard statistics...', {
+        hasToken: !!token,
+        tokenLength: token?.length || 0,
+        apiUrl: 'http://localhost:8000/api/dashboard/statistics'
+      });
+      
       const response = await dashboardService.getStatistics(token || undefined);
       
+      console.log('📊 Dashboard service response:', response);
+      
       if (response.success) {
-        console.log('📊 Dashboard API response:', response.data);
+        console.log('✅ Dashboard API success:', response.data);
         setStatistics(response.data);
       } else {
-        console.error('❌ API returned success: false');
+        console.error('❌ API returned success: false', response);
         showError('Failed to load dashboard statistics', 'Failed to load dashboard statistics');
       }
     } catch (error) {

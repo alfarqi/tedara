@@ -133,7 +133,7 @@ const PageSkeleton: React.FC<PageSkeletonProps> = ({
 
   return (
     <div className={`skeleton-container ${className}`}>
-      <style jsx>{`
+      <style>{`
         .skeleton-container {
           animation: skeleton-loading 1.5s ease-in-out infinite;
         }

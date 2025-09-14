@@ -203,9 +203,17 @@ body {
   }
   
   /* Improve touch targets */
-  button:not(.add-to-cart-btn), [role="button"]:not(.add-to-cart-btn) {
+  button:not(.add-to-cart-btn):not(.quantity-btn), [role="button"]:not(.add-to-cart-btn):not(.quantity-btn) {
     min-height: 44px;
     min-width: 44px;
+  }
+  
+  /* Quantity buttons specific sizing */
+  .quantity-btn {
+    min-height: 25px !important;
+    min-width: 25px !important;
+    height: 25px !important;
+    width: 25px !important;
   }
   
   /* Better spacing for mobile */

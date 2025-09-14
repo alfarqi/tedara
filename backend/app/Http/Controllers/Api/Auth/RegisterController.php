@@ -35,8 +35,21 @@ class RegisterController extends Controller
             ], 422);
         }
 
+        // Generate store name from user name if not provided
+        $storeName = $request->store_name ?? $request->name . "'s Store";
+        
         // Generate store handle if not provided
-        $storeHandle = $request->store_handle ?? Str::slug($request->store_name);
+        $storeHandle = $request->store_handle ?? Str::slug($storeName);
+        
+        // Fallback to user name if store_name is also empty
+        if (empty($storeHandle)) {
+            $storeHandle = Str::slug($request->name);
+        }
+        
+        // Final fallback to ensure we always have a handle
+        if (empty($storeHandle)) {
+            $storeHandle = 'store-' . time();
+        }
         
         // Ensure store handle is unique
         $originalHandle = $storeHandle;
@@ -56,11 +69,31 @@ class RegisterController extends Controller
             'phone' => $request->phone,
             'location' => $request->location,
             'store_handle' => $storeHandle,
-            'store_name' => $request->store_name,
+            'store_name' => $storeName,
         ]);
 
         // Dispatch UserRegistered event to provision tenant defaults
-        event(new UserRegistered($user));
+        \Log::info('RegisterController: Dispatching UserRegistered event', [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'store_handle' => $user->store_handle,
+            'store_name' => $user->store_name,
+            'generated_store_name' => $storeName,
+        ]);
+        
+        try {
+            event(new UserRegistered($user));
+            \Log::info('RegisterController: UserRegistered event dispatched successfully');
+        } catch (\Exception $e) {
+            \Log::error('RegisterController: Failed to dispatch UserRegistered event', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            // Don't fail the registration if tenant provisioning fails
+            // The user can still use the system, but tenant will need to be created manually
+        }
 
         // Create token for immediate login
         $token = $user->createToken('auth-token')->plainTextToken;
@@ -105,4 +138,6 @@ class RegisterController extends Controller
         ]);
     }
 }
+
+
 

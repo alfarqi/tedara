@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useOnboarding } from '../../contexts/OnboardingContext';
 import { storeService } from '../../services/storeService';
 import { useAuth } from '../../contexts/AuthContext';
-import { useToast } from '../../contexts/ToastContext';
+// import { useToast } from '../../contexts/ToastContext';
 
 const ShopNameStep: React.FC = () => {
   const { data, updateShopName, updateStoreLink, nextStep } = useOnboarding();
   const { token } = useAuth();
-  const { showError } = useToast();
+  // const { showError } = useToast();
   const [shopName, setShopName] = useState(data.shopName);
   const [storeLink, setStoreLink] = useState(data.storeLink || '');
   const [isValid, setIsValid] = useState(false);
@@ -33,7 +33,7 @@ const ShopNameStep: React.FC = () => {
 
       setIsCheckingDomain(true);
       try {
-        const response = await storeService.checkDomainAvailability(domain, token);
+        const response = await storeService.checkDomainAvailability(domain, token || undefined);
         if (response.data?.available) {
           setDomainStatus('available');
           setDomainMessage('✓ Domain is available');

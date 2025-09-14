@@ -25,7 +25,6 @@ const DonutChartCard: React.FC<DonutChartCardProps> = ({
   value, 
   subtitle, 
   badge,
-  chartData,
   growth 
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
@@ -46,14 +45,14 @@ const DonutChartCard: React.FC<DonutChartCardProps> = ({
     };
 
     const initializeChart = () => {
-      if (!chartRef.current || typeof window.echarts === 'undefined') {
+      if (!chartRef.current || typeof (window as any).echarts === 'undefined') {
         return;
       }
 
       // Use the same random data generation as the reference
       const data = generateRandomData();
 
-      const chart = window.echarts.init(chartRef.current);
+      const chart = (window as any).echarts.init(chartRef.current);
       
       const option = {
         tooltip: {

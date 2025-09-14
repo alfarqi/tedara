@@ -28,7 +28,7 @@ export const useBusinessCategories = () => {
       setLoading(true);
       setError(null);
       
-      const response = await businessCategoryService.getCategories(token);
+      const response = await businessCategoryService.getCategories(token || undefined);
       const fetchedCategories = response.data || [];
       
       setCategories(fetchedCategories);
@@ -46,7 +46,7 @@ export const useBusinessCategories = () => {
 
   const createCategory = useCallback(async (name: string, description?: string) => {
     try {
-      const response = await businessCategoryService.createCategory(name, description, token);
+      const response = await businessCategoryService.createCategory(name, description, token || undefined);
       // Add the new category to the list if it was created
       if (response.data) {
         const newCategories = [...categories];

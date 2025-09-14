@@ -9,13 +9,10 @@ use App\Models\Tenant;
 use App\Models\TenantDomain;
 use App\Models\TenantThemeSetting;
 use App\Models\Theme;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Str;
 
-class ProvisionTenantDefaults implements ShouldQueue
+class ProvisionTenantDefaults
 {
-    use InteractsWithQueue;
 
     /**
      * Create the event listener.
@@ -30,39 +27,125 @@ class ProvisionTenantDefaults implements ShouldQueue
      */
     public function handle(UserRegistered $event): void
     {
-        $user = $event->user;
-        
-        // Extract store information from user
-        $storeHandle = $user->store_handle ?? Str::slug($user->name);
-        $storeName = $user->store_name ?? $user->name . "'s Store";
-        
-        // Create tenant
-        $tenant = Tenant::create([
-            'handle' => $storeHandle,
-            'display_name' => $storeName,
-            'status' => 'active',
-        ]);
-
-        // Create primary domain
-        $primaryDomain = $storeHandle . '.tedara.com';
-        TenantDomain::create([
-            'tenant_id' => $tenant->id,
-            'domain' => $primaryDomain,
-            'is_primary' => true,
-        ]);
-
-        // Assign classic theme with default settings
-        $theme = Theme::where('key', 'classic')->first();
-        if ($theme) {
-            TenantThemeSetting::create([
-                'tenant_id' => $tenant->id,
-                'theme_id' => $theme->id,
-                'settings' => $this->getDefaultThemeSettings($storeName),
+        try {
+            $user = $event->user;
+            
+            // Log the event
+            \Log::info('ProvisionTenantDefaults: Starting tenant creation for user', [
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'store_handle' => $user->store_handle,
+                'store_name' => $user->store_name,
             ]);
-        }
+            
+            // Extract store information from user
+            $storeHandle = $user->store_handle ?? Str::slug($user->name);
+            $storeName = $user->store_name ?? $user->name . "'s Store";
+            
+            // Ensure store handle is not empty
+            if (empty($storeHandle)) {
+                $storeHandle = Str::slug($user->name);
+                \Log::warning('ProvisionTenantDefaults: Empty store_handle, using name slug', [
+                    'user_id' => $user->id,
+                    'user_name' => $user->name,
+                    'generated_handle' => $storeHandle,
+                ]);
+            }
+            
+            // Final fallback
+            if (empty($storeHandle)) {
+                $storeHandle = 'store-' . $user->id;
+                \Log::warning('ProvisionTenantDefaults: Still empty handle, using user ID', [
+                    'user_id' => $user->id,
+                    'generated_handle' => $storeHandle,
+                ]);
+            }
+            
+            // Update user's store_handle if it was empty
+            if (empty($user->store_handle)) {
+                $user->store_handle = $storeHandle;
+                if (empty($user->store_name)) {
+                    $user->store_name = $user->name . "'s Store";
+                }
+                $user->save();
+                
+                \Log::info('ProvisionTenantDefaults: Updated user store_handle', [
+                    'user_id' => $user->id,
+                    'new_store_handle' => $storeHandle,
+                    'new_store_name' => $user->store_name,
+                ]);
+            }
+            
+            // Check if tenant already exists
+            $existingTenant = Tenant::where('handle', $storeHandle)->first();
+            if ($existingTenant) {
+                \Log::info('ProvisionTenantDefaults: Tenant already exists, skipping', [
+                    'tenant_id' => $existingTenant->id,
+                    'handle' => $storeHandle,
+                ]);
+                return;
+            }
+            
+            // Create tenant
+            $tenant = Tenant::create([
+                'handle' => $storeHandle,
+                'display_name' => $storeName,
+                'status' => 'active',
+            ]);
+            
+            \Log::info('ProvisionTenantDefaults: Tenant created successfully', [
+                'tenant_id' => $tenant->id,
+                'handle' => $storeHandle,
+            ]);
 
-        // Create default pages
-        $this->createDefaultPages($tenant);
+            // Create primary domain (use localhost for development)
+            $primaryDomain = $storeHandle . '.localhost';
+            TenantDomain::create([
+                'tenant_id' => $tenant->id,
+                'domain' => $primaryDomain,
+                'is_primary' => true,
+            ]);
+            
+            \Log::info('ProvisionTenantDefaults: Domain created', [
+                'domain' => $primaryDomain,
+            ]);
+
+            // Assign classic theme with default settings
+            $theme = Theme::where('key', 'classic')->first();
+            if ($theme) {
+                TenantThemeSetting::create([
+                    'tenant_id' => $tenant->id,
+                    'theme_id' => $theme->id,
+                    'settings' => $this->getDefaultThemeSettings($storeName),
+                ]);
+                
+                \Log::info('ProvisionTenantDefaults: Theme settings created', [
+                    'theme_id' => $theme->id,
+                ]);
+            } else {
+                \Log::warning('ProvisionTenantDefaults: Classic theme not found');
+            }
+
+            // Create default pages
+            $this->createDefaultPages($tenant);
+            
+            \Log::info('ProvisionTenantDefaults: Tenant provisioning completed successfully', [
+                'tenant_id' => $tenant->id,
+                'handle' => $storeHandle,
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('ProvisionTenantDefaults: Failed to create tenant', [
+                'user_id' => $user->id ?? null,
+                'user_name' => $user->name ?? null,
+                'store_handle' => $user->store_handle ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            // Re-throw the exception so it can be handled by the application
+            throw $e;
+        }
     }
 
     /**
@@ -95,8 +178,14 @@ class ProvisionTenantDefaults implements ShouldQueue
      */
     private function createDefaultPages(Tenant $tenant): void
     {
-        // Create home page
-        $homePage = StorefrontPage::create([
+        try {
+            \Log::info('ProvisionTenantDefaults: Creating default pages', [
+                'tenant_id' => $tenant->id,
+                'handle' => $tenant->handle,
+            ]);
+            
+            // Create home page
+            $homePage = StorefrontPage::create([
             'tenant_id' => $tenant->id,
             'slug' => 'home',
             'title' => 'Welcome to ' . $tenant->display_name,
@@ -162,6 +251,23 @@ class ProvisionTenantDefaults implements ShouldQueue
 
         // Create sections for contact page
         $this->createContactPageSections($contactPage, $tenant);
+        
+        \Log::info('ProvisionTenantDefaults: Default pages created successfully', [
+            'tenant_id' => $tenant->id,
+            'handle' => $tenant->handle,
+        ]);
+        
+        } catch (\Exception $e) {
+            \Log::error('ProvisionTenantDefaults: Failed to create default pages', [
+                'tenant_id' => $tenant->id,
+                'handle' => $tenant->handle,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            // Re-throw the exception so it can be handled by the application
+            throw $e;
+        }
     }
 
     /**
@@ -405,4 +511,6 @@ class ProvisionTenantDefaults implements ShouldQueue
         ]);
     }
 }
+
+
 
