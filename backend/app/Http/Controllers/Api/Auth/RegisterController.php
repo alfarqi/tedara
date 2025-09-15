@@ -22,7 +22,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'store_name' => 'required|string|max:255',
+            'store_name' => 'nullable|string|max:255', // Changed from required to nullable
             'store_handle' => 'nullable|string|max:255|unique:users',
             'phone' => 'nullable|string|max:20',
             'location' => 'nullable|string|max:255',
@@ -72,28 +72,15 @@ class RegisterController extends Controller
             'store_name' => $storeName,
         ]);
 
-        // Dispatch UserRegistered event to provision tenant defaults
-        \Log::info('RegisterController: Dispatching UserRegistered event', [
+        // Note: Tenant creation is now handled during onboarding process
+        // No need to create tenant during registration
+        \Log::info('RegisterController: User registered successfully', [
             'user_id' => $user->id,
             'user_name' => $user->name,
             'store_handle' => $user->store_handle,
             'store_name' => $user->store_name,
             'generated_store_name' => $storeName,
         ]);
-        
-        try {
-            event(new UserRegistered($user));
-            \Log::info('RegisterController: UserRegistered event dispatched successfully');
-        } catch (\Exception $e) {
-            \Log::error('RegisterController: Failed to dispatch UserRegistered event', [
-                'user_id' => $user->id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            
-            // Don't fail the registration if tenant provisioning fails
-            // The user can still use the system, but tenant will need to be created manually
-        }
 
         // Create token for immediate login
         $token = $user->createToken('auth-token')->plainTextToken;
@@ -109,7 +96,7 @@ class RegisterController extends Controller
                 'role' => $user->role,
             ],
             'token' => $token,
-            'tenant_provisioned' => true,
+            'tenant_provisioned' => false, // Tenant will be created during onboarding
         ], 201);
     }
 

@@ -55,19 +55,99 @@ class StoreController extends BaseController
             DB::beginTransaction();
 
             $data = $request->validated();
+            $user = $request->user();
 
             // Add owner_id based on authenticated user
-            if ($request->user()->isStoreOwner()) {
-                $data['owner_id'] = $request->user()->id;
+            if ($user->isStoreOwner()) {
+                $data['owner_id'] = $user->id;
             }
 
             $store = Store::create($data);
+
+            // Update user's store_handle and store_name with the actual store information
+            if ($user->isStoreOwner()) {
+                $storeHandle = \Illuminate\Support\Str::slug($data['name']);
+                
+                // Ensure store handle is unique
+                $originalHandle = $storeHandle;
+                $counter = 1;
+                while (\App\Models\User::where('store_handle', $storeHandle)->where('id', '!=', $user->id)->exists()) {
+                    $storeHandle = $originalHandle . '-' . $counter;
+                    $counter++;
+                }
+                
+                $user->update([
+                    'store_handle' => $storeHandle,
+                    'store_name' => $data['name'],
+                ]);
+                
+                \Log::info('StoreController: Updated user store information', [
+                    'user_id' => $user->id,
+                    'store_handle' => $storeHandle,
+                    'store_name' => $data['name'],
+                ]);
+                
+                // Create or update tenant with the store information
+                $tenant = \App\Models\Tenant::where('handle', $user->store_handle)->first();
+                
+                if (!$tenant) {
+                    // Create new tenant
+                    $tenant = \App\Models\Tenant::create([
+                        'handle' => $storeHandle,
+                        'display_name' => $data['name'],
+                        'status' => 'active',
+                    ]);
+                    
+                    // Create primary domain
+                    $primaryDomain = $storeHandle . '.localhost';
+                    \App\Models\TenantDomain::create([
+                        'tenant_id' => $tenant->id,
+                        'domain' => $primaryDomain,
+                        'is_primary' => true,
+                    ]);
+                    
+                    // Assign classic theme with default settings
+                    $theme = \App\Models\Theme::where('key', 'classic')->first();
+                    if ($theme) {
+                        \App\Models\TenantThemeSetting::create([
+                            'tenant_id' => $tenant->id,
+                            'theme_id' => $theme->id,
+                            'settings' => $this->getDefaultThemeSettings($data['name']),
+                        ]);
+                    }
+                    
+                    // Create default pages
+                    $this->createDefaultPages($tenant);
+                    
+                    \Log::info('StoreController: Created tenant for store', [
+                        'tenant_id' => $tenant->id,
+                        'handle' => $storeHandle,
+                        'display_name' => $data['name'],
+                    ]);
+                } else {
+                    // Update existing tenant
+                    $tenant->update([
+                        'display_name' => $data['name'],
+                    ]);
+                    
+                    \Log::info('StoreController: Updated existing tenant', [
+                        'tenant_id' => $tenant->id,
+                        'handle' => $storeHandle,
+                        'display_name' => $data['name'],
+                    ]);
+                }
+            }
 
             DB::commit();
 
             return $this->createdResponse($store->load(['owner']), 'Store created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('StoreController: Failed to create store', [
+                'user_id' => $request->user()->id ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             return $this->serverErrorResponse('Failed to create store: ' . $e->getMessage());
         }
     }
@@ -295,6 +375,222 @@ class StoreController extends BaseController
             'available' => $isAvailable,
             'message' => $isAvailable ? 'Domain is available' : 'Domain is already taken'
         ], 'Domain availability checked');
+    }
+
+    /**
+     * Get default theme settings for the tenant.
+     */
+    private function getDefaultThemeSettings(string $storeName): array
+    {
+        return [
+            'primary_color' => '#6f42c1',
+            'secondary_color' => '#6c757d',
+            'font_family' => 'Inter, sans-serif',
+            'header_style' => 'classic',
+            'footer_style' => 'simple',
+            'logo_url' => '/images/logo.png',
+            'favicon_url' => '/images/favicon.ico',
+            'store_name' => $storeName,
+            'contact_email' => 'contact@' . \Illuminate\Support\Str::slug($storeName) . '.com',
+            'contact_phone' => '+1 (555) 123-4567',
+            'social_links' => [
+                'facebook' => '',
+                'twitter' => '',
+                'instagram' => '',
+                'linkedin' => '',
+            ],
+        ];
+    }
+
+    /**
+     * Create default pages for the tenant.
+     */
+    private function createDefaultPages(\App\Models\Tenant $tenant): void
+    {
+        try {
+            \Log::info('StoreController: Creating default pages', [
+                'tenant_id' => $tenant->id,
+                'handle' => $tenant->handle,
+            ]);
+            
+            // Create home page
+            $homePage = \App\Models\StorefrontPage::create([
+                'tenant_id' => $tenant->id,
+                'slug' => 'home',
+                'title' => 'Welcome to ' . $tenant->display_name,
+                'template' => 'home',
+                'seo_json' => [
+                    'title' => 'Welcome to ' . $tenant->display_name,
+                    'description' => 'Discover amazing products at ' . $tenant->display_name,
+                    'keywords' => 'store, shopping, products, ' . $tenant->handle,
+                ],
+                'is_home' => true,
+            ]);
+
+            // Create sections for home page
+            $this->createHomePageSections($homePage, $tenant);
+
+            // Create catalog page
+            $catalogPage = \App\Models\StorefrontPage::create([
+                'tenant_id' => $tenant->id,
+                'slug' => 'catalog',
+                'title' => 'Product Catalog',
+                'template' => 'catalog',
+                'seo_json' => [
+                    'title' => 'Product Catalog - ' . $tenant->display_name,
+                    'description' => 'Browse our complete product catalog',
+                    'keywords' => 'catalog, products, shop, ' . $tenant->handle,
+                ],
+                'is_home' => false,
+            ]);
+
+            // Create sections for catalog page
+            $this->createCatalogPageSections($catalogPage);
+
+            // Create about page
+            $aboutPage = \App\Models\StorefrontPage::create([
+                'tenant_id' => $tenant->id,
+                'slug' => 'about',
+                'title' => 'About Us',
+                'template' => 'about',
+                'seo_json' => [
+                    'title' => 'About Us - ' . $tenant->display_name,
+                    'description' => 'Learn more about ' . $tenant->display_name,
+                    'keywords' => 'about, company, ' . $tenant->handle,
+                ],
+                'is_home' => false,
+            ]);
+
+            // Create sections for about page
+            $this->createAboutPageSections($aboutPage);
+
+            // Create contact page
+            $contactPage = \App\Models\StorefrontPage::create([
+                'tenant_id' => $tenant->id,
+                'slug' => 'contact',
+                'title' => 'Contact Us',
+                'template' => 'contact',
+                'seo_json' => [
+                    'title' => 'Contact Us - ' . $tenant->display_name,
+                    'description' => 'Get in touch with ' . $tenant->display_name,
+                    'keywords' => 'contact, support, ' . $tenant->handle,
+                ],
+                'is_home' => false,
+            ]);
+
+            // Create sections for contact page
+            $this->createContactPageSections($contactPage);
+            
+            \Log::info('StoreController: Default pages created successfully', [
+                'tenant_id' => $tenant->id,
+                'handle' => $tenant->handle,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('StoreController: Failed to create default pages', [
+                'tenant_id' => $tenant->id,
+                'handle' => $tenant->handle,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Create sections for home page.
+     */
+    private function createHomePageSections(\App\Models\StorefrontPage $page, \App\Models\Tenant $tenant): void
+    {
+        // Hero section
+        \App\Models\StorefrontSection::create([
+            'page_id' => $page->id,
+            'type' => 'hero',
+            'props' => json_encode([
+                'title' => 'Welcome to ' . $tenant->display_name,
+                'subtitle' => 'Discover amazing products and great deals',
+                'button_text' => 'Shop Now',
+                'button_link' => '/catalog',
+                'background_image' => '/images/hero-bg.jpg',
+            ]),
+            'sort' => 1,
+        ]);
+
+        // Product grid section
+        \App\Models\StorefrontSection::create([
+            'page_id' => $page->id,
+            'type' => 'product_grid',
+            'props' => json_encode([
+                'title' => 'Featured Products',
+                'limit' => 8,
+                'show_prices' => true,
+                'show_add_to_cart' => true,
+            ]),
+            'sort' => 2,
+        ]);
+
+        // Content section
+        \App\Models\StorefrontSection::create([
+            'page_id' => $page->id,
+            'type' => 'content',
+            'props' => json_encode([
+                'title' => 'About Our Store',
+                'text' => 'We are committed to providing high-quality products and excellent customer service. Shop with confidence knowing that your satisfaction is our priority.',
+            ]),
+            'sort' => 3,
+        ]);
+    }
+
+    /**
+     * Create sections for catalog page.
+     */
+    private function createCatalogPageSections(\App\Models\StorefrontPage $page): void
+    {
+        \App\Models\StorefrontSection::create([
+            'page_id' => $page->id,
+            'type' => 'product_grid',
+            'props' => json_encode([
+                'title' => 'All Products',
+                'limit' => 20,
+                'show_prices' => true,
+                'show_add_to_cart' => true,
+                'show_filters' => true,
+            ]),
+            'sort' => 1,
+        ]);
+    }
+
+    /**
+     * Create sections for about page.
+     */
+    private function createAboutPageSections(\App\Models\StorefrontPage $page): void
+    {
+        \App\Models\StorefrontSection::create([
+            'page_id' => $page->id,
+            'type' => 'content',
+            'props' => json_encode([
+                'title' => 'Our Story',
+                'text' => 'We are passionate about providing quality products and exceptional service to our customers.',
+            ]),
+            'sort' => 1,
+        ]);
+    }
+
+    /**
+     * Create sections for contact page.
+     */
+    private function createContactPageSections(\App\Models\StorefrontPage $page): void
+    {
+        \App\Models\StorefrontSection::create([
+            'page_id' => $page->id,
+            'type' => 'contact_form',
+            'props' => json_encode([
+                'title' => 'Get In Touch',
+                'email' => 'contact@example.com',
+                'phone' => '+1 (555) 123-4567',
+                'address' => '123 Main Street, City, State 12345',
+            ]),
+            'sort' => 1,
+        ]);
     }
 }
 
