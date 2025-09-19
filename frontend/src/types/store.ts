@@ -23,6 +23,7 @@ export interface Store {
     tiktok?: string;
     whatsapp?: string;
     telegram?: string;
+    banner_image?: string;
   };
   created_at: string;
   updated_at: string;

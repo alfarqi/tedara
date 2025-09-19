@@ -103,10 +103,13 @@ class OrderService {
    * Get a specific order by ID
    */
   async getOrder(id: number, token?: string): Promise<ApiResponse<Order>> {
-    return apiRequest<Order>(`/api/orders/${id}`, {
+    console.log('🔍 OrderService.getOrder called with:', { id, token: token ? 'present' : 'missing' });
+    const result = await apiRequest<Order>(`/api/orders/${id}`, {
       method: 'GET',
       headers: getAuthHeaders(token),
     });
+    console.log('🔍 OrderService.getOrder result:', result);
+    return result;
   }
 
   /**
@@ -137,6 +140,7 @@ class OrderService {
       // Map snake_case to camelCase for frontend compatibility
       orderId: order.order_id || order.id?.toString() || 'Unknown',
       formattedTotal: this.formatCurrency(order.total || 0),
+      amount: this.formatCurrency(order.total || 0), // Add amount field for display
       formattedDate: this.formatDate(order.created_at),
       statusText: this.getStatusText(order.status),
       paymentStatusText: this.getPaymentStatusText(order.payment_status),

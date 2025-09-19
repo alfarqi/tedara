@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useParams, Navigate, useLocation } from '
 import { Toaster } from '@/theme/classic/components/ui/toaster';
 import { getTheme } from '@/theme/registry';
 import { ErrorBoundary } from '@/theme/classic/components/ErrorBoundary';
+import { CustomerAuthProvider } from './contexts/CustomerAuthContext';
 
 // Get the classic theme components
 const classicTheme = getTheme('classic');
@@ -18,6 +19,8 @@ const AddAddress = classicTheme.pages.addAddress;
 const Category = classicTheme.pages.category;
 const Order = classicTheme.pages.order;
 const Contact = classicTheme.pages.contact;
+const Auth = classicTheme.pages.auth;
+const OrderConfirmation = classicTheme.pages.orderConfirmation;
 
 // Component to handle redirects for common routes without tenant
 function RedirectHandler() {
@@ -29,7 +32,7 @@ function RedirectHandler() {
   
   if (commonRoutes.includes(pathname)) {
     // Redirect to a default tenant (you can change this to any tenant)
-    return <Navigate to="/faisan" replace />;
+    return <Navigate to="/ahlam" replace />;
   }
   
   return (
@@ -62,25 +65,29 @@ function TenantRoutes() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="category/:categorySlug" element={<Category />} />
-          <Route path="product/:categorySlug/:productSlug" element={<Product />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="checkout" element={<Checkout />} />
-          <Route path="location-selection" element={<LocationSelection />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="orders/:orderId" element={<Order />} />
-          <Route path="account" element={<Account />} />
+    <CustomerAuthProvider>
+      <div className="min-h-screen bg-background">
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="category/:categorySlug" element={<Category />} />
+            <Route path="product/:categorySlug/:productSlug" element={<Product />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="location-selection" element={<LocationSelection />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="orders/:orderId" element={<Order />} />
+            <Route path="account" element={<Account />} />
           <Route path="addresses" element={<Addresses />} />
           <Route path="add-address" element={<AddAddress />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="auth" element={<Auth />} />
+          <Route path="order-confirmation" element={<OrderConfirmation />} />
         </Route>
-      </Routes>
-      <Toaster />
-    </div>
+        </Routes>
+        <Toaster />
+      </div>
+    </CustomerAuthProvider>
   );
 }
 

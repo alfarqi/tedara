@@ -4,23 +4,40 @@ import { Button } from '../components/ui/button';
 import { useCartStore } from '../stores/cartStore';
 import { useToast } from '../hooks/use-toast';
 import { useProductContext } from '../contexts/ProductContext';
-import type { Product } from '../types';
-import productsData from '../data/products.json';
+import { useTenant } from '../../../hooks/useTenant';
+import { productService, type Product } from '../services/productService';
 
 export function ProductFixedBar() {
   const { categorySlug, productSlug } = useParams<{ categorySlug: string; productSlug: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(true);
   const { notes } = useProductContext();
   const { addItem } = useCartStore();
   const { toast } = useToast();
+  const tenant = useTenant();
 
   useEffect(() => {
-    const foundProduct = productsData.find(
-      prod => prod.categorySlug === categorySlug && prod.slug === productSlug
-    );
-    setProduct(foundProduct || null);
-  }, [categorySlug, productSlug]);
+    const loadProduct = async () => {
+      if (!tenant || !categorySlug || !productSlug) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const foundProduct = await productService.findProductBySlug(tenant, categorySlug, productSlug);
+        setProduct(foundProduct);
+      } catch (error) {
+        console.error('Failed to load product:', error);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [tenant, categorySlug, productSlug]);
 
   const handleAddToCart = () => {
     if (product) {
@@ -30,14 +47,15 @@ export function ProductFixedBar() {
       }
       
       toast({
-        title: "Added to cart",
+        title: "✅ Added to cart",
         description: `${quantity}x ${product.name} has been added to your cart.`,
-        className: "bg-purple-600 text-white border-purple-700",
+        className: "bg-white text-gray-900 border-gray-200 shadow-lg",
+        duration: 3000,
       });
     }
   };
 
-  if (!product) {
+  if (loading || !product) {
     return null;
   }
 

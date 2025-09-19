@@ -15,7 +15,7 @@ export function CheckoutFixedBar() {
   const total = subtotal + deliveryFee;
 
   const handleProceedToCheckout = () => {
-    navigate(`/${tenant}/checkout`);
+    navigate(`/${tenant}/auth`);
   };
 
   if (items.length === 0) {

@@ -35,6 +35,31 @@ class UpdateStoreRequest extends FormRequest
             'timezone' => 'nullable|string|max:50',
             'logo' => 'nullable|string|max:500',
             'status' => 'sometimes|required|in:active,inactive,suspended',
+            'settings' => 'nullable|array',
+            // Store information fields
+            'settings.slogan' => 'nullable|string|max:255',
+            'settings.contact_email' => 'nullable|email|max:255',
+            'settings.contact_phone' => 'nullable|string|max:50',
+            // Social media fields (accept account names, not full URLs)
+            'settings.instagram' => 'nullable|string|max:255',
+            'settings.whatsapp' => 'nullable|string|max:255',
+            'settings.facebook' => 'nullable|string|max:255',
+            'settings.twitter' => 'nullable|string|max:255',
+            'settings.linkedin' => 'nullable|string|max:255',
+            'settings.youtube' => 'nullable|string|max:255',
+            'settings.tiktok' => 'nullable|string|max:255',
+            'settings.telegram' => 'nullable|string|max:255',
+            'settings.banner_image' => 'nullable|string|max:500',
+            // Social links object
+            'settings.social_links' => 'nullable|array',
+            'settings.social_links.instagram' => 'nullable|string|max:255',
+            'settings.social_links.whatsapp' => 'nullable|string|max:255',
+            'settings.social_links.facebook' => 'nullable|string|max:255',
+            'settings.social_links.twitter' => 'nullable|string|max:255',
+            'settings.social_links.linkedin' => 'nullable|string|max:255',
+            'settings.social_links.youtube' => 'nullable|string|max:255',
+            'settings.social_links.tiktok' => 'nullable|string|max:255',
+            'settings.social_links.telegram' => 'nullable|string|max:255',
         ];
     }
 

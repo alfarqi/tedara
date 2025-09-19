@@ -27,6 +27,27 @@ export interface Customer {
   }>;
 }
 
+export interface CustomerAddress {
+  id: number;
+  type: 'home' | 'work' | 'other';
+  name: string;
+  address: string;
+  city: string;
+  area: string;
+  building?: string;
+  floor?: string;
+  apartment?: string;
+  latitude?: number | string;
+  longitude?: number | string;
+  is_default: boolean;
+  full_address: string;
+  coordinates: {
+    lat: number | string;
+    lng: number | string;
+  };
+  created_at: string;
+}
+
 export interface CustomerFilters {
   search?: string;
   status?: string;
@@ -147,6 +168,14 @@ export const customerService = {
       method: 'POST',
       headers: getAuthHeaders(token),
       body: JSON.stringify({ customer_ids: customerIds }),
+    });
+  },
+
+  // Get customer addresses
+  async getCustomerAddresses(customerId: string, token?: string): Promise<any> {
+    return apiRequest<CustomerAddress[]>(`${API_CONFIG.ENDPOINTS.CUSTOMERS}/${customerId}/addresses`, {
+      method: 'GET',
+      headers: getAuthHeaders(token),
     });
   },
 };

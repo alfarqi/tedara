@@ -85,8 +85,13 @@ const OrderDetails: React.FC = () => {
       const response = await orderService.getOrder(parseInt(orderId!), token || undefined);
       
       if (response.data) {
-        const order = response.data;
+        // Handle different response structures
+        const order = response.data.data || response.data;
+        console.log('Full API response:', response);
         console.log('Full order data:', order);
+        console.log('Order items (orderItems):', order.orderItems);
+        console.log('Order items (order_items):', order.order_items);
+        console.log('Order items count:', (order.orderItems || order.order_items)?.length || 0);
         
         // Format the order data for display
         setOrderForm({
@@ -119,9 +124,10 @@ const OrderDetails: React.FC = () => {
             method: order.payment_method || '',
             status: order.payment_status || ''
           },
-          products: order.orderItems?.map((item: any) => {
+          products: (order.orderItems || order.order_items)?.map((item: any) => {
             console.log('Order item:', item);
-            return {
+            console.log('Product data:', item.product);
+            const mappedProduct = {
               id: item.id?.toString() || '',
               name: item.product?.name || 'Unknown Product',
               quantity: item.quantity || 0,
@@ -130,9 +136,15 @@ const OrderDetails: React.FC = () => {
               totalWeight: 0, // Not available in API
               total: parseFloat(item.total || item.total_price || 0) || 0
             };
+            console.log('Mapped product:', mappedProduct);
+            return mappedProduct;
           }) || [],
           tags: [] // Not available in API
         });
+        
+        console.log('Final orderForm state:', orderForm);
+        console.log('Products array length:', orderForm.products.length);
+        console.log('Products array:', orderForm.products);
       }
     } catch (error) {
       console.error('Error loading order details:', error);
@@ -500,7 +512,11 @@ const OrderDetails: React.FC = () => {
               </h5>
             </div>
             <div className="card-body">
-              {orderForm.products.length > 0 ? (
+              {(() => {
+                console.log('Rendering Products section - products.length:', orderForm.products.length);
+                console.log('Rendering Products section - products:', orderForm.products);
+                return orderForm.products.length > 0;
+              })() ? (
                 <div className="table-responsive">
                   <table className="table table-hover">
                     <thead className="bg-light">

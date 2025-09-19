@@ -34,16 +34,20 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = () => {
   const location = useLocation();
   const tenant = useTenant();
-  const { loading, error } = useTheme(tenant || '');
+  const { theme, store, loading, error } = useTheme(tenant || '');
   
   // Check if current page should have custom layout
   const isLocationSelectionPage = location.pathname.endsWith('/location-selection');
   const isAddAddressPage = location.pathname.endsWith('/add-address');
   const isAccountPage = location.pathname.endsWith('/account');
-  const isOrdersPage = location.pathname.endsWith('/orders') || location.pathname.includes('/orders/');
+  const isOrdersPage = location.pathname.endsWith('/orders');
+  const isOrderDetailsPage = location.pathname.includes('/orders/') && !location.pathname.endsWith('/orders');
   const isAddressesPage = location.pathname.endsWith('/addresses');
   const isCartPage = location.pathname.endsWith('/cart');
   const isCheckoutPage = location.pathname.endsWith('/checkout');
+  const isAuthPage = location.pathname.endsWith('/auth');
+  const isProductPage = location.pathname.includes('/product/');
+  const isOrderConfirmationPage = location.pathname.endsWith('/order-confirmation');
 
   // Show loading state while fetching theme
   if (loading) {
@@ -113,8 +117,8 @@ export const Layout: React.FC<LayoutProps> = () => {
     );
   }
 
-  // For location selection and add address pages, render without header and bottom nav
-  if (isLocationSelectionPage || isAddAddressPage) {
+  // For location selection, add address, and order confirmation pages, render without header and bottom nav
+  if (isLocationSelectionPage || isAddAddressPage || isOrderConfirmationPage) {
     return (
       <ProductProvider>
         <div className="min-h-screen flex flex-col">
@@ -131,7 +135,7 @@ export const Layout: React.FC<LayoutProps> = () => {
     return (
       <ProductProvider>
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <Header store={store} theme={theme} />
           <main className="flex-1 pb-20 md:pb-0">
             <Outlet />
           </main>
@@ -146,7 +150,7 @@ export const Layout: React.FC<LayoutProps> = () => {
     return (
       <ProductProvider>
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <Header store={store} theme={theme} />
           <main className="flex-1">
             <Outlet />
           </main>
@@ -160,7 +164,7 @@ export const Layout: React.FC<LayoutProps> = () => {
     return (
       <ProductProvider>
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <Header store={store} theme={theme} />
           <main className="flex-1 pb-16 md:pb-0">
             <Outlet />
           </main>
@@ -170,11 +174,53 @@ export const Layout: React.FC<LayoutProps> = () => {
     );
   }
 
+  // For order details pages, render with header only (no bottom nav)
+  if (isOrderDetailsPage) {
+    return (
+      <ProductProvider>
+        <div className="min-h-screen flex flex-col">
+          <Header store={store} theme={theme} />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+        </div>
+      </ProductProvider>
+    );
+  }
+
+  // For auth page, render with header only (no bottom nav)
+  if (isAuthPage) {
+    return (
+      <ProductProvider>
+        <div className="min-h-screen flex flex-col">
+          <Header store={store} theme={theme} />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+        </div>
+      </ProductProvider>
+    );
+  }
+
+  // For product pages, render with header only (no bottom nav)
+  if (isProductPage) {
+    return (
+      <ProductProvider>
+        <div className="min-h-screen flex flex-col">
+          <Header store={store} theme={theme} />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+        </div>
+      </ProductProvider>
+    );
+  }
+
   // Default layout for all other pages
   return (
     <ProductProvider>
       <div className="min-h-screen flex flex-col">
-        <Header />
+        <Header store={store} theme={theme} />
         <main className="flex-1 pb-16 md:pb-0">
           <Outlet />
         </main>

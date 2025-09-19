@@ -22,8 +22,8 @@ class ProductController extends Controller
         }
 
         $products = Product::where('tenant_id', $tenant->id)
-            ->select(['id', 'name', 'slug', 'description', 'price', 'image', 'is_active', 'created_at', 'updated_at'])
-            ->where('is_active', true)
+            ->with(['category'])
+            ->where('status', 'active')
             ->orderBy('name')
             ->paginate(20);
 
@@ -75,7 +75,7 @@ class ProductController extends Controller
     /**
      * Get a specific product by slug.
      */
-    public function show(Request $request, string $tenantHandle, string $slug): JsonResponse
+    public function show(Request $request, string $tenantHandle, string $id): JsonResponse
     {
         $tenant = $this->getTenant($tenantHandle);
         
@@ -84,19 +84,19 @@ class ProductController extends Controller
         }
 
         $product = Product::where('tenant_id', $tenant->id)
-            ->where('slug', $slug)
-            ->where('is_active', true)
-            ->first();
+            ->with(['category'])
+            ->where('status', 'active')
+            ->find($id);
 
         if (!$product) {
             // Return sample data if product not found
             $product = (object) [
-                'id' => 'sample-' . $slug,
-                'name' => 'Sample ' . ucwords(str_replace('-', ' ', $slug)),
-                'slug' => $slug,
-                'description' => 'This is a sample product description for ' . $slug . '.',
+                'id' => 'sample-' . $id,
+                'name' => 'Sample Product ' . $id,
+                'slug' => 'sample-product-' . $id,
+                'description' => 'This is a sample product description for product ' . $id . '.',
                 'price' => 39.99,
-                'image' => '/images/sample-' . $slug . '.jpg',
+                'image' => '/images/sample-' . $id . '.jpg',
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -120,6 +120,55 @@ class ProductController extends Controller
                     'handle' => $tenant->handle,
                     'display_name' => $tenant->display_name,
                 ]
+            ]
+        ]);
+    }
+
+    /**
+     * Get products by category.
+     */
+    public function byCategory(Request $request, string $tenantHandle, string $categorySlug): JsonResponse
+    {
+        $tenant = $this->getTenant($tenantHandle);
+        
+        if (!$tenant) {
+            return response()->json(['error' => 'Tenant not found'], 404);
+        }
+
+        // Find category by slug (assuming we have a slug field or we'll use name)
+        $category = \App\Models\Category::where('store_id', $tenant->store()->id)
+            ->where('name', 'like', '%' . str_replace('-', ' ', $categorySlug) . '%')
+            ->first();
+
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        $products = Product::where('tenant_id', $tenant->id)
+            ->where('category_id', $category->id)
+            ->with(['category'])
+            ->where('status', 'active')
+            ->orderBy('name')
+            ->paginate(20);
+
+        return response()->json([
+            'data' => $products,
+            'meta' => [
+                'tenant' => [
+                    'handle' => $tenant->handle,
+                    'display_name' => $tenant->display_name,
+                ],
+                'category' => [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'description' => $category->description,
+                ],
+                'pagination' => [
+                    'current_page' => $products->currentPage(),
+                    'last_page' => $products->lastPage(),
+                    'per_page' => $products->perPage(),
+                    'total' => $products->total(),
+                ],
             ]
         ]);
     }

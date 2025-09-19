@@ -9,6 +9,7 @@ interface CartStore {
   updateQuantity: (itemId: string, quantity: number) => void;
   updateNotes: (itemId: string, notes: string) => void;
   clearCart: () => void;
+  clearInvalidProducts: () => void;
   getItemCount: () => number;
   getSubtotal: () => number;
   getTotal: (deliveryFee?: number) => number;
@@ -83,6 +84,15 @@ export const useCartStore = create<CartStore>()(
 
       getTotal: (deliveryFee = 0) => {
         return get().getSubtotal() + deliveryFee;
+      },
+
+      clearInvalidProducts: () => {
+        const items = get().items;
+        const validItems = items.filter(item => item.product && item.product.id && item.product.id > 0);
+        if (validItems.length !== items.length) {
+          console.warn('Removed invalid products from cart');
+          set({ items: validItems });
+        }
       },
     }),
     {

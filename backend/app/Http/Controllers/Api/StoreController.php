@@ -41,6 +41,14 @@ class StoreController extends BaseController
 
         $stores = $query->paginate($perPage);
 
+        // Build full logo URLs for all stores
+        $stores->getCollection()->transform(function ($store) {
+            if ($store->logo) {
+                $store->logo = $this->buildLogoUrl($store->logo);
+            }
+            return $store;
+        });
+
         return $this->paginatedResponse($stores, 'Stores retrieved successfully');
     }
 
@@ -159,8 +167,15 @@ class StoreController extends BaseController
     {
         $this->authorize('view', $store);
 
+        $storeData = $store->load(['owner']);
+        
+        // Build full logo URL if logo exists
+        if ($storeData->logo) {
+            $storeData->logo = $this->buildLogoUrl($storeData->logo);
+        }
+
         return $this->successResponse(
-            $store->load(['owner']),
+            $storeData,
             'Store retrieved successfully'
         );
     }
@@ -176,12 +191,26 @@ class StoreController extends BaseController
             DB::beginTransaction();
 
             $data = $request->validated();
+            
+            // Handle settings merging
+            if (isset($data['settings'])) {
+                $currentSettings = $store->settings ?? [];
+                $data['settings'] = array_merge($currentSettings, $data['settings']);
+            }
+            
             $store->update($data);
 
             DB::commit();
 
+            $storeData = $store->load(['owner']);
+            
+            // Build full logo URL if logo exists
+            if ($storeData->logo) {
+                $storeData->logo = $this->buildLogoUrl($storeData->logo);
+            }
+
             return $this->successResponse(
-                $store->load(['owner']),
+                $storeData,
                 'Store updated successfully'
             );
         } catch (\Exception $e) {
@@ -256,6 +285,23 @@ class StoreController extends BaseController
             'settings.auto_backup' => 'boolean',
             'settings.email_notifications' => 'boolean',
             'settings.sms_notifications' => 'boolean',
+            // Store information fields
+            'settings.slogan' => 'nullable|string|max:255',
+            'settings.contact_email' => 'nullable|email|max:255',
+            'settings.contact_phone' => 'nullable|string|max:50',
+            // Social media fields
+            'settings.instagram' => 'nullable|url|max:255',
+            'settings.whatsapp' => 'nullable|string|max:255',
+            'settings.facebook' => 'nullable|url|max:255',
+            'settings.twitter' => 'nullable|url|max:255',
+            'settings.linkedin' => 'nullable|url|max:255',
+            // Social links object
+            'settings.social_links' => 'nullable|array',
+            'settings.social_links.instagram' => 'nullable|url|max:255',
+            'settings.social_links.whatsapp' => 'nullable|string|max:255',
+            'settings.social_links.facebook' => 'nullable|url|max:255',
+            'settings.social_links.twitter' => 'nullable|url|max:255',
+            'settings.social_links.linkedin' => 'nullable|url|max:255',
         ]);
 
         try {
@@ -375,6 +421,35 @@ class StoreController extends BaseController
             'available' => $isAvailable,
             'message' => $isAvailable ? 'Domain is available' : 'Domain is already taken'
         ], 'Domain availability checked');
+    }
+
+    /**
+     * Build logo URL from logo path
+     */
+    private function buildLogoUrl(?string $logo): ?string
+    {
+        if (empty($logo)) {
+            return null;
+        }
+
+        // If it's already a full URL, return as is
+        if (filter_var($logo, FILTER_VALIDATE_URL)) {
+            return $logo;
+        }
+
+        // If it's just a filename, construct the full URL
+        if (!str_contains($logo, '/')) {
+            // This is likely an old filename format, try to construct a path
+            return url('storage/uploads/store/logos/' . $logo);
+        }
+
+        // If it's a relative path, make it absolute using app URL
+        if (str_starts_with($logo, 'uploads/')) {
+            return url('storage/' . $logo);
+        }
+
+        // Default: assume it's a relative path and prepend storage URL
+        return url('storage/' . $logo);
     }
 
     /**

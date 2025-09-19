@@ -113,6 +113,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Customers API
     Route::get('customers/statistics', [\App\Http\Controllers\Api\CustomerController::class, 'statistics']);
+    Route::get('customers/{customer}/addresses', [\App\Http\Controllers\Api\CustomerController::class, 'addresses']);
     Route::apiResource('customers', \App\Http\Controllers\Api\CustomerController::class);
 
     // Questions & Ratings API
@@ -166,4 +167,15 @@ Route::middleware(['auth:sanctum', 'role:store_owner,store_manager'])->prefix('s
 Route::prefix('public')->group(function () {
     Route::get('stores/{storeSlug}/pages', [PageController::class, 'publicPages']);
     Route::get('stores/{storeSlug}/pages/{seoUrl}', [PageController::class, 'publicPage']);
+});
+
+// Storefront routes (public access)
+Route::prefix('storefront')->group(function () {
+    // Theme routes
+    Route::get('{tenantHandle}/theme', [\App\Http\Controllers\Api\Storefront\ThemeController::class, 'show']);
+    
+    // Product routes
+    Route::get('{tenantHandle}/products', [\App\Http\Controllers\Api\Storefront\ProductController::class, 'index']);
+    Route::get('{tenantHandle}/products/{id}', [\App\Http\Controllers\Api\Storefront\ProductController::class, 'show']);
+    Route::get('{tenantHandle}/categories/{categorySlug}/products', [\App\Http\Controllers\Api\Storefront\ProductController::class, 'byCategory']);
 });

@@ -9,6 +9,7 @@ use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends BaseController
 {
@@ -40,6 +41,21 @@ class OrderController extends BaseController
         $perPage = min($perPage, 100); // Limit to 100 per page
         
         $orders = $query->paginate($perPage);
+        
+        // Debug: Log the orders being returned to admin
+        Log::info('Admin orders retrieved', [
+            'count' => $orders->count(),
+            'orders' => $orders->map(function($order) {
+                return [
+                    'id' => $order->id,
+                    'order_id' => $order->order_id,
+                    'total' => $order->total,
+                    'subtotal' => $order->subtotal,
+                    'shipping_cost' => $order->shipping_cost,
+                    'status' => $order->status
+                ];
+            })->toArray()
+        ]);
 
         return $this->paginatedResponse($orders, 'Orders retrieved successfully');
     }

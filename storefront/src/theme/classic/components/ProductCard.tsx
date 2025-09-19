@@ -19,9 +19,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = () => {
     addItem(product);
     toast({
-      title: "Added to cart",
+      title: "✅ Added to cart",
       description: `${product.name} has been added to your cart.`,
-      className: "bg-purple-600 text-white border-purple-700",
+      className: "bg-white text-gray-900 border-gray-200 shadow-lg",
+      duration: 3000,
     });
   };
 

@@ -16,6 +16,8 @@ import { LocationSelection as ClassicLocationSelection } from './classic/pages/L
 import { Category as ClassicCategory } from './classic/pages/Category';
 import { Order as ClassicOrder } from './classic/pages/Order';
 import { Contact as ClassicContact } from './classic/pages/Contact';
+import { Auth as ClassicAuth } from './classic/pages/Auth';
+import { OrderConfirmation as ClassicOrderConfirmation } from './classic/pages/OrderConfirmation';
 
 // Import classic theme components
 import { Header as ClassicHeader } from './classic/components/Header';
@@ -60,6 +62,8 @@ export const themeRegistry: Record<string, ThemeComponents> = {
       category: ClassicCategory,
       order: ClassicOrder,
       contact: ClassicContact,
+      auth: ClassicAuth,
+      orderConfirmation: ClassicOrderConfirmation,
     },
     components: {
       header: ClassicHeader,
@@ -91,6 +95,8 @@ export const themeRegistry: Record<string, ThemeComponents> = {
       category: ClassicCategory,
       order: ClassicOrder,
       contact: ClassicContact,
+      auth: ClassicAuth,
+      orderConfirmation: ClassicOrderConfirmation,
     },
     components: {
       header: ClassicHeader,

@@ -290,4 +290,68 @@ class CustomerController extends BaseController
 
         return $query;
     }
+
+    /**
+     * Get addresses for a specific customer.
+     */
+    public function addresses(Request $request, string $id): JsonResponse
+    {
+        try {
+            $customer = Customer::with('store')->findOrFail($id);
+            
+            // Check if user has access to this customer
+            if ($request->user()->isStoreOwner()) {
+                $customer = Customer::with('store')->whereHas('store', function ($storeQuery) use ($request) {
+                    $storeQuery->where('owner_id', $request->user()->id);
+                })->findOrFail($id);
+            }
+
+            // Authorize access to this specific customer
+            $this->authorize('view', $customer);
+
+            $addresses = $customer->addresses()
+                ->orderBy('is_default', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $formattedAddresses = $addresses->map(function ($address) {
+                return [
+                    'id' => $address->id,
+                    'type' => $address->type,
+                    'name' => $address->name,
+                    'address' => $address->address,
+                    'city' => $address->city,
+                    'area' => $address->area,
+                    'building' => $address->building,
+                    'floor' => $address->floor,
+                    'apartment' => $address->apartment,
+                    'latitude' => $address->latitude,
+                    'longitude' => $address->longitude,
+                    'is_default' => $address->is_default,
+                    'full_address' => $address->full_address,
+                    'coordinates' => $address->coordinates,
+                    'created_at' => $address->created_at,
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer addresses retrieved successfully',
+                'data' => $formattedAddresses
+            ]);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Customer not found'
+            ], 404);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized to view customer addresses'
+            ], 403);
+        } catch (\Exception $e) {
+            return $this->serverErrorResponse('Failed to retrieve customer addresses: ' . $e->getMessage());
+        }
+    }
 }

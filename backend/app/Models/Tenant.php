@@ -70,6 +70,19 @@ class Tenant extends Model
     }
 
     /**
+     * Get the store associated with this tenant.
+     */
+    public function store()
+    {
+        // Find store by matching the tenant handle with user's store_handle
+        $user = \App\Models\User::where('store_handle', $this->handle)
+            ->whereNotNull('store_handle')
+            ->first();
+        
+        return $user ? $user->ownedStores()->first() : null;
+    }
+
+    /**
      * Check if tenant is active.
      */
     public function isActive(): bool

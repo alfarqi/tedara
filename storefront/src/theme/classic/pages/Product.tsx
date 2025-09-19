@@ -3,26 +3,39 @@ import { useParams } from 'react-router-dom';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGallery } from '../components/ProductGallery';
 import { ProductInfoPanel } from '../components/ProductInfoPanel';
+import { ProductFixedBar } from '../components/ProductFixedBar';
 import { EmptyState } from '../components/EmptyState';
 import { Skeleton } from '../components/ui/skeleton';
-import type { Product as ProductType } from '../types';
-import productsData from '../data/products.json';
+import { useTenant } from '../../../hooks/useTenant';
+import { productService, type Product as ProductType } from '../services/productService';
 
 export function Product() {
   const { categorySlug, productSlug } = useParams<{ categorySlug: string; productSlug: string }>();
+  const tenant = useTenant();
   const [product, setProduct] = useState<ProductType | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      const foundProduct = productsData.find(
-        prod => prod.categorySlug === categorySlug && prod.slug === productSlug
-      );
-      setProduct(foundProduct || null);
-      setLoading(false);
-    }, 500);
-  }, [categorySlug, productSlug]);
+    const loadProduct = async () => {
+      if (!tenant || !categorySlug || !productSlug) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const foundProduct = await productService.findProductBySlug(tenant, categorySlug, productSlug);
+        setProduct(foundProduct);
+      } catch (error) {
+        console.error('Failed to load product:', error);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [tenant, categorySlug, productSlug]);
 
   if (loading) {
     return (
@@ -80,6 +93,9 @@ export function Product() {
           <ProductInfoPanel product={product} />
         </div>
       </div>
+      
+      {/* Add to Cart Fixed Bar */}
+      <ProductFixedBar />
     </div>
   );
 }

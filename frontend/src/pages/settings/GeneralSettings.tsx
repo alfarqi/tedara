@@ -17,10 +17,13 @@ const GeneralSettings: React.FC = () => {
   const [storePhone, setStorePhone] = useState('');
   const [storeLogo, setStoreLogo] = useState<string | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [storeBanner, setStoreBanner] = useState<string | null>(null);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
   
   // Social Media Accounts
   const [socialAccounts, setSocialAccounts] = useState({
@@ -34,7 +37,7 @@ const GeneralSettings: React.FC = () => {
     telegram: ''
   });
 
-  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       // Validate file type
@@ -49,14 +52,27 @@ const GeneralSettings: React.FC = () => {
         return;
       }
 
-      setStoreLogo(file.name);
-      
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setLogoPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Upload the file to the server
+        const uploadResponse = await storeService.uploadLogo(file, token || undefined);
+        
+        if (uploadResponse.data && uploadResponse.data.path) {
+          // Store only the path returned from the server
+          setStoreLogo(uploadResponse.data.path);
+          
+          // Create preview
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            setLogoPreview(e.target?.result as string);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          alert('Failed to upload logo');
+        }
+      } catch (error) {
+        console.error('Error uploading logo:', error);
+        alert('Failed to upload logo. Please try again.');
+      }
     }
   };
 
@@ -68,12 +84,60 @@ const GeneralSettings: React.FC = () => {
     }
   };
 
+  const handleBannerUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+      
+      // Validate file size (max 10MB for banner)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        return;
+      }
+
+      try {
+        // Upload the file to the server
+        const uploadResponse = await storeService.uploadLogo(file, token || undefined);
+        
+        if (uploadResponse.data && uploadResponse.data.path) {
+          // Store only the path returned from the server
+          setStoreBanner(uploadResponse.data.path);
+          
+          // Create preview
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            setBannerPreview(e.target?.result as string);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          alert('Failed to upload banner image');
+        }
+      } catch (error) {
+        console.error('Banner upload error:', error);
+        alert('Failed to upload banner image. Please try again.');
+      }
+    }
+  };
+
+  const handleRemoveBanner = () => {
+    setStoreBanner(null);
+    setBannerPreview(null);
+    if (bannerInputRef.current) {
+      bannerInputRef.current.value = '';
+    }
+  };
+
   const handleSocialAccountChange = (platform: string, value: string) => {
     setSocialAccounts(prev => ({
       ...prev,
       [platform]: value
     }));
   };
+
 
   // Populate form fields when store data is loaded
   useEffect(() => {
@@ -86,6 +150,8 @@ const GeneralSettings: React.FC = () => {
       setStorePhone(''); // Phone not in current store model
       setStoreLogo(store.logo || null);
       setLogoPreview(store.logo || null);
+      setStoreBanner((store.settings as any)?.banner_image || null);
+      setBannerPreview((store.settings as any)?.banner_image || null);
       
       // Set social media accounts from store settings if available
       if (store.settings) {
@@ -128,7 +194,8 @@ const GeneralSettings: React.FC = () => {
           youtube: socialAccounts.youtube,
           tiktok: socialAccounts.tiktok,
           whatsapp: socialAccounts.whatsapp,
-          telegram: socialAccounts.telegram
+          telegram: socialAccounts.telegram,
+          banner_image: storeBanner || undefined
         }
       };
 
@@ -577,6 +644,98 @@ const GeneralSettings: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Store Banner Section */}
+            <div className="card mb-4">
+               <div className="card-header">
+                 <div className="d-flex align-items-center">
+                   <i className="ti ti-photo-landscape me-3 fs-1 text-muted"></i>
+                   <div className="flex-grow-1">
+                     <h4 className="card-title mb-1" style={{ fontSize: '16px', lineHeight: '1' }}>Hero Banner Image</h4>
+                     <p className="text-muted mb-0" style={{ fontSize: '12px', fontWeight: '500', fontStyle: 'italic', lineHeight: '1' }}>Upload a banner image for your storefront hero section</p>
+                   </div>
+                 </div>
+               </div>
+              <div className="card-body">
+                <div className="row align-items-center">
+                  <div className="col-md-4 d-flex justify-content-center align-items-center">
+                    <div className="banner-upload-area d-flex justify-content-center align-items-center">
+                      {bannerPreview ? (
+                        <div className="banner-preview-container">
+                          <img 
+                            src={bannerPreview} 
+                            alt="Banner Preview" 
+                            className="banner-preview"
+                            style={{
+                              width: '300px',
+                              height: '150px',
+                              objectFit: 'cover',
+                              borderRadius: '8px',
+                              border: '2px dashed #dee2e6'
+                            }}
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-danger mt-2"
+                            onClick={handleRemoveBanner}
+                          >
+                            <i className="ti ti-trash me-1"></i>
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <div 
+                          className="banner-upload-placeholder"
+                          onClick={() => bannerInputRef.current?.click()}
+                          style={{
+                            width: '300px',
+                            height: '150px',
+                            border: '2px dashed #dee2e6',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            backgroundColor: '#f8f9fa'
+                          }}
+                        >
+                          <i className="ti ti-photo-landscape fs-24 text-muted mb-2"></i>
+                          <small className="text-muted text-center">Click to upload banner</small>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-md-8">
+                    <div className="upload-info">
+                      <h6 className="mb-2">Banner Requirements</h6>
+                      <ul className="list-unstyled text-muted mb-3">
+                        <li><i className="ti ti-check text-success me-2"></i>Recommended size: 1200x600 pixels</li>
+                        <li><i className="ti ti-check text-success me-2"></i>Maximum file size: 10MB</li>
+                        <li><i className="ti ti-check text-success me-2"></i>Supported formats: JPG, PNG, GIF</li>
+                        <li><i className="ti ti-check text-success me-2"></i>Landscape format works best</li>
+                      </ul>
+                      <input
+                        ref={bannerInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleBannerUpload}
+                        style={{ display: 'none' }}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-outline-primary"
+                        onClick={() => bannerInputRef.current?.click()}
+                      >
+                        <i className="ti ti-upload me-2"></i>
+                        Choose Banner
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             
             {/* Store Information Section */}
             <div className="card mb-4">
@@ -734,13 +893,14 @@ const GeneralSettings: React.FC = () => {
                       <span className="input-group-text">
                         <i className="ti ti-brand-facebook"></i>
                       </span>
+                      <span className="input-group-text">https://facebook.com/</span>
                       <input
-                        type="url"
+                        type="text"
                         id="facebook"
                         className="form-control"
                         value={socialAccounts.facebook}
                         onChange={(e) => handleSocialAccountChange('facebook', e.target.value)}
-                        placeholder="https://facebook.com/yourstore"
+                        placeholder="yourstore"
                       />
                 </div>
               </div>
@@ -754,13 +914,14 @@ const GeneralSettings: React.FC = () => {
                       <span className="input-group-text">
                         <i className="ti ti-brand-twitter"></i>
                       </span>
+                      <span className="input-group-text">https://twitter.com/</span>
                       <input
-                        type="url"
+                        type="text"
                         id="twitter"
                         className="form-control"
                         value={socialAccounts.twitter}
                         onChange={(e) => handleSocialAccountChange('twitter', e.target.value)}
-                        placeholder="https://twitter.com/yourstore"
+                        placeholder="yourstore"
                       />
                 </div>
               </div>
@@ -774,13 +935,14 @@ const GeneralSettings: React.FC = () => {
                       <span className="input-group-text">
                         <i className="ti ti-brand-instagram"></i>
                       </span>
+                      <span className="input-group-text">https://instagram.com/</span>
                       <input
-                        type="url"
+                        type="text"
                         id="instagram"
                         className="form-control"
                         value={socialAccounts.instagram}
                         onChange={(e) => handleSocialAccountChange('instagram', e.target.value)}
-                        placeholder="https://instagram.com/yourstore"
+                        placeholder="yourstore"
                       />
                 </div>
               </div>
@@ -794,13 +956,14 @@ const GeneralSettings: React.FC = () => {
                       <span className="input-group-text">
                         <i className="ti ti-brand-linkedin"></i>
                       </span>
+                      <span className="input-group-text">https://linkedin.com/in/</span>
                       <input
-                        type="url"
+                        type="text"
                         id="linkedin"
                         className="form-control"
                         value={socialAccounts.linkedin}
                         onChange={(e) => handleSocialAccountChange('linkedin', e.target.value)}
-                        placeholder="https://linkedin.com/company/yourstore"
+                        placeholder="yourstore"
                       />
             </div>
           </div>
@@ -814,13 +977,14 @@ const GeneralSettings: React.FC = () => {
                       <span className="input-group-text">
                         <i className="ti ti-brand-youtube"></i>
                       </span>
+                      <span className="input-group-text">https://youtube.com/@</span>
                       <input
-                        type="url"
+                        type="text"
                         id="youtube"
                         className="form-control"
                         value={socialAccounts.youtube}
                         onChange={(e) => handleSocialAccountChange('youtube', e.target.value)}
-                        placeholder="https://youtube.com/c/yourstore"
+                        placeholder="yourstore"
                       />
                     </div>
             </div>
@@ -834,13 +998,14 @@ const GeneralSettings: React.FC = () => {
                       <span className="input-group-text">
                         <i className="ti ti-brand-tiktok"></i>
                       </span>
+                      <span className="input-group-text">https://tiktok.com/@</span>
                     <input
-                        type="url"
+                        type="text"
                         id="tiktok"
                         className="form-control"
                         value={socialAccounts.tiktok}
                         onChange={(e) => handleSocialAccountChange('tiktok', e.target.value)}
-                        placeholder="https://tiktok.com/@yourstore"
+                        placeholder="yourstore"
                       />
                 </div>
               </div>
@@ -854,16 +1019,17 @@ const GeneralSettings: React.FC = () => {
                       <span className="input-group-text">
                         <i className="ti ti-brand-whatsapp"></i>
                       </span>
+                      <span className="input-group-text">https://wa.me/</span>
                       <input
                         type="tel"
                         id="whatsapp"
                         className="form-control"
                         value={socialAccounts.whatsapp}
                         onChange={(e) => handleSocialAccountChange('whatsapp', e.target.value)}
-                        placeholder="+966 50 123 4567"
+                        placeholder="966501234567"
                       />
                     </div>
-                    <small className="text-muted">Enter your WhatsApp business number</small>
+                    <small className="text-muted">Enter your WhatsApp business number (without + sign)</small>
                 </div>
                   
                   <div className="col-md-6 mb-3">
@@ -875,22 +1041,23 @@ const GeneralSettings: React.FC = () => {
                       <span className="input-group-text">
                         <i className="ti ti-brand-telegram"></i>
                       </span>
+                      <span className="input-group-text">https://t.me/</span>
                     <input
                         type="text"
                         id="telegram"
                         className="form-control"
                         value={socialAccounts.telegram}
                         onChange={(e) => handleSocialAccountChange('telegram', e.target.value)}
-                        placeholder="@yourstore"
+                        placeholder="yourstore"
                       />
                   </div>
-                    <small className="text-muted">Enter your Telegram username</small>
+                    <small className="text-muted">Enter your Telegram username (without @ sign)</small>
                 </div>
               </div>
                 
                 <div className="alert alert-info mt-3">
                   <i className="ti ti-info-circle me-2"></i>
-                  <strong>Tip:</strong> Adding your social media accounts helps customers find and connect with your store on different platforms. This can increase your store's visibility and customer engagement.
+                  <strong>Tip:</strong> Enter your social media account names in the input fields. The URL prefix is already included, so you only need to enter your username (e.g., "yourstore" for https://instagram.com/yourstore).
             </div>
           </div>
         </div>

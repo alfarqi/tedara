@@ -6,16 +6,16 @@ export interface Product {
   name: string;
   description: string;
   sku: string;
-  price: number;
-  original_price: number;
+  price: string | number;
+  original_price: string | number | null;
   stock: number;
   category_id: number;
   store_id: number;
   status: string;
   brand: string;
-  weight: number;
-  dimensions: string;
-  rating: number;
+  weight: string | number;
+  dimensions: string | null;
+  rating: string | number;
   reviews_count: number;
   created_at: string;
   updated_at: string;
@@ -24,6 +24,13 @@ export interface Product {
   category?: {
     id: number;
     name: string;
+    description?: string;
+    parent_id?: number | null;
+    store_id: number;
+    image?: string;
+    sort_order: number;
+    created_at: string;
+    updated_at: string;
   };
 }
 
@@ -120,18 +127,24 @@ class ProductService {
       imageUrl = product.images[0];
     }
 
+    // Convert string prices to numbers for calculations
+    const price = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
+    const originalPrice = product.original_price ? 
+      (typeof product.original_price === 'string' ? parseFloat(product.original_price) : product.original_price) : 
+      null;
+
     return {
       id: product.id,
       productName: product.name,
-      basePrice: product.price.toString(),
-      originalPrice: product.original_price.toString(),
+      basePrice: price.toString(),
+      originalPrice: originalPrice ? originalPrice.toString() : '',
       stock: product.stock.toString(),
       category: product.category?.name || 'Uncategorized',
       image: imageUrl,
-      rating: product.rating || 0,
+      rating: typeof product.rating === 'string' ? parseFloat(product.rating) : (product.rating || 0),
       reviews: product.reviews_count || 0,
-      discount: product.original_price > product.price 
-        ? `${Math.round(((product.original_price - product.price) / product.original_price) * 100)}% OFF`
+      discount: originalPrice && originalPrice > price 
+        ? `${Math.round(((originalPrice - price) / originalPrice) * 100)}% OFF`
         : 'NEW',
       discountType: 'percentage',
       description: product.description,

@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout';
 import { customerService, type Customer as CustomerType, type CustomerStatistics } from '../services/customerService';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import CustomerAddressesModal from '../components/modals/CustomerAddressesModal';
 
 // interface Customer {
 //   id: string;
@@ -27,6 +28,8 @@ const Customers: React.FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedCustomers, setSelectedCustomers] = useState<Set<string>>(new Set());
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [selectedCustomerForAddress, setSelectedCustomerForAddress] = useState<{id: string, name: string} | null>(null);
   const [loading, setLoading] = useState(true);
   const [customers, setCustomers] = useState<CustomerType[]>([]);
   const [statistics, setStatistics] = useState<CustomerStatistics | null>(null);
@@ -102,6 +105,16 @@ const Customers: React.FC = () => {
       newSelected.delete(customerId);
     }
     setSelectedCustomers(newSelected);
+  };
+
+  const handleViewAddresses = (customer: CustomerType) => {
+    setSelectedCustomerForAddress({ id: customer.id, name: customer.name });
+    setShowAddressModal(true);
+  };
+
+  const handleCloseAddressModal = () => {
+    setShowAddressModal(false);
+    setSelectedCustomerForAddress(null);
   };
 
   const getStatusBadge = (status: string) => {
@@ -407,6 +420,7 @@ const Customers: React.FC = () => {
                     <th>Total Spent</th>
                     <th>Status</th>
                     <th>Contact</th>
+                    <th>Addresses</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -455,6 +469,15 @@ const Customers: React.FC = () => {
                           <p className="mb-0 fs-sm">{customer.phone}</p>
                           <p className="text-muted fs-xs mb-0">{customer.email}</p>
                         </div>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => handleViewAddresses(customer)}
+                          title="View Addresses"
+                        >
+                          <i className="ti ti-map-pin fs-5"></i>
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -574,6 +597,21 @@ const Customers: React.FC = () => {
 
        {/* Modal Backdrop */}
        {showAddCustomerModal && (
+         <div className="modal-backdrop fade show"></div>
+       )}
+
+       {/* Customer Addresses Modal */}
+       {selectedCustomerForAddress && (
+         <CustomerAddressesModal
+           isOpen={showAddressModal}
+           onClose={handleCloseAddressModal}
+           customerId={selectedCustomerForAddress.id}
+           customerName={selectedCustomerForAddress.name}
+         />
+       )}
+
+       {/* Address Modal Backdrop */}
+       {showAddressModal && (
          <div className="modal-backdrop fade show"></div>
        )}
      </Layout>

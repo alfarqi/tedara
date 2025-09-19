@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTenant } from '../../../hooks/useTenant';
+import { useCustomerAuth } from '../../../contexts/CustomerAuthContext';
 import { Button } from '../components/ui/button';
 import { 
   MapPin, 
@@ -27,33 +29,49 @@ interface Address {
 
 export function Addresses() {
   const navigate = useNavigate();
-  const [addresses, setAddresses] = useState<Address[]>([
-    {
-      id: '1',
-      type: 'home',
-      name: 'Home',
-      address: '123 Main Street',
-      city: 'Manama',
-      area: 'Capital',
-      building: 'Building A',
-      floor: '2nd Floor',
-      apartment: 'Apt 201',
-      isDefault: true
-    },
-    {
-      id: '2',
-      type: 'work',
-      name: 'Office',
-      address: '456 Business District',
-      city: 'Manama',
-      area: 'Capital',
-      building: 'Office Tower B',
-      floor: '10th Floor',
-      apartment: 'Suite 1001',
-      isDefault: false
-    }
-  ]);
+  const tenant = useTenant();
+  const { customer, token } = useCustomerAuth();
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (customer && token && tenant) {
+      fetchAddresses();
+    } else {
+      setLoading(false);
+    }
+  }, [customer, token, tenant]);
+
+  const fetchAddresses = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/addresses`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Please log in to view addresses');
+        }
+        throw new Error('Failed to fetch addresses');
+      }
+
+      const data = await response.json();
+      setAddresses(data.addresses || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch addresses');
+      console.error('Error fetching addresses:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getAddressIcon = (type: Address['type']) => {
     switch (type) {
@@ -78,24 +96,85 @@ export function Addresses() {
   };
 
   const handleAddNew = () => {
-    navigate('/add-address');
+    navigate(`/${tenant}/add-address`);
   };
 
   const handleEdit = (address: Address) => {
-    navigate('/add-address', { state: { address } });
+    navigate(`/${tenant}/add-address`, { state: { address } });
   };
 
 
-  const handleDelete = (id: string) => {
-    setAddresses(addresses.filter(addr => addr.id !== id));
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/addresses/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete address');
+      }
+
+      // Refresh addresses list
+      fetchAddresses();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete address');
+      console.error('Error deleting address:', err);
+    }
   };
 
-  const handleSetDefault = (id: string) => {
-    setAddresses(addresses.map(addr => ({
-      ...addr,
-      isDefault: addr.id === id
-    })));
+  const handleSetDefault = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/addresses/${id}/set-default`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to set default address');
+      }
+
+      // Refresh addresses list
+      fetchAddresses();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to set default address');
+      console.error('Error setting default address:', err);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="px-4 py-6 space-y-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-500">Loading addresses...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="px-4 py-6 space-y-4">
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+            <p className="text-red-600 mb-4">{error}</p>
+            <Button onClick={fetchAddresses} variant="outline">
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

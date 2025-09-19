@@ -63,26 +63,21 @@ export function DeliveryLocation({ onLocationSelect, currentLocation: propCurren
           className="w-full justify-start p-0 h-auto hover:bg-gray-50 focus:outline-none focus:ring-0"
           onClick={handleLocationClick}
         >
-          <div className="flex flex-col items-start space-y-1">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-600">
-                {selectedOption?.type === 'pickup' ? 'Pick up from' : 'Deliver to'}
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium text-gray-600">
+              {selectedOption?.type === 'pickup' ? 'Pick up from' : 'Deliver to'}
+            </span>
+            <MapPin className="h-4 w-4 text-red-500 fill-current [&>circle]:fill-white" />
+            {isDetecting ? (
+              <span className="text-sm text-gray-500">Detecting location...</span>
+            ) : currentLocation ? (
+              <span className="text-sm font-medium text-gray-900">{currentLocation}</span>
+            ) : (
+              <span className="text-sm text-gray-500">
+                {selectedOption?.type === 'pickup' ? 'Select pickup location' : 'Select delivery location'}
               </span>
-              <ChevronRight className="h-4 w-4 text-gray-400" />
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <MapPin className="h-4 w-4 text-red-500 fill-current [&>circle]:fill-white" />
-              {isDetecting ? (
-                <span className="text-sm text-gray-500">Detecting location...</span>
-              ) : currentLocation ? (
-                <span className="text-sm font-medium text-gray-900">{currentLocation}</span>
-              ) : (
-                <span className="text-sm text-gray-500">
-                  {selectedOption?.type === 'pickup' ? 'Select pickup location' : 'Select delivery location'}
-                </span>
-              )}
-            </div>
+            )}
+            <ChevronRight className="h-4 w-4 text-gray-400 ml-auto" />
           </div>
         </Button>
       </div>
