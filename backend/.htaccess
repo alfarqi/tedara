@@ -1,13 +1,3 @@
-# CORS Headers - Add before any rewrite rules
-<IfModule mod_headers.c>
-    # Set CORS headers for all requests
-    Header always set Access-Control-Allow-Origin "https://tedara.com"
-    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS, PATCH"
-    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, X-CSRF-TOKEN"
-    Header always set Access-Control-Allow-Credentials "true"
-    Header always set Access-Control-Max-Age "86400"
-</IfModule>
-
 # Laravel redirect configuration for GoDaddy
 RewriteEngine On
 
