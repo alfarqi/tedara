@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 define('LARAVEL_START', microtime(true));
 
 // Global CORS headers to support GoDaddy/shared hosting environments
+// Clear any existing CORS headers first
+header_remove('Access-Control-Allow-Origin');
+header_remove('Access-Control-Allow-Methods');
+header_remove('Access-Control-Allow-Headers');
+header_remove('Access-Control-Allow-Credentials');
+
 // Always compute an allowed origin (fallback to production domain)
 $requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $allowedOrigins = [
@@ -16,12 +22,16 @@ $allowedOrigins = [
     'https://www.tedara.com',
     'https://tedara.netlify.app',
 ];
+
+// Set single origin - never multiple
 $allowOrigin = in_array($requestOrigin, $allowedOrigins, true) ? $requestOrigin : 'https://tedara.com';
+
+// Set CORS headers
 header('Access-Control-Allow-Origin: ' . $allowOrigin);
 header('Vary: Origin');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS, PATCH');
-header('Access-Control-Allow-Headers: *');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept, X-CSRF-TOKEN');
 header('Access-Control-Max-Age: 86400');
 
 // Short-circuit preflight requests early

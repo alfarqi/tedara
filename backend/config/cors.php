@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => [], // Disabled - handled in index.php
 
     'allowed_methods' => ['*'],
 
