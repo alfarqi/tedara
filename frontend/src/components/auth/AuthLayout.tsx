@@ -1,4 +1,5 @@
 import React from 'react';
+import { ASSETS } from '../../utils/assets';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
         </div>
         <div className="auth-image-side">
           <img
-            src="/assets/images/crowd.png"
+            src={ASSETS.CROWD}
             alt="Authentication illustration"
             className="auth-crowd-image"
           />
