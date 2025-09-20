@@ -31,7 +31,7 @@ const CustomerAddressesModal: React.FC<CustomerAddressesModalProps> = ({
   const fetchAddresses = async () => {
     try {
       setLoading(true);
-      const response = await customerService.getCustomerAddresses(customerId, token);
+      const response = await customerService.getCustomerAddresses(customerId, token || undefined);
       if (response.data) {
         setAddresses(response.data);
       }

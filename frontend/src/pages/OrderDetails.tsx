@@ -86,7 +86,7 @@ const OrderDetails: React.FC = () => {
       
       if (response.data) {
         // Handle different response structures
-        const order = response.data.data || response.data;
+        const order = (response.data as any).data || response.data;
         console.log('Full API response:', response);
         console.log('Full order data:', order);
         console.log('Order items (orderItems):', order.orderItems);

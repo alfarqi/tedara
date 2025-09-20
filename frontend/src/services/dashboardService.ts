@@ -31,7 +31,7 @@ class DashboardService {
       
       // If the response itself has the correct structure, return it
       if (response && 'success' in response && 'data' in response) {
-        return response as DashboardApiResponse;
+        return response as unknown as DashboardApiResponse;
       }
       
       // Last resort: return error response

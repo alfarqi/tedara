@@ -10,7 +10,7 @@ const Auth: React.FC = () => {
   const [registerLoading, setRegisterLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login, register, isAuthenticated, error, clearError } = useAuth();
+  const { login, register, error, clearError } = useAuth();
   const { showError, showSuccess } = useToast();
 
   // Check if there's a tab parameter in URL (e.g., /auth?tab=register)

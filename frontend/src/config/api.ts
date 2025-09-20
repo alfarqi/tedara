@@ -1,5 +1,20 @@
+// Environment-based API configuration
+const getBaseUrl = (): string => {
+  // Check if we're in production (Netlify)
+  if (import.meta.env.PROD) {
+    const prodUrl = import.meta.env.VITE_API_URL || 'https://api.tedara.com/backend/public';
+    console.log('🚀 Production API URL:', prodUrl);
+    return prodUrl;
+  }
+  
+  // Development environment
+  const devUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  console.log('🔧 Development API URL:', devUrl);
+  return devUrl;
+};
+
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
+  BASE_URL: getBaseUrl(),
   TIMEOUT: 30000, // 30 seconds
   DEFAULT_HEADERS: {
     'Content-Type': 'application/json',
