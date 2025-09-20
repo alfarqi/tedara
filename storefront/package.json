@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:no-check": "vite build",
+    "build:no-check": "vite build --mode production",
     "lint": "eslint .",
     "preview": "vite preview"
   },

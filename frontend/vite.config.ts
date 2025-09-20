@@ -3,6 +3,6 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './', // ← prevents blank page on deploy
+  base: '/admin/', // ← Set base path for admin dashboard
   plugins: [react()],
 })
