@@ -96,20 +96,27 @@ function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
-          {/* Root route - show welcome message */}
+          {/* Root route - redirect to admin dashboard */}
           <Route path="/" element={
             <div className="min-h-screen flex items-center justify-center">
               <div className="text-center">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome to Tedara Storefront</h1>
-                <p className="text-gray-600 mb-4">Please access your store using the format:</p>
-                <code className="bg-gray-100 px-3 py-1 rounded">http://localhost:5173/your-store-handle</code>
-                <div className="mt-6">
-                  <p className="text-sm text-gray-500">Example URLs:</p>
-                  <ul className="text-sm text-gray-500 mt-2">
-                    <li>• http://localhost:5173/feras</li>
-                    <li>• http://localhost:5173/faisan</li>
-                    <li>• http://localhost:5173/demo-store</li>
-                  </ul>
+                <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome to Tedara</h1>
+                <p className="text-gray-600 mb-4">Choose your destination:</p>
+                <div className="space-y-4">
+                  <a 
+                    href="/admin" 
+                    className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Admin Dashboard
+                  </a>
+                  <div className="text-sm text-gray-500">
+                    <p>Or visit a store:</p>
+                    <ul className="mt-2 space-y-1">
+                      <li>• <a href="/sameer" className="text-blue-600 hover:underline">Sameer's Store</a></li>
+                      <li>• <a href="/feras" className="text-blue-600 hover:underline">Feras's Store</a></li>
+                      <li>• <a href="/faisan" className="text-blue-600 hover:underline">Faisan's Store</a></li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>

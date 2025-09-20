@@ -60,7 +60,7 @@ function App() {
       <AuthProvider>
         <OnboardingProvider>
           <LanguageProvider>
-            <Router>
+            <Router basename="/admin">
               <AppRoutes />
               <IconInitializer />
             </Router>

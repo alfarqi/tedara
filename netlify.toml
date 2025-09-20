@@ -1,8 +1,15 @@
 [build]
-  base = "frontend"
+  base = "."
   publish = "dist"
-  command = "npm run build"
+  command = "npm run build:combined"
 
+# Admin dashboard routes (everything under /admin)
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
+# Storefront routes (everything else)
 [[redirects]]
   from = "/*"
   to = "/index.html"

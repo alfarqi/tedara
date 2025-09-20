@@ -17,7 +17,7 @@ export function Auth() {
   const location = useLocation();
   const { customer } = useCustomerAuth();
   const tenant = useTenant();
-  const { store, theme, loading: themeLoading } = useTheme(tenant || '');
+  const { store, loading: themeLoading } = useTheme(tenant || '');
 
   // Redirect if already authenticated
   React.useEffect(() => {

@@ -1,4 +1,12 @@
 {
+  "name": "tedara-combined",
+  "version": "1.0.0",
+  "scripts": {
+    "build:combined": "npm run build:admin && npm run build:storefront && npm run combine:builds",
+    "build:admin": "cd frontend && npm install && npm run build",
+    "build:storefront": "cd storefront && npm install && npm run build:no-check",
+    "combine:builds": "node scripts/combine-builds.js"
+  },
   "dependencies": {
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.2",

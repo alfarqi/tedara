@@ -60,15 +60,19 @@ export interface ProductCustomization {
   default: string | string[];
 }
 
+import { getStorefrontApiUrl } from '../../../config/api';
+
 class ProductService {
-  private baseUrl = 'http://localhost:8000/api/storefront';
+  private getBaseUrl(tenantHandle: string) {
+    return getStorefrontApiUrl(tenantHandle);
+  }
 
   /**
    * Fetch products for a specific tenant
    */
   async getProducts(tenantHandle: string): Promise<Product[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/${tenantHandle}/products`);
+      const response = await fetch(`${this.getBaseUrl(tenantHandle)}/products`);
       
       if (!response.ok) {
         throw new Error(`Failed to fetch products: ${response.statusText}`);
@@ -97,7 +101,7 @@ class ProductService {
    */
   async getProduct(tenantHandle: string, productId: number): Promise<Product | null> {
     try {
-      const response = await fetch(`${this.baseUrl}/${tenantHandle}/products/${productId}`);
+      const response = await fetch(`${this.getBaseUrl(tenantHandle)}/products/${productId}`);
       
       if (!response.ok) {
         if (response.status === 404) {

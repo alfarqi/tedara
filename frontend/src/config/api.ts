@@ -3,13 +3,13 @@ const getBaseUrl = (): string => {
   // Check if we're in production (Netlify)
   if (import.meta.env.PROD) {
     const prodUrl = import.meta.env.VITE_API_URL || 'https://api.tedara.com/backend/public';
-    console.log('🚀 Production API URL:', prodUrl);
+    console.log('🚀 Admin Production API URL:', prodUrl);
     return prodUrl;
   }
   
   // Development environment
   const devUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-  console.log('🔧 Development API URL:', devUrl);
+  console.log('🔧 Admin Development API URL:', devUrl);
   return devUrl;
 };
 

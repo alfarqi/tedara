@@ -16,7 +16,7 @@ export function Home() {
   const location = useLocation();
   const tenant = useTenant();
   const { loading, error } = usePage(tenant || '', 'home');
-  const { theme, store, loading: themeLoading, error: themeError } = useTheme(tenant || '');
+  const { theme, store } = useTheme(tenant || '');
   const [isFulfillmentModalOpen, setIsFulfillmentModalOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);

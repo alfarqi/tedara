@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CheckCircle, ArrowLeft, Package, CreditCard, MapPin, Clock } from 'lucide-react';
 import { Button } from '../components/ui/button';
