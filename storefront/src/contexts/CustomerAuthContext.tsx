@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useTenant } from '../hooks/useTenant';
+import { getStorefrontApiUrl } from '../config/api';
 
 interface Customer {
   id: number;
@@ -114,7 +115,7 @@ export const CustomerAuthProvider: React.FC<CustomerAuthProviderProps> = ({ chil
         throw new Error('Store not found. Please check the URL.');
       }
 
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/auth/login`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -159,7 +160,7 @@ export const CustomerAuthProvider: React.FC<CustomerAuthProviderProps> = ({ chil
         throw new Error('Store not found. Please check the URL.');
       }
 
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/auth/register`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +204,7 @@ export const CustomerAuthProvider: React.FC<CustomerAuthProviderProps> = ({ chil
         throw new Error('Store not found. Please check the URL.');
       }
 
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/auth/guest`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/auth/guest`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

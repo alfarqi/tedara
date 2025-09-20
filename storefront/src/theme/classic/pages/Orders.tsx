@@ -4,6 +4,7 @@ import { Button } from '../components/ui/button';
 import { Clock, MapPin, Package } from 'lucide-react';
 import { useCustomerAuth } from '../../../contexts/CustomerAuthContext';
 import { useTenant } from '../../../hooks/useTenant';
+import { getStorefrontApiUrl } from '../../../config/api';
 
 interface OrderItem {
   product_name: string;
@@ -47,7 +48,7 @@ export function Orders() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/orders`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/orders`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

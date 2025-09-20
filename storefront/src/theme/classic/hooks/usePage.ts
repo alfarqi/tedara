@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getStorefrontApiUrl } from '../../../config/api';
 
 interface Section {
   id: string;
@@ -44,7 +45,7 @@ export function usePage(tenant: string, slug: string) {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/page/${slug}`);
+        const response = await fetch(`${getStorefrontApiUrl(tenant)}/page/${slug}`);
         
         if (!response.ok) {
           if (response.status === 404) {

@@ -12,6 +12,7 @@ import { PaymentMethod } from '../components/checkout/PaymentMethod';
 import { useCartStore } from '../stores/cartStore';
 import { useCustomerAuth } from '../../../contexts/CustomerAuthContext';
 import { useTenant } from '../../../hooks/useTenant';
+import { getStorefrontApiUrl } from '../../../config/api';
 
 export function Checkout() {
   const navigate = useNavigate();
@@ -158,7 +159,7 @@ export function Checkout() {
 
       // Create order via API
       console.log('Creating order with data:', orderData);
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/orders`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

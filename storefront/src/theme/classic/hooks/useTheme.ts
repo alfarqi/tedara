@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getStorefrontApiUrl } from '../../../config/api';
 
 interface ThemeSettings {
   primary_color?: string;
@@ -58,7 +59,7 @@ export function useTheme(tenant: string) {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/theme`);
+        const response = await fetch(`${getStorefrontApiUrl(tenant)}/theme`);
         
         if (!response.ok) {
           throw new Error(`Failed to fetch theme: ${response.statusText}`);
