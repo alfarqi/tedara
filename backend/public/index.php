@@ -12,6 +12,8 @@ header_remove('Access-Control-Allow-Methods');
 header_remove('Access-Control-Allow-Headers');
 header_remove('Access-Control-Allow-Credentials');
 
+//Tst
+
 // Always compute an allowed origin (fallback to production domain)
 $requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $allowedOrigins = [
