@@ -1,4 +1,25 @@
+# Laravel redirect configuration for GoDaddy
+RewriteEngine On
+
+# Handle requests to /backend/public/ path (your current URL structure)
+RewriteCond %{REQUEST_URI} ^/backend/public/(.*)$
+RewriteRule ^backend/public/(.*)$ public/$1 [L]
+
+# Handle requests to /backend/public path (without trailing slash)
+RewriteCond %{REQUEST_URI} ^/backend/public$
+RewriteRule ^backend/public$ public/ [L,R=301]
+
+# Redirect root requests to public directory
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_URI} !^/backend/public/
+RewriteCond %{REQUEST_URI} !^/test-root\.php$
+RewriteCond %{REQUEST_URI} !^/test\.html$
+RewriteRule ^(.*)$ public/$1 [L]
+
+# Set default directory index
+DirectoryIndex public/index.php
+
+# Enable mod_rewrite
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
