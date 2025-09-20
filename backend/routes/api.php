@@ -16,6 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) { return $request->user(); });
 Route::get('/test', function () { return response()->json(['message' => 'Tedara API is working!', 'timestamp' => now()->toISOString()]); });
 
+// CORS test endpoint
+Route::options('/cors-test', function () {
+    return response('', 200);
+});
+Route::get('/cors-test', function (Request $request) {
+    return response()->json([
+        'message' => 'CORS test successful',
+        'origin' => $request->header('Origin'),
+        'method' => $request->method(),
+        'timestamp' => now()->toISOString()
+    ]);
+});
+
 // Debug route for questions-ratings
 Route::get('/debug-questions-ratings', function () {
     try {

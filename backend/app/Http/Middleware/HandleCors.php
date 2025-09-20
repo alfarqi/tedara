@@ -15,7 +15,12 @@ class HandleCors
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $response = $next($request);
+        // Handle preflight OPTIONS request first
+        if ($request->isMethod('OPTIONS')) {
+            $response = response('', 200);
+        } else {
+            $response = $next($request);
+        }
 
         // Add CORS headers - allow both development and production origins
         $origin = $request->header('Origin');
@@ -35,15 +40,11 @@ class HandleCors
             // For development, default to localhost
             $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5176');
         }
-        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+        
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, X-CSRF-TOKEN');
         $response->headers->set('Access-Control-Allow-Credentials', 'true');
-
-        // Handle preflight OPTIONS request
-        if ($request->isMethod('OPTIONS')) {
-            $response->setStatusCode(200);
-            $response->setContent('');
-        }
+        $response->headers->set('Access-Control-Max-Age', '86400');
 
         return $response;
     }

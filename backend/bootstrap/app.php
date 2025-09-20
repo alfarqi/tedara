@@ -23,8 +23,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'resolve.tenant' => \App\Http\Middleware\ResolveTenant::class,
         ]);
         
-        // Add CORS middleware to global stack
+        // Add CORS middleware to global stack for all requests
         $middleware->append(\App\Http\Middleware\HandleCors::class);
+        
+        // Also add CORS to API middleware group
+        $middleware->group('api', [
+            \App\Http\Middleware\HandleCors::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
