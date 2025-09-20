@@ -32,6 +32,16 @@ class StoreStoreRequest extends FormRequest
             'timezone' => 'nullable|string|max:50',
             'logo' => 'nullable|string|max:500',
             'status' => 'nullable|in:active,inactive,suspended',
+            'settings' => 'nullable|array',
+            'settings.slogan' => 'nullable|string|max:255',
+            'settings.contact_email' => 'nullable|email|max:255',
+            'settings.contact_phone' => 'nullable|string|max:50',
+            'settings.social_links' => 'nullable|array',
+            'settings.social_links.instagram' => 'nullable|string|max:255',
+            'settings.social_links.whatsapp' => 'nullable|string|max:255',
+            'settings.social_links.facebook' => 'nullable|string|max:255',
+            'settings.social_links.twitter' => 'nullable|string|max:255',
+            'settings.social_links.linkedin' => 'nullable|string|max:255',
         ];
     }
 

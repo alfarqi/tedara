@@ -137,7 +137,19 @@ export const storeService = {
       currency: 'SAR',
       language: 'ar',
       timezone: 'Asia/Riyadh',
-      status: 'active'
+      status: 'active',
+      settings: {
+        slogan: `Welcome to ${storeData.name} - Your trusted ${storeData.businessType} store`,
+        contact_email: null,
+        contact_phone: null,
+        social_links: {
+          instagram: null,
+          whatsapp: null,
+          facebook: null,
+          twitter: null,
+          linkedin: null
+        }
+      }
     };
 
     // Debug logging
@@ -172,11 +184,14 @@ export const storeService = {
         
         // Update store with logo URL if upload was successful
         if (logoResponse.data && logoResponse.data.url) {
-          // TODO: Update store with logo URL
+          await this.updateStore(storeResponse.data.id, {
+            logo: logoResponse.data.url
+          }, token);
         }
       } catch (logoError) {
         // Don't fail the whole process if logo upload fails
         // This is expected behavior - logo upload is optional
+        console.warn('Logo upload failed:', logoError);
       }
     }
 

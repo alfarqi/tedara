@@ -11,6 +11,7 @@ import { useTenant } from '../../../hooks/useTenant';
 import { usePage } from '../hooks/usePage';
 import { useTheme } from '../hooks/useTheme';
 import { productService, type Product } from '../services/productService';
+import { ASSETS } from '../../../utils/assets';
 
 export function Home() {
   const location = useLocation();
@@ -134,7 +135,7 @@ export function Home() {
         <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
           <div className="relative h-[50vh] sm:h-[60vh] md:h-96 lg:h-[32rem] overflow-hidden">
             <img
-              src={storeBanner || "/pexels-fotios-photos-1279330.jpg"}
+              src={storeBanner || ASSETS.DEFAULT_BANNER}
               alt={storeName || "Store Banner"}
               className="w-full h-full object-cover"
             />
