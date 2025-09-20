@@ -1,13 +1,13 @@
 # Admin Dashboard Image Loading Fix
 
 ## The Problem
-The admin dashboard at `https://tedara.com/admin/` was not loading the authentication illustration image (`crowd.png`) because the asset paths were incorrect for the path-based routing setup.
-
-## Root Cause
-The admin dashboard was looking for images at `/assets/images/crowd.png` but with path-based routing, it should be looking at `/admin/assets/images/crowd.png`.
+The admin dashboard at `https://tedara.com/admin/` was not loading images because:
+- Admin dashboard is served from `/admin` path
+- Images were referenced with root-relative paths (`/assets/images/crowd.png`)
+- But the actual images are located at `/admin/assets/images/crowd.png`
 
 ## The Solution
-Updated the admin dashboard's Vite configuration to use the correct base path.
+Updated the frontend Vite configuration to use the correct base path for the admin dashboard.
 
 ### What I Fixed:
 
@@ -17,43 +17,52 @@ Updated the admin dashboard's Vite configuration to use the correct base path.
 
 2. **✅ Rebuilt Admin Dashboard**
    - Generated new build with correct asset paths
-   - All assets now reference `/admin/assets/...`
+   - All images now reference `/admin/assets/images/...`
 
 3. **✅ Updated Combined Build**
-   - Combined the fixed admin build with storefront
-   - Ready for deployment
+   - Combined the updated admin build with storefront
 
-## Asset Path Changes
+### Asset Paths Now Correct:
+- **Before**: `/assets/images/crowd.png` ❌
+- **After**: `/admin/assets/images/crowd.png` ✅
 
-### Before (Broken):
-```html
-<img src="/assets/images/crowd.png" alt="Authentication illustration">
-```
-
-### After (Fixed):
-```html
-<img src="/admin/assets/images/crowd.png" alt="Authentication illustration">
-```
-
-## Files Updated:
+### Files Updated:
 - `frontend/vite.config.ts` - Set base path to `/admin/`
-- `dist/admin/index.html` - Now has correct asset paths
-- `dist/admin/assets/` - All assets properly referenced
+- `dist/admin/index.html` - Now has correct asset references
+- `dist/admin/assets/` - All assets properly located
 
-## Deployment Steps:
-
-1. **Deploy the updated build to Netlify**
-2. **Test the admin dashboard**: `https://tedara.com/admin/`
-3. **Verify the authentication illustration loads correctly**
-
-## Expected Results:
-- ✅ **Authentication illustration displays** on the admin login page
-- ✅ **All admin assets load correctly** (CSS, JS, images)
-- ✅ **Admin dashboard functions properly** with correct styling
-
-## Current Status:
+## Deployment Status
 - ✅ **Code fixed** - Vite configuration updated
-- ✅ **Build updated** - New build with correct asset paths
+- ✅ **Build updated** - New build with correct paths
 - ⏳ **Deployment needed** - Updated build needs to be deployed
 
-**Next step: Deploy the updated build to fix the image loading issue!**
+## Next Steps
+Deploy the updated build to Netlify:
+
+**Option 1: Automatic (if connected to Git):**
+```bash
+git add .
+git commit -m "Fix admin dashboard asset paths for /admin base path"
+git push
+```
+
+**Option 2: Manual Deployment:**
+1. Go to Netlify dashboard
+2. Go to "Deploys" tab  
+3. Click "Trigger deploy" → "Deploy site"
+4. Or drag and drop the `dist` folder
+
+## Expected Results After Deployment
+- ✅ **Images load correctly** in admin dashboard
+- ✅ **Authentication illustration** displays properly
+- ✅ **All admin assets** (CSS, JS, images) load from correct paths
+- ✅ **Admin dashboard fully functional** at `https://tedara.com/admin/`
+
+## Verification
+After deployment, check:
+1. Visit `https://tedara.com/admin/`
+2. Verify the "Authentication illustration" image loads
+3. Check browser Network tab - all assets should load from `/admin/assets/...`
+4. No 404 errors for images or other assets
+
+**The fix is ready! Deploy the updated build to resolve the image loading issue.**
