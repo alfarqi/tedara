@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
+import { ASSETS } from '../../utils/assets';
 
 const Support: React.FC = () => {
   return (
@@ -157,7 +158,7 @@ const Support: React.FC = () => {
                       </td>
                       <td>
                         <div className="d-flex align-items-center">
-                          <img src="/assets/images/users/user-1.jpg" alt="user" className="rounded-circle me-2" width="32" />
+                          <img src={ASSETS.USER_1} alt="user" className="rounded-circle me-2" width="32" />
                           <div>
                             <h6 className="mb-0">John Doe</h6>
                             <small className="text-muted">john@example.com</small>
@@ -195,7 +196,7 @@ const Support: React.FC = () => {
                       </td>
                       <td>
                         <div className="d-flex align-items-center">
-                          <img src="/assets/images/users/user-2.jpg" alt="user" className="rounded-circle me-2" width="32" />
+                          <img src={ASSETS.USER_2} alt="user" className="rounded-circle me-2" width="32" />
                           <div>
                             <h6 className="mb-0">Jane Smith</h6>
                             <small className="text-muted">jane@example.com</small>
@@ -233,7 +234,7 @@ const Support: React.FC = () => {
                       </td>
                       <td>
                         <div className="d-flex align-items-center">
-                          <img src="/assets/images/users/user-3.jpg" alt="user" className="rounded-circle me-2" width="32" />
+                          <img src={ASSETS.USER_3} alt="user" className="rounded-circle me-2" width="32" />
                           <div>
                             <h6 className="mb-0">Mike Johnson</h6>
                             <small className="text-muted">mike@example.com</small>
@@ -269,7 +270,7 @@ const Support: React.FC = () => {
                       </td>
                       <td>
                         <div className="d-flex align-items-center">
-                          <img src="/assets/images/users/user-4.jpg" alt="user" className="rounded-circle me-2" width="32" />
+                          <img src={ASSETS.USER_4} alt="user" className="rounded-circle me-2" width="32" />
                           <div>
                             <h6 className="mb-0">Sarah Wilson</h6>
                             <small className="text-muted">sarah@example.com</small>

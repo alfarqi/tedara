@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
+import { ASSETS } from '../../utils/assets';
 
 const StoreDetails: React.FC = () => {
   return (
@@ -37,7 +38,7 @@ const StoreDetails: React.FC = () => {
                   <div className="d-flex justify-content-between align-items-center rounded border-light p-3 bg-light-subtle border">
                     <div className="d-flex justify-content-start align-items-center gap-3">
                       <div className="avatar avatar-xxl">
-                        <img src="/assets/images/sellers/3.png" alt="store-avatar" className="img-fluid img-thumbnail rounded-circle"/>
+                        <img src={ASSETS.SELLER_3} alt="store-avatar" className="img-fluid img-thumbnail rounded-circle"/>
                       </div>
                       <div>
                         <h4 className="text-nowrap fw-bold mb-1">TechStore Pro</h4>
@@ -286,7 +287,7 @@ const StoreDetails: React.FC = () => {
                         <td>
                           <div className="d-flex align-items-center">
                             <div className="avatar-md me-3">
-                              <img src="/assets/images/products/1.png" alt="Product" className="img-fluid rounded"/>
+                              <img src={ASSETS.PRODUCT_1} alt="Product" className="img-fluid rounded"/>
                             </div>
                             <div>
                               <h5 className="mb-0">
@@ -319,7 +320,7 @@ const StoreDetails: React.FC = () => {
                         <td>
                           <div className="d-flex align-items-center">
                             <div className="avatar-md me-3">
-                              <img src="/assets/images/products/2.png" alt="Product" className="img-fluid rounded"/>
+                              <img src={ASSETS.PRODUCT_2} alt="Product" className="img-fluid rounded"/>
                             </div>
                             <div>
                               <h5 className="mb-0">
@@ -352,7 +353,7 @@ const StoreDetails: React.FC = () => {
                         <td>
                           <div className="d-flex align-items-center">
                             <div className="avatar-md me-3">
-                              <img src="/assets/images/products/3.png" alt="Product" className="img-fluid rounded"/>
+                              <img src={ASSETS.PRODUCT_3} alt="Product" className="img-fluid rounded"/>
                             </div>
                             <div>
                               <h5 className="mb-0">
@@ -385,7 +386,7 @@ const StoreDetails: React.FC = () => {
                         <td>
                           <div className="d-flex align-items-center">
                             <div className="avatar-md me-3">
-                              <img src="/assets/images/products/4.png" alt="Product" className="img-fluid rounded"/>
+                              <img src={ASSETS.PRODUCT_4} alt="Product" className="img-fluid rounded"/>
                             </div>
                             <div>
                               <h5 className="mb-0">
@@ -418,7 +419,7 @@ const StoreDetails: React.FC = () => {
                         <td>
                           <div className="d-flex align-items-center">
                             <div className="avatar-md me-3">
-                              <img src="/assets/images/products/5.png" alt="Product" className="img-fluid rounded"/>
+                              <img src={ASSETS.PRODUCT_5} alt="Product" className="img-fluid rounded"/>
                             </div>
                             <div>
                               <h5 className="mb-0">

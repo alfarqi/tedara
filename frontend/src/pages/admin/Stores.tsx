@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
+import { ASSETS } from '../../utils/assets';
 
 const Stores: React.FC = () => {
   return (
@@ -107,7 +108,7 @@ const Stores: React.FC = () => {
                     <td>
                       <div className="d-flex align-items-center">
                         <div className="avatar-md me-3">
-                          <img src="/assets/images/sellers/3.png" alt="Store" className="img-fluid rounded"/>
+                          <img src={ASSETS.SELLER_3} alt="Store" className="img-fluid rounded"/>
                         </div>
                         <div>
                           <h5 className="mb-1">
@@ -119,7 +120,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <img src="/assets/images/users/user-1.jpg" alt="Owner" className="avatar-sm rounded-circle me-2"/>
+                        <img src={ASSETS.USER_1} alt="Owner" className="avatar-sm rounded-circle me-2"/>
                         <span>John Smith</span>
                       </div>
                     </td>
@@ -137,7 +138,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <span className="badge p-1 text-bg-light fs-sm">
-                        <img src="/assets/images/flags/us.svg" alt="" className="rounded-circle me-1" height="12"/> US
+                        <img src={ASSETS.FLAG_US} alt="" className="rounded-circle me-1" height="12"/> US
                       </span>
                     </td>
                     <td>$92.5k</td>
@@ -168,7 +169,7 @@ const Stores: React.FC = () => {
                     <td>
                       <div className="d-flex align-items-center">
                         <div className="avatar-md me-3">
-                          <img src="/assets/images/sellers/4.png" alt="Store" className="img-fluid rounded"/>
+                          <img src={ASSETS.SELLER_4} alt="Store" className="img-fluid rounded"/>
                         </div>
                         <div>
                           <h5 className="mb-1">
@@ -180,7 +181,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <img src="/assets/images/users/user-2.jpg" alt="Owner" className="avatar-sm rounded-circle me-2"/>
+                        <img src={ASSETS.USER_2} alt="Owner" className="avatar-sm rounded-circle me-2"/>
                         <span>Sarah Johnson</span>
                       </div>
                     </td>
@@ -198,7 +199,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <span className="badge p-1 text-bg-light fs-sm">
-                        <img src="/assets/images/flags/gb.svg" alt="" className="rounded-circle me-1" height="12"/> UK
+                        <img src={ASSETS.FLAG_GB} alt="" className="rounded-circle me-1" height="12"/> UK
                       </span>
                     </td>
                     <td>$145.7k</td>
@@ -229,7 +230,7 @@ const Stores: React.FC = () => {
                     <td>
                       <div className="d-flex align-items-center">
                         <div className="avatar-md me-3">
-                          <img src="/assets/images/sellers/5.png" alt="Store" className="img-fluid rounded"/>
+                          <img src={ASSETS.SELLER_5} alt="Store" className="img-fluid rounded"/>
                         </div>
                         <div>
                           <h5 className="mb-1">
@@ -241,7 +242,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <img src="/assets/images/users/user-3.jpg" alt="Owner" className="avatar-sm rounded-circle me-2"/>
+                        <img src={ASSETS.USER_3} alt="Owner" className="avatar-sm rounded-circle me-2"/>
                         <span>Mike Wilson</span>
                       </div>
                     </td>
@@ -259,7 +260,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <span className="badge p-1 text-bg-light fs-sm">
-                        <img src="/assets/images/flags/ca.svg" alt="" className="rounded-circle me-1" height="12"/> CA
+                        <img src={ASSETS.FLAG_CA} alt="" className="rounded-circle me-1" height="12"/> CA
                       </span>
                     </td>
                     <td>$300.4k</td>
@@ -290,7 +291,7 @@ const Stores: React.FC = () => {
                     <td>
                       <div className="d-flex align-items-center">
                         <div className="avatar-md me-3">
-                          <img src="/assets/images/sellers/6.png" alt="Store" className="img-fluid rounded"/>
+                          <img src={ASSETS.SELLER_6} alt="Store" className="img-fluid rounded"/>
                         </div>
                         <div>
                           <h5 className="mb-1">
@@ -302,7 +303,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <img src="/assets/images/users/user-4.jpg" alt="Owner" className="avatar-sm rounded-circle me-2"/>
+                        <img src={ASSETS.USER_4} alt="Owner" className="avatar-sm rounded-circle me-2"/>
                         <span>Emily Davis</span>
                       </div>
                     </td>
@@ -320,7 +321,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <span className="badge p-1 text-bg-light fs-sm">
-                        <img src="/assets/images/flags/au.svg" alt="" className="rounded-circle me-1" height="12"/> AU
+                        <img src={ASSETS.FLAG_AU} alt="" className="rounded-circle me-1" height="12"/> AU
                       </span>
                     </td>
                     <td>$78.9k</td>
@@ -351,7 +352,7 @@ const Stores: React.FC = () => {
                     <td>
                       <div className="d-flex align-items-center">
                         <div className="avatar-md me-3">
-                          <img src="/assets/images/sellers/7.png" alt="Store" className="img-fluid rounded"/>
+                          <img src={ASSETS.SELLER_7} alt="Store" className="img-fluid rounded"/>
                         </div>
                         <div>
                           <h5 className="mb-1">
@@ -363,7 +364,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <img src="/assets/images/users/user-5.jpg" alt="Owner" className="avatar-sm rounded-circle me-2"/>
+                        <img src={ASSETS.USER_5} alt="Owner" className="avatar-sm rounded-circle me-2"/>
                         <span>David Brown</span>
                       </div>
                     </td>
@@ -381,7 +382,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <span className="badge p-1 text-bg-light fs-sm">
-                        <img src="/assets/images/flags/de.svg" alt="" className="rounded-circle me-1" height="12"/> DE
+                        <img src={ASSETS.FLAG_DE} alt="" className="rounded-circle me-1" height="12"/> DE
                       </span>
                     </td>
                     <td>$56.2k</td>
@@ -412,7 +413,7 @@ const Stores: React.FC = () => {
                     <td>
                       <div className="d-flex align-items-center">
                         <div className="avatar-md me-3">
-                          <img src="/assets/images/sellers/8.png" alt="Store" className="img-fluid rounded"/>
+                          <img src={ASSETS.SELLER_8} alt="Store" className="img-fluid rounded"/>
                         </div>
                         <div>
                           <h5 className="mb-1">
@@ -424,7 +425,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <div className="d-flex align-items-center">
-                        <img src="/assets/images/users/user-6.jpg" alt="Owner" className="avatar-sm rounded-circle me-2"/>
+                        <img src={ASSETS.USER_6} alt="Owner" className="avatar-sm rounded-circle me-2"/>
                         <span>Lisa Anderson</span>
                       </div>
                     </td>
@@ -442,7 +443,7 @@ const Stores: React.FC = () => {
                     </td>
                     <td>
                       <span className="badge p-1 text-bg-light fs-sm">
-                        <img src="/assets/images/flags/fr.svg" alt="" className="rounded-circle me-1" height="12"/> FR
+                        <img src={ASSETS.FLAG_FR} alt="" className="rounded-circle me-1" height="12"/> FR
                       </span>
                     </td>
                     <td>$600k</td>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { ASSETS } from '../../utils/assets';
 
 interface HeaderProps {
   onSidebarToggle: () => void;
@@ -78,20 +79,20 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
             {/* Logo light */}
             <a href="/" className="logo-light">
               <span className="logo-lg">
-                <img src="/assets/images/logo.png" alt="logo" />
+                <img src={ASSETS.LOGO} alt="logo" />
               </span>
               <span className="logo-sm">
-                <img src="/assets/images/logo-sm.png" alt="small logo" />
+                <img src={ASSETS.LOGO_SM} alt="small logo" />
               </span>
             </a>
 
             {/* Logo Dark */}
             <a href="/" className="logo-dark">
               <span className="logo-lg">
-                <img src="/assets/images/logo-black.png" alt="dark logo" />
+                <img src={ASSETS.LOGO_BLACK} alt="dark logo" />
               </span>
               <span className="logo-sm">
-                <img src="/assets/images/logo-sm.png" alt="small logo" />
+                <img src={ASSETS.LOGO_SM} alt="small logo" />
               </span>
             </a>
           </div>
@@ -296,7 +297,7 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
                 aria-expanded="false"
                 style={{ border: 'none', background: 'transparent' }}
               >
-                <img src="/assets/images/users/user-2.jpg" width="32" className="rounded-circle me-lg-2 d-flex" alt="user-image" />
+                <img src={ASSETS.USER_2} width="32" className="rounded-circle me-lg-2 d-flex" alt="user-image" />
                 <div className="d-lg-flex align-items-center gap-1 d-none">
                   <h5 className="my-0">{user?.name || 'User'}</h5>
                   <i className="ti ti-chevron-down align-middle"></i>

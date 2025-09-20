@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { useUserStore } from '../../hooks/useUserStore';
 import { useAuth } from '../../contexts/AuthContext';
 import LanguageSwitcher from '../common/LanguageSwitcher';
+import { ASSETS } from '../../utils/assets';
 
 interface SidebarProps {
   size: 'default' | 'condensed' | 'compact' | 'offcanvas';
@@ -289,12 +290,12 @@ const Sidebar: React.FC<SidebarProps> = memo(({ size, onToggle }) => {
       {/* Brand Logo */}
       <Link to={isAdminRoute ? "/admin" : "/dashboard"} className="logo">
         <span className="logo logo-light" style={{ display: 'none' }}>
-          <span className="logo-lg"><img src="/assets/images/logo.png" alt="logo" /></span>
-          <span className="logo-sm"><img src="/assets/images/logo-sm.png" alt="small logo" /></span>
+          <span className="logo-lg"><img src={ASSETS.LOGO} alt="logo" /></span>
+          <span className="logo-sm"><img src={ASSETS.LOGO_SM} alt="small logo" /></span>
         </span>
         <span className="logo logo-dark" style={{ display: 'block' }}>
-          <span className="logo-lg"><img src="/assets/images/logo-black.png" alt="dark logo" /></span>
-          <span className="logo-sm"><img src="/assets/images/logo-sm.png" alt="small logo" /></span>
+          <span className="logo-lg"><img src={ASSETS.LOGO_BLACK} alt="dark logo" /></span>
+          <span className="logo-sm"><img src={ASSETS.LOGO_SM} alt="small logo" /></span>
         </span>
       </Link>
 
