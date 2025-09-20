@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('replies', function (Blueprint $table) {
             $table->id();
             $table->text('content');
-            $table->foreignId('question_rating_id')->constrained('question_ratings')->onDelete('cascade');
+            $table->foreignId('question_rating_id')->constrained('questions_ratings')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['published', 'unpublished'])->default('published');
             $table->timestamps();

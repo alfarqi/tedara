@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('question_ratings_table_manual', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('customers', function (Blueprint $table) {
+            $table->string('password')->nullable()->after('phone');
         });
     }
 
@@ -22,6 +21,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('question_ratings_table_manual');
+        Schema::table('customers', function (Blueprint $table) {
+            $table->dropColumn('password');
+        });
     }
 };
+
+
+
+
