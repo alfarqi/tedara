@@ -2,7 +2,6 @@
 RewriteEngine On
 
 # Handle requests to /backend/public/ path (your current URL structure)
-# This allows /backend/public/ to work directly by serving files from public/ directory
 RewriteCond %{REQUEST_URI} ^/backend/public/(.*)$
 RewriteRule ^backend/public/(.*)$ public/$1 [L]
 
@@ -18,8 +17,8 @@ RewriteCond %{REQUEST_URI} !^/test-root\.php$
 RewriteCond %{REQUEST_URI} !^/test\.html$
 RewriteRule ^(.*)$ public/$1 [L]
 
-# Set default directory index
-DirectoryIndex public/index.php
+# Set default directory index to our custom index.php
+DirectoryIndex index.php
 
 # Enable mod_rewrite
 <IfModule mod_rewrite.c>
