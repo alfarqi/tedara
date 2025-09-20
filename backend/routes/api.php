@@ -29,6 +29,17 @@ Route::get('/cors-test', function (Request $request) {
     ]);
 });
 
+// Simple CORS test endpoint
+Route::options('/cors-simple', function () {
+    return response('', 200);
+});
+Route::get('/cors-simple', function () {
+    return response()->json(['message' => 'CORS working!']);
+});
+Route::post('/cors-simple', function () {
+    return response()->json(['message' => 'CORS POST working!']);
+});
+
 // Debug route for questions-ratings
 Route::get('/debug-questions-ratings', function () {
     try {
@@ -69,6 +80,9 @@ Route::get('/debug-auth', function (Request $request) {
 // Authentication routes
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
+Route::options('/auth/register', function () {
+    return response('', 200);
+});
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/auth/refresh', [AuthController::class, 'refresh'])->middleware('auth:sanctum');
 Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth:sanctum');

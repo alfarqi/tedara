@@ -17,6 +17,34 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
+     * Add CORS headers to response.
+     */
+    private function addCorsHeaders($response, $request)
+    {
+        $origin = $request->header('Origin');
+        $allowedOrigins = [
+            'http://localhost:5173', 
+            'http://localhost:5176', 
+            'http://localhost:3000',
+            'https://tedara.com',
+            'https://www.tedara.com',
+            'https://tedara.netlify.app'
+        ];
+        
+        if (in_array($origin, $allowedOrigins)) {
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+        } else {
+            $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5176');
+        }
+        
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, X-CSRF-TOKEN');
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
+        $response->headers->set('Access-Control-Max-Age', '86400');
+        
+        return $response;
+    }
+    /**
      * Handle user login.
      */
     public function login(Request $request): JsonResponse
@@ -99,9 +127,10 @@ class AuthController extends Controller
         $throttleKey = 'register:' . $request->ip();
         if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
             $seconds = RateLimiter::availableIn($throttleKey);
-            return response()->json([
+            $response = response()->json([
                 'message' => 'Too many registration attempts. Please try again in ' . $seconds . ' seconds.',
             ], 429);
+            return $this->addCorsHeaders($response, $request);
         }
 
         // Validate request
@@ -126,10 +155,11 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             RateLimiter::hit($throttleKey, 300);
-            return response()->json([
+            $response = response()->json([
                 'message' => 'Validation failed',
                 'errors' => $validator->errors(),
             ], 422);
+            return $this->addCorsHeaders($response, $request);
         }
 
         try {
@@ -180,7 +210,7 @@ class AuthController extends Controller
             // Create token for immediate login
             $token = $user->createToken('auth-token')->plainTextToken;
 
-            return response()->json([
+            $response = response()->json([
                 'message' => 'Registration successful',
                 'user' => [
                     'id' => $user->id,
@@ -201,15 +231,18 @@ class AuthController extends Controller
                 ] : null,
                 'token' => $token,
             ], 201);
+            
+            return $this->addCorsHeaders($response, $request);
 
         } catch (\Exception $e) {
             DB::rollBack();
             RateLimiter::hit($throttleKey, 300);
             
-            return response()->json([
+            $response = response()->json([
                 'message' => 'Registration failed. Please try again.',
                 'error' => $e->getMessage(),
             ], 500);
+            return $this->addCorsHeaders($response, $request);
         }
     }
 
