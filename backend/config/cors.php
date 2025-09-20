@@ -26,7 +26,9 @@ return [
         'http://localhost:5176',
         'https://tedara.com',
         'https://www.tedara.com',
-        'https://your-frontend-domain.com' // Replace with your actual frontend domain
+        'https://tedara.netlify.app',
+        'https://*.netlify.app',
+        'https://*.tedara.com'
     ],
 
     'allowed_origins_patterns' => [],

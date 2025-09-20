@@ -17,13 +17,22 @@ class HandleCors
     {
         $response = $next($request);
 
-        // Add CORS headers - allow both common Vite ports
+        // Add CORS headers - allow both development and production origins
         $origin = $request->header('Origin');
-        $allowedOrigins = ['http://localhost:5173', 'http://localhost:5176', 'http://localhost:3000'];
+        $allowedOrigins = [
+            'http://localhost:5173', 
+            'http://localhost:5176', 
+            'http://localhost:3000',
+            'https://tedara.com',
+            'https://www.tedara.com',
+            'https://tedara.netlify.app'
+        ];
         
+        // Check if origin is allowed
         if (in_array($origin, $allowedOrigins)) {
             $response->headers->set('Access-Control-Allow-Origin', $origin);
         } else {
+            // For development, default to localhost
             $response->headers->set('Access-Control-Allow-Origin', 'http://localhost:5176');
         }
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
