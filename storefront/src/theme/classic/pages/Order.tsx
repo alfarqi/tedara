@@ -9,6 +9,7 @@ import { EmptyState } from '../components/EmptyState';
 import { Skeleton } from '../components/ui/skeleton';
 import { useCustomerAuth } from '../../../contexts/CustomerAuthContext';
 import { useTenant } from '../../../hooks/useTenant';
+import { getStorefrontApiUrl } from '../../../config/api';
 import { useCartStore } from '../stores/cartStore';
 
 interface OrderItem {
@@ -57,7 +58,7 @@ export function Order() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/orders/${orderId}`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/orders/${orderId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

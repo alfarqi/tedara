@@ -7,6 +7,7 @@ import { GoogleMap } from '../components/GoogleMap';
 import { geocodingService } from '../services/geocoding';
 import { useCustomerAuth } from '../../../contexts/CustomerAuthContext';
 import { useTenant } from '../../../hooks/useTenant';
+import { getStorefrontApiUrl } from '../../../config/api';
 import { 
   MapPin, 
   Home, 
@@ -114,8 +115,8 @@ export function AddAddress() {
       };
 
       const url = isEditing 
-        ? `http://localhost:8000/api/storefront/${tenant}/addresses/${editingAddress?.id}`
-        : `http://localhost:8000/api/storefront/${tenant}/addresses`;
+        ? `${getStorefrontApiUrl(tenant)}/addresses/${editingAddress?.id}`
+        : `${getStorefrontApiUrl(tenant)}/addresses`;
 
       const method = isEditing ? 'PUT' : 'POST';
 

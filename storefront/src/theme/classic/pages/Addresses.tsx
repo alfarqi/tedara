@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTenant } from '../../../hooks/useTenant';
+import { getStorefrontApiUrl } from '../../../config/api';
 import { useCustomerAuth } from '../../../contexts/CustomerAuthContext';
 import { Button } from '../components/ui/button';
 import { 
@@ -48,7 +49,7 @@ export function Addresses() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/addresses`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/addresses`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -106,7 +107,7 @@ export function Addresses() {
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/addresses/${id}`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/addresses/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -128,7 +129,7 @@ export function Addresses() {
 
   const handleSetDefault = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/storefront/${tenant}/addresses/${id}/set-default`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant)}/addresses/${id}/set-default`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
