@@ -69,3 +69,5 @@ The Google Maps integration includes:
 - Consider restricting your API key to specific domains
 - Monitor your API usage in the Google Cloud Console
 - Set up billing alerts to avoid unexpected charges
+
+
