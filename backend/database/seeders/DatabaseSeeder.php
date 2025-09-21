@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             TenantSeeder::class,
             ThemeSeeder::class,
             StorefrontSeeder::class,
+            // Fashion store seeder
+            FashionStoreSeeder::class,
         ]);
     }
 }
