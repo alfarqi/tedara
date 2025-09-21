@@ -40,6 +40,17 @@ class ProductController extends Controller
                     'is_active' => true,
                     'created_at' => now(),
                     'updated_at' => now(),
+                    'category' => (object) [
+                        'id' => 1,
+                        'name' => 'Sample Category',
+                        'description' => 'A sample category for demonstration',
+                        'parent_id' => null,
+                        'store_id' => 1,
+                        'image' => null,
+                        'sort_order' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
                 ],
                 (object) [
                     'id' => 'sample-2',
@@ -51,6 +62,17 @@ class ProductController extends Controller
                     'is_active' => true,
                     'created_at' => now(),
                     'updated_at' => now(),
+                    'category' => (object) [
+                        'id' => 1,
+                        'name' => 'Sample Category',
+                        'description' => 'A sample category for demonstration',
+                        'parent_id' => null,
+                        'store_id' => 1,
+                        'image' => null,
+                        'sort_order' => 1,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
                 ],
             ]);
         }
@@ -100,6 +122,17 @@ class ProductController extends Controller
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'category' => (object) [
+                    'id' => 1,
+                    'name' => 'Sample Category',
+                    'description' => 'A sample category for demonstration',
+                    'parent_id' => null,
+                    'store_id' => 1,
+                    'image' => null,
+                    'sort_order' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
             ];
         }
 

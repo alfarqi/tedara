@@ -20,13 +20,15 @@ $allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:5176',
     'http://localhost:3000',
+    'http://localhost:8000',
+    'http://tedara.local',
     'https://tedara.com',
     'https://www.tedara.com',
     'https://tedara.netlify.app',
 ];
 
 // Set single origin - never multiple
-$allowOrigin = in_array($requestOrigin, $allowedOrigins, true) ? $requestOrigin : 'https://tedara.com';
+$allowOrigin = in_array($requestOrigin, $allowedOrigins, true) ? $requestOrigin : 'http://localhost:8000';
 
 // Set CORS headers
 header('Access-Control-Allow-Origin: ' . $allowOrigin);

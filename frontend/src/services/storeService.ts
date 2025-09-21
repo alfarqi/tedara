@@ -182,10 +182,10 @@ export const storeService = {
       try {
         const logoResponse = await this.uploadLogo(storeData.logo, token);
         
-        // Update store with logo URL if upload was successful
-        if (logoResponse.data && logoResponse.data.url) {
+        // Update store with logo path if upload was successful
+        if (logoResponse.data && logoResponse.data.path) {
           await this.updateStore(storeResponse.data.id, {
-            logo: logoResponse.data.url
+            logo: logoResponse.data.path
           }, token);
         }
       } catch (logoError) {

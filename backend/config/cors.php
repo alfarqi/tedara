@@ -24,6 +24,8 @@ return [
         'http://localhost:5174', 
         'http://localhost:5175', 
         'http://localhost:5176',
+        'http://localhost:8000',
+        'http://tedara.local',
         'https://tedara.com',
         'https://www.tedara.com',
         'https://tedara.netlify.app',

@@ -62,3 +62,4 @@ class UpdateStoreCategoriesSeeder extends Seeder
 
 
 
+

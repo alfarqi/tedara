@@ -443,9 +443,14 @@ class StoreController extends BaseController
             return url('storage/uploads/store/logos/' . $logo);
         }
 
-        // If it's a relative path, make it absolute using app URL
+        // If it's a relative path starting with 'uploads/', make it absolute
         if (str_starts_with($logo, 'uploads/')) {
             return url('storage/' . $logo);
+        }
+
+        // If it's a path without 'uploads/' prefix, add it
+        if (!str_starts_with($logo, 'storage/') && !str_starts_with($logo, 'uploads/')) {
+            return url('storage/uploads/' . $logo);
         }
 
         // Default: assume it's a relative path and prepend storage URL

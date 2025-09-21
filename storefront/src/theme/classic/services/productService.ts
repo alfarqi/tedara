@@ -21,7 +21,7 @@ export interface ApiProduct {
   created_at: string;
   updated_at: string;
   is_active: number;
-  category: {
+  category?: {
     id: number;
     name: string;
     description?: string;
@@ -158,11 +158,13 @@ class ProductService {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
     
-    // Create category slug
-    const categorySlug = apiProduct.category.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+    // Create category slug - handle case where category might be undefined
+    const categorySlug = apiProduct.category?.name
+      ? apiProduct.category.name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '')
+      : 'uncategorized';
 
     return {
       id: apiProduct.id,
