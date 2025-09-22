@@ -1,0 +1,161 @@
+{
+  "info": {
+    "name": "Tedara Home Page API - GoDaddy",
+    "description": "Collection for testing home page API endpoints on GoDaddy hosting",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.tedara.com/backend/public/api",
+      "type": "string"
+    },
+    {
+      "key": "tenant_handle",
+      "value": "fashion-store",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Basic API Test",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/test",
+          "host": ["{{base_url}}"],
+          "path": ["test"]
+        }
+      }
+    },
+    {
+      "name": "CORS Test",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cors-test",
+          "host": ["{{base_url}}"],
+          "path": ["cors-test"]
+        }
+      }
+    },
+    {
+      "name": "Home Page - Fashion Store",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/storefront/{{tenant_handle}}/page/home",
+          "host": ["{{base_url}}"],
+          "path": ["storefront", "{{tenant_handle}}", "page", "home"]
+        }
+      }
+    },
+    {
+      "name": "All Pages - Fashion Store",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/storefront/{{tenant_handle}}/pages",
+          "host": ["{{base_url}}"],
+          "path": ["storefront", "{{tenant_handle}}", "pages"]
+        }
+      }
+    },
+    {
+      "name": "Theme - Fashion Store",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/storefront/{{tenant_handle}}/theme",
+          "host": ["{{base_url}}"],
+          "path": ["storefront", "{{tenant_handle}}", "theme"]
+        }
+      }
+    },
+    {
+      "name": "Products - Fashion Store",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/storefront/{{tenant_handle}}/products",
+          "host": ["{{base_url}}"],
+          "path": ["storefront", "{{tenant_handle}}", "products"]
+        }
+      }
+    },
+    {
+      "name": "Home Page - Feras Store",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/storefront/feras-store/page/home",
+          "host": ["{{base_url}}"],
+          "path": ["storefront", "feras-store", "page", "home"]
+        }
+      }
+    },
+    {
+      "name": "Home Page - Sameer Store",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/storefront/sameer-store/page/home",
+          "host": ["{{base_url}}"],
+          "path": ["storefront", "sameer-store", "page", "home"]
+        }
+      }
+    }
+  ]
+}
