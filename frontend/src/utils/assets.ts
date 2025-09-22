@@ -3,8 +3,17 @@ export const getAssetPath = (path: string): string => {
   // Remove leading slash if present
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
   
-  // Return relative path that works with the /admin base path
-  return `./${cleanPath}`;
+  // For production/GoDaddy, use absolute path from the frontend domain
+  // For development, use relative path
+  const isProduction = window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1');
+  
+  if (isProduction) {
+    // Use absolute path for production (GoDaddy)
+    return `https://tedara.com/${cleanPath}`;
+  } else {
+    // Use relative path for development
+    return `./${cleanPath}`;
+  }
 };
 
 // Common asset paths
@@ -46,4 +55,14 @@ export const ASSETS = {
   FLAG_AU: getAssetPath('/assets/images/flags/au.svg'),
   FLAG_DE: getAssetPath('/assets/images/flags/de.svg'),
   FLAG_FR: getAssetPath('/assets/images/flags/fr.svg'),
+};
+
+// Helper function to get user avatar with fallback
+export const getUserAvatar = (userAvatar?: string, defaultAvatar: string = ASSETS.USER_2): string => {
+  if (userAvatar) {
+    // If user has a custom avatar, use it
+    return userAvatar;
+  }
+  // Use default avatar
+  return defaultAvatar;
 };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { ASSETS } from '../../utils/assets';
+import { ASSETS, getUserAvatar } from '../../utils/assets';
 
 interface HeaderProps {
   onSidebarToggle: () => void;
@@ -297,7 +297,7 @@ const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
                 aria-expanded="false"
                 style={{ border: 'none', background: 'transparent' }}
               >
-                <img src={ASSETS.USER_2} width="32" className="rounded-circle me-lg-2 d-flex" alt="user-image" />
+                <img src={getUserAvatar(user?.avatar)} width="32" className="rounded-circle me-lg-2 d-flex" alt="user-image" />
                 <div className="d-lg-flex align-items-center gap-1 d-none">
                   <h5 className="my-0">{user?.name || 'User'}</h5>
                   <i className="ti ti-chevron-down align-middle"></i>
