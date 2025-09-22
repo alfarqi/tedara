@@ -33,7 +33,6 @@ class StoreStoreRequest extends FormRequest
             'logo' => 'nullable|string|max:500',
             'status' => 'nullable|in:active,inactive,suspended',
             'settings' => 'nullable|array',
-            'settings.slogan' => 'nullable|string|max:255',
             'settings.contact_email' => 'nullable|email|max:255',
             'settings.contact_phone' => 'nullable|string|max:50',
             'settings.social_links' => 'nullable|array',

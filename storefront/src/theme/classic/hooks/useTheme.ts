@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getStorefrontApiUrl } from '../../../config/api';
+import { logMobileDebug, logMobileError, isMobile } from '../../../utils/mobileDebug';
 
 interface ThemeSettings {
   primary_color?: string;
@@ -59,18 +60,34 @@ export function useTheme(tenant: string) {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`${getStorefrontApiUrl(tenant)}/theme`);
+        const apiUrl = `${getStorefrontApiUrl(tenant)}/theme`;
+        logMobileDebug('Fetching theme for tenant', { tenant, apiUrl, isMobile: isMobile() });
+
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        logMobileDebug('Theme API Response Status', { status: response.status, tenant });
         
         if (!response.ok) {
-          throw new Error(`Failed to fetch theme: ${response.statusText}`);
+          const errorText = await response.text();
+          logMobileError(new Error(`API Error: ${response.status} ${response.statusText}`), 'Theme API');
+          throw new Error(`Failed to fetch theme: ${response.status} ${response.statusText}`);
         }
 
         const data: ThemeResponse = await response.json();
+        logMobileDebug('Theme data received successfully', { tenant, hasStore: !!data.meta.store });
+        
         setTheme(data.data);
         setStore(data.meta.store);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch theme');
-        console.error('Theme fetch error:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch theme';
+        setError(errorMessage);
+        logMobileError(err instanceof Error ? err : new Error(errorMessage), 'Theme fetch');
       } finally {
         setLoading(false);
       }
@@ -78,6 +95,10 @@ export function useTheme(tenant: string) {
 
     if (tenant) {
       fetchTheme();
+    } else {
+      logMobileDebug('No tenant provided to useTheme hook');
+      setError('No tenant specified');
+      setLoading(false);
     }
   }, [tenant]);
 

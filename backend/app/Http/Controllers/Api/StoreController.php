@@ -309,7 +309,6 @@ class StoreController extends BaseController
             'settings.email_notifications' => 'boolean',
             'settings.sms_notifications' => 'boolean',
             // Store information fields
-            'settings.slogan' => 'nullable|string|max:255',
             'settings.contact_email' => 'nullable|email|max:255',
             'settings.contact_phone' => 'nullable|string|max:50',
             'settings.banner_image' => 'nullable|string|max:500',
