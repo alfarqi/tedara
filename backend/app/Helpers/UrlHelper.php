@@ -23,12 +23,12 @@ class UrlHelper
         
         // Handle different path formats
         if (str_starts_with($path, 'uploads/')) {
-            // Path starts with uploads/ - use file serving script
+            // Path starts with uploads/ - use Laravel route
             return $baseUrl . '/backend/public/serve-file/' . $path;
         }
         
         if (str_starts_with($path, 'storage/')) {
-            // Path already has storage/ prefix - use file serving script
+            // Path already has storage/ prefix - use Laravel route
             $cleanPath = str_replace('storage/app/public/', '', $path);
             return $baseUrl . '/backend/public/serve-file/' . $cleanPath;
         }
@@ -38,7 +38,7 @@ class UrlHelper
             return $baseUrl . '/backend/public/serve-file/uploads/store/logos/' . $path;
         }
         
-        // Default: assume it's a relative path and use file serving script
+        // Default: assume it's a relative path and use Laravel route
         return $baseUrl . '/backend/public/serve-file/' . $path;
     }
 
@@ -77,7 +77,7 @@ class UrlHelper
             return $baseUrl . '/backend/public/serve-file/uploads/store/logos/' . $logo;
         }
         
-        // Default: assume it's a relative path and use file serving script
+        // Default: assume it's a relative path and use Laravel route
         return $baseUrl . '/backend/public/serve-file/' . $logo;
     }
 
