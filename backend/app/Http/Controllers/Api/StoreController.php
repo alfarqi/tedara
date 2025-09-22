@@ -48,9 +48,11 @@ class StoreController extends BaseController
                 $store->logo = UrlHelper::buildLogoUrl($store->logo);
             }
             
-            // Build full banner URL if banner exists
-            if (isset($store->settings['banner_image']) && $store->settings['banner_image']) {
-                $store->settings['banner_image'] = UrlHelper::buildFileUrl($store->settings['banner_image']);
+            // Build full banner URL if banner exists - handle settings properly
+            $settings = $store->settings ?? [];
+            if (isset($settings['banner_image']) && $settings['banner_image']) {
+                $settings['banner_image'] = UrlHelper::buildFileUrl($settings['banner_image']);
+                $store->settings = $settings;
             }
             
             return $store;
@@ -181,9 +183,11 @@ class StoreController extends BaseController
             $storeData->logo = UrlHelper::buildLogoUrl($storeData->logo);
         }
         
-        // Build full banner URL if banner exists
-        if (isset($storeData->settings['banner_image']) && $storeData->settings['banner_image']) {
-            $storeData->settings['banner_image'] = UrlHelper::buildFileUrl($storeData->settings['banner_image']);
+        // Build full banner URL if banner exists - handle settings properly
+        $settings = $storeData->settings ?? [];
+        if (isset($settings['banner_image']) && $settings['banner_image']) {
+            $settings['banner_image'] = UrlHelper::buildFileUrl($settings['banner_image']);
+            $storeData->settings = $settings;
         }
 
         return $this->successResponse(
@@ -221,9 +225,11 @@ class StoreController extends BaseController
                 $storeData->logo = UrlHelper::buildLogoUrl($storeData->logo);
             }
             
-            // Build full banner URL if banner exists
-            if (isset($storeData->settings['banner_image']) && $storeData->settings['banner_image']) {
-                $storeData->settings['banner_image'] = UrlHelper::buildFileUrl($storeData->settings['banner_image']);
+            // Build full banner URL if banner exists - handle settings properly
+            $settings = $storeData->settings ?? [];
+            if (isset($settings['banner_image']) && $settings['banner_image']) {
+                $settings['banner_image'] = UrlHelper::buildFileUrl($settings['banner_image']);
+                $storeData->settings = $settings;
             }
 
             return $this->successResponse(
@@ -329,8 +335,8 @@ class StoreController extends BaseController
 
             DB::commit();
 
-            // Build full banner URL if banner exists
-            $settings = $store->settings;
+            // Build full banner URL if banner exists - handle settings properly
+            $settings = $store->settings ?? [];
             if (isset($settings['banner_image']) && $settings['banner_image']) {
                 $settings['banner_image'] = UrlHelper::buildFileUrl($settings['banner_image']);
             }
