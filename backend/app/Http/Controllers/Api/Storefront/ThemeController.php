@@ -47,7 +47,7 @@ class ThemeController extends Controller
                         'logo_url' => UrlHelper::buildLogoUrl($store?->logo),
                         'banner_url' => UrlHelper::buildFileUrl($store?->settings['banner_image'] ?? null),
                         'store_name' => $store?->name ?? $tenant->display_name,
-                        'store_slogan' => $store?->settings['slogan'] ?? $store?->description ?? 'Delicious food delivered fresh to your doorstep',
+                        'store_slogan' => $store?->settings['slogan'] ?? $store?->description ?? '',
                         'contact_email' => $store?->settings['contact_email'] ?? null,
                         'contact_phone' => $store?->settings['contact_phone'] ?? null,
                         'social_links' => $store?->settings['social_links'] ?? [
@@ -107,7 +107,7 @@ class ThemeController extends Controller
                 'logo_url' => UrlHelper::buildLogoUrl($store->logo),
                 'banner_url' => UrlHelper::buildFileUrl($store->settings['banner_image'] ?? null),
                 'store_name' => $store->name ?? $tenant->display_name,
-                'store_slogan' => $store->settings['slogan'] ?? $store->description ?? $settings['store_slogan'] ?? 'Delicious food delivered fresh to your doorstep',
+                'store_slogan' => $store->settings['slogan'] ?? $store->description ?? $settings['store_slogan'] ?? '',
                 'contact_email' => $store->settings['contact_email'] ?? $settings['contact_email'] ?? null,
                 'contact_phone' => $store->settings['contact_phone'] ?? $settings['contact_phone'] ?? null,
                 'social_links' => $mergedSocialLinks,

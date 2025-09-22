@@ -58,7 +58,7 @@ export function Home() {
   const storeName = store?.name || theme?.settings?.store_name || '';
   const storeLogo = store?.logo || theme?.settings?.logo_url;
   const storeBanner = theme?.settings?.banner_url;
-  const storeSlogan = theme?.settings?.store_slogan || '';
+  const storeSlogan = store?.description || theme?.settings?.store_slogan || '';
   const socialLinks = theme?.settings?.social_links;
 
   // Show loading state while fetching page data or products

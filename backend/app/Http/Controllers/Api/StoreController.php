@@ -207,7 +207,7 @@ class StoreController extends BaseController
             
             // Build full logo URL if logo exists
             if ($storeData->logo) {
-                $storeData->logo = $this->buildLogoUrl($storeData->logo);
+                $storeData->logo = UrlHelper::buildLogoUrl($storeData->logo);
             }
 
             return $this->successResponse(
