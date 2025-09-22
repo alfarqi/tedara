@@ -7,11 +7,13 @@ import { Skeleton } from '../components/ui/skeleton';
 import { FulfillmentModal } from '../components/FulfillmentModal';
 import { ProductGrid } from '../components/ProductGrid';
 import { DeliveryLocation } from '../components/DeliveryLocation';
+import { MobileDebugPanel } from '../../../components/MobileDebugPanel';
 import { useTenant } from '../../../hooks/useTenant';
 import { usePage } from '../hooks/usePage';
 import { useTheme } from '../hooks/useTheme';
 import { productService, type Product } from '../services/productService';
 import { ASSETS } from '../../../utils/assets';
+import '../../../utils/testMobileDebug';
 
 export function Home() {
   const location = useLocation();
@@ -22,6 +24,7 @@ export function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState<string>('Capital');
+  const [showDebugPanel, setShowDebugPanel] = useState(false);
 
   // Load products from API
   useEffect(() => {
@@ -155,11 +158,17 @@ export function Home() {
             >
               Go to Home
             </a>
-          </div>
         </div>
       </div>
-    );
-  }
+      
+      {/* Mobile Debug Panel */}
+      <MobileDebugPanel 
+        isVisible={showDebugPanel} 
+        onToggle={() => setShowDebugPanel(!showDebugPanel)} 
+      />
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen">
@@ -337,6 +346,12 @@ export function Home() {
       <FulfillmentModal 
         isOpen={isFulfillmentModalOpen}
         onClose={() => setIsFulfillmentModalOpen(false)}
+      />
+      
+      {/* Mobile Debug Panel */}
+      <MobileDebugPanel 
+        isVisible={showDebugPanel} 
+        onToggle={() => setShowDebugPanel(!showDebugPanel)} 
       />
     </div>
   );
