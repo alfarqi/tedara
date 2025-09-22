@@ -23,22 +23,23 @@ class UrlHelper
         
         // Handle different path formats
         if (str_starts_with($path, 'uploads/')) {
-            // Path starts with uploads/ - add storage prefix
-            return $baseUrl . '/backend/storage/app/public/' . $path;
+            // Path starts with uploads/ - use file serving script
+            return $baseUrl . '/backend/public/serve-file/' . $path;
         }
         
         if (str_starts_with($path, 'storage/')) {
-            // Path already has storage/ prefix
-            return $baseUrl . '/backend/' . $path;
+            // Path already has storage/ prefix - use file serving script
+            $cleanPath = str_replace('storage/app/public/', '', $path);
+            return $baseUrl . '/backend/public/serve-file/' . $cleanPath;
         }
         
         if (!str_contains($path, '/')) {
             // Just a filename - construct full path
-            return $baseUrl . '/backend/storage/app/public/uploads/store/logos/' . $path;
+            return $baseUrl . '/backend/public/serve-file/uploads/store/logos/' . $path;
         }
         
-        // Default: assume it's a relative path and prepend storage URL
-        return $baseUrl . '/backend/storage/app/public/' . $path;
+        // Default: assume it's a relative path and use file serving script
+        return $baseUrl . '/backend/public/serve-file/' . $path;
     }
 
     /**
@@ -59,24 +60,25 @@ class UrlHelper
         
         // Handle different logo path formats
         if (str_starts_with($logo, 'uploads/store/logos/')) {
-            return $baseUrl . '/backend/storage/app/public/' . $logo;
+            return $baseUrl . '/backend/public/serve-file/' . $logo;
         }
         
         if (str_starts_with($logo, 'uploads/')) {
-            return $baseUrl . '/backend/storage/app/public/' . $logo;
+            return $baseUrl . '/backend/public/serve-file/' . $logo;
         }
         
         if (str_starts_with($logo, 'storage/')) {
-            return $baseUrl . '/backend/' . $logo;
+            $cleanPath = str_replace('storage/app/public/', '', $logo);
+            return $baseUrl . '/backend/public/serve-file/' . $cleanPath;
         }
         
         if (!str_contains($logo, '/')) {
             // Just a filename - construct full path for store logos
-            return $baseUrl . '/backend/storage/app/public/uploads/store/logos/' . $logo;
+            return $baseUrl . '/backend/public/serve-file/uploads/store/logos/' . $logo;
         }
         
-        // Default: assume it's a relative path and prepend storage URL
-        return $baseUrl . '/backend/storage/app/public/' . $logo;
+        // Default: assume it's a relative path and use file serving script
+        return $baseUrl . '/backend/public/serve-file/' . $logo;
     }
 
     /**
@@ -85,6 +87,6 @@ class UrlHelper
     public static function getStorageUrl(): string
     {
         $baseUrl = config('app.url');
-        return $baseUrl . '/backend/storage/app/public';
+        return $baseUrl . '/backend/public/serve-file';
     }
 }
