@@ -8,6 +8,7 @@ import { FulfillmentModal } from '../components/FulfillmentModal';
 import { ProductGrid } from '../components/ProductGrid';
 import { DeliveryLocation } from '../components/DeliveryLocation';
 import { MobileDebugPanel } from '../../../components/MobileDebugPanel';
+import { EmergencyDebugInfo } from '../../../components/EmergencyDebugInfo';
 import { useTenant } from '../../../hooks/useTenant';
 import { usePage } from '../hooks/usePage';
 import { useTheme } from '../hooks/useTheme';
@@ -123,6 +124,12 @@ export function Home() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        {/* Emergency Debug Info - Mobile Only */}
+        <EmergencyDebugInfo 
+          tenant={tenant} 
+          error={error} 
+          loading={loading} 
+        />
         <div className="text-center max-w-md mx-auto p-6">
           <div className="mb-6">
             <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
@@ -172,6 +179,13 @@ export function Home() {
 
   return (
     <div className="min-h-screen">
+      {/* Emergency Debug Info - Mobile Only */}
+      <EmergencyDebugInfo 
+        tenant={tenant} 
+        error={error} 
+        loading={loading} 
+      />
+      
       {/* Hero Image Section - Mobile: 50vh, Small: 60vh, Medium: 384px, Large: 512px */}
       <section className="relative">
         <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-primary/10 via-background to-secondary/10">
