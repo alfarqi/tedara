@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Storefront;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\TenantThemeSetting;
+use App\Helpers\UrlHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -43,8 +44,8 @@ class ThemeController extends Controller
                         'font_family' => 'Inter, sans-serif',
                         'header_style' => 'modern',
                         'footer_style' => 'simple',
-                        'logo_url' => $this->buildLogoUrl($store?->logo),
-                        'banner_url' => $this->buildLogoUrl($store?->settings['banner_image'] ?? null),
+                        'logo_url' => UrlHelper::buildLogoUrl($store?->logo),
+                        'banner_url' => UrlHelper::buildFileUrl($store?->settings['banner_image'] ?? null),
                         'store_name' => $store?->name ?? $tenant->display_name,
                         'store_slogan' => $store?->settings['slogan'] ?? $store?->description ?? 'Delicious food delivered fresh to your doorstep',
                         'contact_email' => $store?->settings['contact_email'] ?? null,
@@ -69,7 +70,7 @@ class ThemeController extends Controller
                 'store' => $store ? [
                     'id' => $store->id,
                     'name' => $store->name,
-                    'logo' => $this->buildLogoUrl($store->logo),
+                    'logo' => UrlHelper::buildLogoUrl($store->logo),
                     'description' => $store->description,
                 ] : null
                 ]
@@ -103,8 +104,8 @@ class ThemeController extends Controller
             $mergedSocialLinks = array_merge($existingSocialLinks, $storeSocialLinks);
             
             $settings = array_merge($settings, [
-                'logo_url' => $this->buildLogoUrl($store->logo),
-                'banner_url' => $this->buildLogoUrl($store->settings['banner_image'] ?? null),
+                'logo_url' => UrlHelper::buildLogoUrl($store->logo),
+                'banner_url' => UrlHelper::buildFileUrl($store->settings['banner_image'] ?? null),
                 'store_name' => $store->name ?? $tenant->display_name,
                 'store_slogan' => $store->settings['slogan'] ?? $store->description ?? $settings['store_slogan'] ?? 'Delicious food delivered fresh to your doorstep',
                 'contact_email' => $store->settings['contact_email'] ?? $settings['contact_email'] ?? null,
@@ -130,7 +131,7 @@ class ThemeController extends Controller
                 'store' => $store ? [
                     'id' => $store->id,
                     'name' => $store->name,
-                    'logo' => $this->buildLogoUrl($store->logo),
+                    'logo' => UrlHelper::buildLogoUrl($store->logo),
                     'description' => $store->description,
                 ] : null
             ]
@@ -159,39 +160,6 @@ class ThemeController extends Controller
             ->first();
     }
 
-    /**
-     * Build logo URL from logo path
-     */
-    private function buildLogoUrl(?string $logo): ?string
-    {
-        if (empty($logo)) {
-            return null;
-        }
-
-        // If it's already a full URL, return as is
-        if (filter_var($logo, FILTER_VALIDATE_URL)) {
-            return $logo;
-        }
-
-        // If it's just a filename, construct the full URL
-        if (!str_contains($logo, '/')) {
-            // This is likely an old filename format, try to construct a path
-            return url('storage/uploads/store/logos/' . $logo);
-        }
-
-        // If it's a relative path starting with 'uploads/', make it absolute
-        if (str_starts_with($logo, 'uploads/')) {
-            return url('storage/' . $logo);
-        }
-
-        // If it's a path without 'uploads/' prefix, add it
-        if (!str_starts_with($logo, 'storage/') && !str_starts_with($logo, 'uploads/')) {
-            return url('storage/uploads/' . $logo);
-        }
-
-        // Default: assume it's a relative path and prepend storage URL
-        return url('storage/' . $logo);
-    }
 
     /**
      * Build social media URL from account name

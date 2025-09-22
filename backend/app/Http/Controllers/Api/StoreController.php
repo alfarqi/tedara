@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BaseController;
 use App\Http\Requests\Api\Store\StoreStoreRequest;
 use App\Http\Requests\Api\Store\UpdateStoreRequest;
 use App\Models\Store;
+use App\Helpers\UrlHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +45,7 @@ class StoreController extends BaseController
         // Build full logo URLs for all stores
         $stores->getCollection()->transform(function ($store) {
             if ($store->logo) {
-                $store->logo = $this->buildLogoUrl($store->logo);
+                $store->logo = UrlHelper::buildLogoUrl($store->logo);
             }
             return $store;
         });
@@ -171,7 +172,7 @@ class StoreController extends BaseController
         
         // Build full logo URL if logo exists
         if ($storeData->logo) {
-            $storeData->logo = $this->buildLogoUrl($storeData->logo);
+            $storeData->logo = UrlHelper::buildLogoUrl($storeData->logo);
         }
 
         return $this->successResponse(
@@ -423,39 +424,6 @@ class StoreController extends BaseController
         ], 'Domain availability checked');
     }
 
-    /**
-     * Build logo URL from logo path
-     */
-    private function buildLogoUrl(?string $logo): ?string
-    {
-        if (empty($logo)) {
-            return null;
-        }
-
-        // If it's already a full URL, return as is
-        if (filter_var($logo, FILTER_VALIDATE_URL)) {
-            return $logo;
-        }
-
-        // If it's just a filename, construct the full URL
-        if (!str_contains($logo, '/')) {
-            // This is likely an old filename format, try to construct a path
-            return url('storage/uploads/store/logos/' . $logo);
-        }
-
-        // If it's a relative path starting with 'uploads/', make it absolute
-        if (str_starts_with($logo, 'uploads/')) {
-            return url('storage/' . $logo);
-        }
-
-        // If it's a path without 'uploads/' prefix, add it
-        if (!str_starts_with($logo, 'storage/') && !str_starts_with($logo, 'uploads/')) {
-            return url('storage/uploads/' . $logo);
-        }
-
-        // Default: assume it's a relative path and prepend storage URL
-        return url('storage/' . $logo);
-    }
 
     /**
      * Get default theme settings for the tenant.
