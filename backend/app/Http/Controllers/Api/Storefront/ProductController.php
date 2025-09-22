@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Storefront;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Tenant;
+use App\Helpers\UrlHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,14 @@ class ProductController extends Controller
             ->where('status', 'active')
             ->orderBy('name')
             ->paginate(20);
+
+        // Process product images to build full URLs
+        if (!$products->isEmpty()) {
+            $products->getCollection()->transform(function ($product) {
+                $product = $this->processProductImages($product);
+                return $product;
+            });
+        }
 
         if ($products->isEmpty()) {
             // Return sample data if no products exist
@@ -110,6 +119,10 @@ class ProductController extends Controller
             ->where('status', 'active')
             ->find($id);
 
+        if ($product) {
+            $product = $this->processProductImages($product);
+        }
+
         if (!$product) {
             // Return sample data if product not found
             $product = (object) [
@@ -184,6 +197,14 @@ class ProductController extends Controller
             ->orderBy('name')
             ->paginate(20);
 
+        // Process product images to build full URLs
+        if (!$products->isEmpty()) {
+            $products->getCollection()->transform(function ($product) {
+                $product = $this->processProductImages($product);
+                return $product;
+            });
+        }
+
         return response()->json([
             'data' => $products,
             'meta' => [
@@ -226,5 +247,24 @@ class ProductController extends Controller
         return Tenant::where('handle', $tenantHandle)
             ->where('status', 'active')
             ->first();
+    }
+
+    /**
+     * Process product images to build full URLs
+     */
+    private function processProductImages($product)
+    {
+        if (isset($product->images) && is_array($product->images)) {
+            $product->images = array_map(function ($image) {
+                // If it's already a full URL (like Pexels), return as is
+                if (filter_var($image, FILTER_VALIDATE_URL)) {
+                    return $image;
+                }
+                // Otherwise, build full URL using UrlHelper
+                return UrlHelper::buildFileUrl($image);
+            }, $product->images);
+        }
+        
+        return $product;
     }
 }

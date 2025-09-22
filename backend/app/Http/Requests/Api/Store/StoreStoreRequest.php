@@ -42,6 +42,7 @@ class StoreStoreRequest extends FormRequest
             'settings.social_links.facebook' => 'nullable|string|max:255',
             'settings.social_links.twitter' => 'nullable|string|max:255',
             'settings.social_links.linkedin' => 'nullable|string|max:255',
+            'settings.banner_image' => 'nullable|string|max:500',
         ];
     }
 

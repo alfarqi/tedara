@@ -42,11 +42,17 @@ class StoreController extends BaseController
 
         $stores = $query->paginate($perPage);
 
-        // Build full logo URLs for all stores
+        // Build full logo and banner URLs for all stores
         $stores->getCollection()->transform(function ($store) {
             if ($store->logo) {
                 $store->logo = UrlHelper::buildLogoUrl($store->logo);
             }
+            
+            // Build full banner URL if banner exists
+            if (isset($store->settings['banner_image']) && $store->settings['banner_image']) {
+                $store->settings['banner_image'] = UrlHelper::buildFileUrl($store->settings['banner_image']);
+            }
+            
             return $store;
         });
 
@@ -174,6 +180,11 @@ class StoreController extends BaseController
         if ($storeData->logo) {
             $storeData->logo = UrlHelper::buildLogoUrl($storeData->logo);
         }
+        
+        // Build full banner URL if banner exists
+        if (isset($storeData->settings['banner_image']) && $storeData->settings['banner_image']) {
+            $storeData->settings['banner_image'] = UrlHelper::buildFileUrl($storeData->settings['banner_image']);
+        }
 
         return $this->successResponse(
             $storeData,
@@ -208,6 +219,11 @@ class StoreController extends BaseController
             // Build full logo URL if logo exists
             if ($storeData->logo) {
                 $storeData->logo = UrlHelper::buildLogoUrl($storeData->logo);
+            }
+            
+            // Build full banner URL if banner exists
+            if (isset($storeData->settings['banner_image']) && $storeData->settings['banner_image']) {
+                $storeData->settings['banner_image'] = UrlHelper::buildFileUrl($storeData->settings['banner_image']);
             }
 
             return $this->successResponse(
@@ -290,6 +306,7 @@ class StoreController extends BaseController
             'settings.slogan' => 'nullable|string|max:255',
             'settings.contact_email' => 'nullable|email|max:255',
             'settings.contact_phone' => 'nullable|string|max:50',
+            'settings.banner_image' => 'nullable|string|max:500',
             // Social media fields
             'settings.instagram' => 'nullable|url|max:255',
             'settings.whatsapp' => 'nullable|string|max:255',
@@ -312,8 +329,14 @@ class StoreController extends BaseController
 
             DB::commit();
 
+            // Build full banner URL if banner exists
+            $settings = $store->settings;
+            if (isset($settings['banner_image']) && $settings['banner_image']) {
+                $settings['banner_image'] = UrlHelper::buildFileUrl($settings['banner_image']);
+            }
+
             return $this->successResponse(
-                $store->settings,
+                $settings,
                 'Store settings updated successfully'
             );
         } catch (\Exception $e) {
