@@ -79,15 +79,56 @@ export function useTheme(tenant: string) {
           throw new Error(`Failed to fetch theme: ${response.status} ${response.statusText}`);
         }
 
-        const data: ThemeResponse = await response.json();
-        logMobileDebug('Theme data received successfully', { tenant, hasStore: !!data.meta.store });
+        const responseText = await response.text();
+        logMobileDebug('Raw API response received', { tenant, responseLength: responseText.length });
+        
+        let data: ThemeResponse;
+        try {
+          data = JSON.parse(responseText);
+          logMobileDebug('JSON parsed successfully', { tenant, hasStore: !!data.meta?.store });
+        } catch (parseError) {
+          logMobileError(new Error(`JSON Parse Error: ${parseError}`), 'Theme API Response');
+          throw new Error(`Invalid JSON response from API: ${parseError}`);
+        }
+        
+        // Validate response structure
+        if (!data || typeof data !== 'object') {
+          throw new Error('Invalid response structure: not an object');
+        }
+        
+        if (!data.data || typeof data.data !== 'object') {
+          throw new Error('Invalid response structure: missing data property');
+        }
+        
+        if (!data.meta || typeof data.meta !== 'object') {
+          throw new Error('Invalid response structure: missing meta property');
+        }
         
         setTheme(data.data);
-        setStore(data.meta.store);
+        setStore(data.meta.store || null);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch theme';
+        let errorMessage = 'Failed to fetch theme';
+        
+        if (err instanceof Error) {
+          errorMessage = err.message;
+          
+          // Handle specific error types
+          if (err.name === 'TypeError') {
+            errorMessage = `TypeError: ${err.message}. This usually means the API response format is unexpected.`;
+          } else if (err.message.includes('JSON')) {
+            errorMessage = `JSON Error: ${err.message}. The API response is not valid JSON.`;
+          } else if (err.message.includes('fetch')) {
+            errorMessage = `Network Error: ${err.message}. Check your internet connection.`;
+          }
+        }
+        
         setError(errorMessage);
         logMobileError(err instanceof Error ? err : new Error(errorMessage), 'Theme fetch');
+        
+        // Log additional debugging info for TypeError
+        if (err instanceof Error && err.name === 'TypeError') {
+          logMobileError(new Error('TypeError detected - API response may be malformed'), 'TypeError Debug');
+        }
       } finally {
         setLoading(false);
       }
