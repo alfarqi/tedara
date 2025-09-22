@@ -24,21 +24,21 @@ class UrlHelper
         // Handle different path formats
         if (str_starts_with($path, 'uploads/')) {
             // Path starts with uploads/ - add storage prefix
-            return $baseUrl . '/backend/public/storage/' . $path;
+            return $baseUrl . '/backend/storage/app/public/' . $path;
         }
         
         if (str_starts_with($path, 'storage/')) {
             // Path already has storage/ prefix
-            return $baseUrl . '/backend/public/' . $path;
+            return $baseUrl . '/backend/' . $path;
         }
         
         if (!str_contains($path, '/')) {
             // Just a filename - construct full path
-            return $baseUrl . '/backend/public/storage/uploads/store/logos/' . $path;
+            return $baseUrl . '/backend/storage/app/public/uploads/store/logos/' . $path;
         }
         
         // Default: assume it's a relative path and prepend storage URL
-        return $baseUrl . '/backend/public/storage/' . $path;
+        return $baseUrl . '/backend/storage/app/public/' . $path;
     }
 
     /**
@@ -59,24 +59,24 @@ class UrlHelper
         
         // Handle different logo path formats
         if (str_starts_with($logo, 'uploads/store/logos/')) {
-            return $baseUrl . '/backend/public/storage/' . $logo;
+            return $baseUrl . '/backend/storage/app/public/' . $logo;
         }
         
         if (str_starts_with($logo, 'uploads/')) {
-            return $baseUrl . '/backend/public/storage/' . $logo;
+            return $baseUrl . '/backend/storage/app/public/' . $logo;
         }
         
         if (str_starts_with($logo, 'storage/')) {
-            return $baseUrl . '/backend/public/' . $logo;
+            return $baseUrl . '/backend/' . $logo;
         }
         
         if (!str_contains($logo, '/')) {
             // Just a filename - construct full path for store logos
-            return $baseUrl . '/backend/public/storage/uploads/store/logos/' . $logo;
+            return $baseUrl . '/backend/storage/app/public/uploads/store/logos/' . $logo;
         }
         
         // Default: assume it's a relative path and prepend storage URL
-        return $baseUrl . '/backend/public/storage/' . $logo;
+        return $baseUrl . '/backend/storage/app/public/' . $logo;
     }
 
     /**
@@ -85,6 +85,6 @@ class UrlHelper
     public static function getStorageUrl(): string
     {
         $baseUrl = config('app.url');
-        return $baseUrl . '/backend/public/storage';
+        return $baseUrl . '/backend/storage/app/public';
     }
 }

@@ -29,7 +29,7 @@ $testPaths = [
     'uploads/store/logos/2025/09/screenshot-13_1758554814_jdyzkwOZ.jpg',
     'storage/uploads/store/logos/2025/09/screenshot-13_1758554814_jdyzkwOZ.jpg',
     'screenshot-13_1758554814_jdyzkwOZ.jpg',
-    'https://api.tedara.com/backend/public/storage/uploads/store/logos/2025/09/screenshot-13_1758554814_jdyzkwOZ.jpg',
+    'https://api.tedara.com/backend/storage/app/public/uploads/store/logos/2025/09/screenshot-13_1758554814_jdyzkwOZ.jpg',
     '/uploads/store/logos/2025/09/screenshot-13_1758554814_jdyzkwOZ.jpg',
 ];
 
