@@ -74,7 +74,6 @@ export function useTheme(tenant: string) {
         logMobileDebug('Theme API Response Status', { status: response.status, tenant });
         
         if (!response.ok) {
-          const errorText = await response.text();
           logMobileError(new Error(`API Error: ${response.status} ${response.statusText}`), 'Theme API');
           throw new Error(`Failed to fetch theme: ${response.status} ${response.statusText}`);
         }

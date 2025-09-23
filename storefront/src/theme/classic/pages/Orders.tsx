@@ -48,7 +48,7 @@ export function Orders() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`${getStorefrontApiUrl(tenant)}/orders`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant!)}/orders`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -218,7 +218,7 @@ export function Orders() {
                     {order.items.map((item, index) => (
                       <div key={index} className="flex justify-between text-sm">
                         <span className="text-gray-700">{item.quantity}x {item.product_name}</span>
-                        <span className="font-medium text-gray-900">${(parseFloat(item.total) || 0).toFixed(2)}</span>
+                        <span className="font-medium text-gray-900">${(parseFloat(String(item.total)) || 0).toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
@@ -234,7 +234,7 @@ export function Orders() {
                   {/* Order Total and Actions */}
                   <div className="pt-4 border-t border-gray-100">
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-lg font-semibold text-gray-900">Total: ${(parseFloat(order.total) || 0).toFixed(2)}</span>
+                      <span className="text-lg font-semibold text-gray-900">Total: ${(parseFloat(String(order.total)) || 0).toFixed(2)}</span>
                     </div>
                     <div className="flex space-x-3">
                       <Button 

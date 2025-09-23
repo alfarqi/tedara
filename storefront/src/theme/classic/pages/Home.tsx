@@ -61,7 +61,7 @@ export function Home() {
   // Get store information from theme/API
   const storeName = store?.name || theme?.settings?.store_name || '';
   const storeLogo = store?.logo || theme?.settings?.logo_url;
-  const storeBanner = theme?.settings?.banner_url;
+  const storeBanner = (theme?.settings as any)?.banner_url;
   const storeSlogan = store?.description || theme?.settings?.store_slogan || '';
   const socialLinks = theme?.settings?.social_links;
 
@@ -182,7 +182,7 @@ export function Home() {
       {/* Emergency Debug Info - Mobile Only */}
       <EmergencyDebugInfo 
         tenant={tenant} 
-        error={error} 
+        error={error || undefined} 
         loading={loading} 
       />
       

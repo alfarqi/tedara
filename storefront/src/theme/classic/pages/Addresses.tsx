@@ -49,7 +49,7 @@ export function Addresses() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`${getStorefrontApiUrl(tenant)}/addresses`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant!)}/addresses`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -107,7 +107,7 @@ export function Addresses() {
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`${getStorefrontApiUrl(tenant)}/addresses/${id}`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant!)}/addresses/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -129,7 +129,7 @@ export function Addresses() {
 
   const handleSetDefault = async (id: string) => {
     try {
-      const response = await fetch(`${getStorefrontApiUrl(tenant)}/addresses/${id}/set-default`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant!)}/addresses/${id}/set-default`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

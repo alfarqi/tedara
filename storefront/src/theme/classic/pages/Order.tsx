@@ -58,7 +58,7 @@ export function Order() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`${getStorefrontApiUrl(tenant)}/orders/${orderId}`, {
+      const response = await fetch(`${getStorefrontApiUrl(tenant!)}/orders/${orderId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -99,6 +99,22 @@ export function Order() {
           images: ['/images/no-image.png'], // Default image since we don't have product images
           stock: 999, // Assume in stock for reordering
           description: `Previously ordered item`,
+          slug: (item as any).product_slug || (item as any).product_id || item.id,
+          currency: 'SAR',
+          categoryId: (item as any).category_id || '1',
+          categorySlug: (item as any).category_slug || 'general',
+          sku: (item as any).sku || (item as any).product_id || item.id,
+          weight: (item as any).weight || 0,
+          brand: (item as any).brand || '',
+          tags: (item as any).tags || [],
+          rating: (item as any).rating || 0,
+          reviewsCount: (item as any).reviews_count || 0,
+          featured: false,
+          available: true,
+          preparationTime: 0,
+          calories: 0,
+          ingredients: [],
+          allergens: [],
         };
 
         // Add to cart with the same quantity
@@ -183,7 +199,7 @@ export function Order() {
               <CardContent className="pt-0">
                 <StatusTimeline 
                   status={order.status}
-                  estimatedTime={order.estimatedDelivery}
+                  estimatedTime={(order as any).estimatedDelivery}
                 />
               </CardContent>
             </Card>

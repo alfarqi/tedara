@@ -115,8 +115,8 @@ export function AddAddress() {
       };
 
       const url = isEditing 
-        ? `${getStorefrontApiUrl(tenant)}/addresses/${editingAddress?.id}`
-        : `${getStorefrontApiUrl(tenant)}/addresses`;
+        ? `${getStorefrontApiUrl(tenant!)}/addresses/${editingAddress?.id}`
+        : `${getStorefrontApiUrl(tenant!)}/addresses`;
 
       const method = isEditing ? 'PUT' : 'POST';
 
