@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
 
+// Declare google namespace for TypeScript
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 interface GoogleMapProps {
   center: { lat: number; lng: number };
   zoom: number;
@@ -84,7 +91,7 @@ const MapComponent: React.FC<GoogleMapProps> = ({ center, zoom, onLocationSelect
   return <div ref={ref} className={className} />;
 };
 
-const render = (status: Status) => {
+const render = (status: Status): JSX.Element => {
   switch (status) {
     case Status.LOADING:
       return (

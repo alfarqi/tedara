@@ -99,11 +99,11 @@ export function Order() {
           images: ['/images/no-image.png'], // Default image since we don't have product images
           stock: 999, // Assume in stock for reordering
           description: `Previously ordered item`,
-          slug: (item as any).product_slug || (item as any).product_id || item.id,
+          slug: (item as any).product_slug || (item as any).product_id || (item as any).id,
           currency: 'SAR',
           categoryId: (item as any).category_id || '1',
           categorySlug: (item as any).category_slug || 'general',
-          sku: (item as any).sku || (item as any).product_id || item.id,
+          sku: (item as any).sku || (item as any).product_id || (item as any).id,
           weight: (item as any).weight || 0,
           brand: (item as any).brand || '',
           tags: (item as any).tags || [],
@@ -118,7 +118,7 @@ export function Order() {
         };
 
         // Add to cart with the same quantity
-        addItem(product, item.quantity);
+        addItem(product as any, item.quantity);
       }
 
       // Navigate to cart
