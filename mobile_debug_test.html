@@ -166,17 +166,29 @@
                             'Accept': 'application/json',
                             'Content-Type': 'application/json',
                         },
-                        credentials: 'include'
+                        credentials: 'include',
+                        redirect: 'follow' // Follow redirects
                     });
                     const elapsed = Date.now() - startedAt;
                     const text = await response.text();
-                    logs.push({ url, status: response.status, ok: response.ok, elapsedMs: elapsed, bodyPreview: text.slice(0, 500) });
+                    const finalUrl = response.url; // This shows the final URL after redirects
+                    logs.push({ 
+                        originalUrl: url, 
+                        finalUrl: finalUrl, 
+                        redirected: url !== finalUrl,
+                        status: response.status, 
+                        ok: response.ok, 
+                        elapsedMs: elapsed, 
+                        bodyPreview: text.slice(0, 500) 
+                    });
                     if (response.ok) {
                         const data = JSON.parse(text);
                         resultsDiv.innerHTML = `
                             <div class="success">
                                 <h4>✅ API Test Successful</h4>
-                                <p><strong>URL:</strong> ${url}</p>
+                                <p><strong>Original URL:</strong> ${url}</p>
+                                <p><strong>Final URL:</strong> ${finalUrl}</p>
+                                <p><strong>Redirected:</strong> ${url !== finalUrl ? 'YES' : 'NO'}</p>
                                 <p><strong>HTTP Code:</strong> ${response.status}</p>
                                 <p><strong>Store Name:</strong> ${data.meta?.store?.name || 'N/A'}</p>
                                 <p><strong>Store Description:</strong> ${data.meta?.store?.description || 'N/A'}</p>
@@ -190,7 +202,11 @@
                         return;
                     }
                 } catch (err) {
-                    logs.push({ url, error: err?.message || String(err) });
+                    logs.push({ 
+                        originalUrl: url, 
+                        error: err?.message || String(err),
+                        errorType: err?.name || 'Unknown'
+                    });
                 }
             }
             
@@ -243,12 +259,17 @@
             for (const test of tests) {
                 try {
                     const start = Date.now();
-                    const response = await fetch(test.url, { method: 'GET' });
+                    const response = await fetch(test.url, { 
+                        method: 'GET',
+                        redirect: 'follow'
+                    });
                     const elapsed = Date.now() - start;
                     const text = await response.text();
                     results.push({
                         name: test.name,
-                        url: test.url,
+                        originalUrl: test.url,
+                        finalUrl: response.url,
+                        redirected: test.url !== response.url,
                         status: response.status,
                         ok: response.ok,
                         elapsed: elapsed,
@@ -258,9 +279,10 @@
                 } catch (error) {
                     results.push({
                         name: test.name,
-                        url: test.url,
+                        originalUrl: test.url,
                         success: false,
-                        error: error.message
+                        error: error.message,
+                        errorType: error.name
                     });
                 }
             }

@@ -2,7 +2,7 @@
 const getBaseUrl = (): string => {
   // Check if we're in production (Netlify)
   if (import.meta.env.PROD) {
-    const prodUrl = import.meta.env.VITE_API_URL || 'https://api.tedara.com/backend/public';
+    const prodUrl = import.meta.env.VITE_API_URL || 'http://api.tedara.com/backend/public';
     console.log('🚀 Storefront Production API URL:', prodUrl);
     return prodUrl;
   }
