@@ -25,18 +25,10 @@ $allowedOrigins = [
     'https://tedara.com',
     'https://www.tedara.com',
     'https://tedara.netlify.app',
-    // API domain (both schemes)
-    'https://api.tedara.com',
-    'http://api.tedara.com',
 ];
 
 // Set single origin - never multiple
-// Allow any subdomain of tedara.com, plus explicit whitelisted origins above
-if ($requestOrigin && preg_match('/^https?:\/\/(?:[a-z0-9-]+\.)*tedara\.com$/i', $requestOrigin)) {
-    $allowOrigin = $requestOrigin;
-} else {
-    $allowOrigin = in_array($requestOrigin, $allowedOrigins, true) ? $requestOrigin : 'https://tedara.com';
-}
+$allowOrigin = in_array($requestOrigin, $allowedOrigins, true) ? $requestOrigin : 'http://localhost:8000';
 
 // Set CORS headers
 header('Access-Control-Allow-Origin: ' . $allowOrigin);

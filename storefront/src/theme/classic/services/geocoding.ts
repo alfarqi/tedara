@@ -12,15 +12,8 @@ interface ReverseGeocodeResult {
   place_id: string;
 }
 
-// Declare google namespace for TypeScript
-declare global {
-  interface Window {
-    google: any;
-  }
-}
-
 export class GeocodingService {
-  private geocoder: any = null;
+  private geocoder: google.maps.Geocoder | null = null;
 
   constructor() {
     if (window.google && window.google.maps) {
@@ -35,9 +28,9 @@ export class GeocodingService {
     }
 
     return new Promise((resolve, reject) => {
-      this.geocoder!.geocode({ address: query }, (results: any, status: any) => {
+      this.geocoder!.geocode({ address: query }, (results, status) => {
         if (status === 'OK' && results) {
-          const addresses = results.map((result: any) => ({
+          const addresses = results.map((result) => ({
             address: result.formatted_address,
             lat: result.geometry.location.lat(),
             lng: result.geometry.location.lng(),
@@ -58,8 +51,8 @@ export class GeocodingService {
       throw new Error('Google Maps not loaded');
     }
 
-    return new Promise((resolve) => {
-      this.geocoder!.geocode({ location: { lat, lng } }, (results: any, status: any) => {
+    return new Promise((resolve, reject) => {
+      this.geocoder!.geocode({ location: { lat, lng } }, (results, status) => {
         if (status === 'OK' && results && results.length > 0) {
           const result = results[0];
           resolve({

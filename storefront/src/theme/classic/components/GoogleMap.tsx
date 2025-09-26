@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
 
-// Declare google namespace for TypeScript
-declare global {
-  interface Window {
-    google: any;
-  }
-}
-
 interface GoogleMapProps {
   center: { lat: number; lng: number };
   zoom: number;
@@ -17,8 +10,8 @@ interface GoogleMapProps {
 
 const MapComponent: React.FC<GoogleMapProps> = ({ center, zoom, onLocationSelect, className }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<any>(null);
-  const [marker, setMarker] = useState<any>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
 
   useEffect(() => {
     if (ref.current && !map) {
@@ -39,7 +32,7 @@ const MapComponent: React.FC<GoogleMapProps> = ({ center, zoom, onLocationSelect
       });
 
       // Add click listener to map
-      newMap.addListener('click', (event: any) => {
+      newMap.addListener('click', (event: google.maps.MapMouseEvent) => {
         if (event.latLng) {
           const lat = event.latLng.lat();
           const lng = event.latLng.lng();
@@ -91,7 +84,7 @@ const MapComponent: React.FC<GoogleMapProps> = ({ center, zoom, onLocationSelect
   return <div ref={ref} className={className} />;
 };
 
-const render = (status: Status): React.ReactElement => {
+const render = (status: Status) => {
   switch (status) {
     case Status.LOADING:
       return (
