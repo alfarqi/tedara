@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Debug Test - Tedara Storefront</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .debug-panel {
+            background: #dc2626;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ef4444;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .info {
+            background: #3b82f6;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.success { background: #10b981; color: white; }
+        .status.error { background: #ef4444; color: white; }
+        .status.warning { background: #f59e0b; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Mobile Debug Test - Tedara Storefront</h1>
+        
+        <!-- Mobile Debug Panel -->
+        <div class="debug-panel" id="mobile-debug-panel">
+            <strong>📱 Mobile Debug Panel</strong><br>
+            <span id="debug-info">Loading...</span>
+        </div>
+
+        <!-- Test Results -->
+        <div id="test-results">
+            <div class="info">
+                <h2>🔍 Running Mobile Debug Tests...</h2>
+                <p>This test will help identify why the mobile storefront is showing "Store Not Found" error.</p>
+            </div>
+        </div>
+
+        <!-- Test Buttons -->
+        <div class="test-section">
+            <h3>🧪 Manual Tests</h3>
+            <button onclick="testAPI()">Test API Endpoint</button>
+            <button onclick="testTenantDetection()">Test Tenant Detection</button>
+            <button onclick="testMobileFeatures()">Test Mobile Features</button>
+            <button onclick="clearCache()">Clear Cache & Reload</button>
+        </div>
+
+        <!-- Results Display -->
+        <div id="results" class="test-section">
+            <h3>📊 Test Results</h3>
+            <div id="results-content">Click a test button above to see results...</div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Detection
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Update Debug Panel
+        function updateDebugPanel() {
+            const pathSegments = window.location.pathname.split('/').filter(Boolean);
+            const tenant = pathSegments[0] || 'NOT DETECTED';
+            const isMobileDevice = isMobile();
+            
+            document.getElementById('debug-info').innerHTML = `
+                <strong>Tenant:</strong> ${tenant} | 
+                <strong>Device:</strong> ${isMobileDevice ? 'Mobile' : 'Desktop'} | 
+                <strong>URL:</strong> ${window.location.href} | 
+                <strong>Time:</strong> ${new Date().toLocaleTimeString()}
+            `;
+        }
+
+        // Test API Endpoint
+        async function testAPI() {
+            const resultsDiv = document.getElementById('results-content');
+            resultsDiv.innerHTML = '<div class="info">🔄 Testing API endpoint...</div>';
+            
+            try {
+                const apiUrl = 'https://api.tedara.com/api/storefront/fasool/theme';
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const httpCode = response.status;
+                const responseText = await response.text();
+                
+                if (httpCode === 200) {
+                    const data = JSON.parse(responseText);
+                    resultsDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ API Test Successful</h4>
+                            <p><strong>HTTP Code:</strong> ${httpCode}</p>
+                            <p><strong>Store Name:</strong> ${data.meta?.store?.name || 'N/A'}</p>
+                            <p><strong>Store Description:</strong> ${data.meta?.store?.description || 'N/A'}</p>
+                            <p><strong>Response Length:</strong> ${responseText.length} characters</p>
+                        </div>
+                        <details>
+                            <summary>View Full Response</summary>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </details>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ API Test Failed</h4>
+                            <p><strong>HTTP Code:</strong> ${httpCode}</p>
+                            <p><strong>Error:</strong> ${response.statusText}</p>
+                            <p><strong>Response:</strong></p>
+                            <pre>${responseText}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ API Test Error</h4>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>This could be a CORS issue or network problem.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Test Tenant Detection
+        function testTenantDetection() {
+            const resultsDiv = document.getElementById('results-content');
+            const pathSegments = window.location.pathname.split('/').filter(Boolean);
+            const tenant = pathSegments[0] || 'NOT DETECTED';
+            const isMobileDevice = isMobile();
+            
+            resultsDiv.innerHTML = `
+                <div class="info">
+                    <h4>🔍 Tenant Detection Test</h4>
+                    <p><strong>Detected Tenant:</strong> <span class="status ${tenant !== 'NOT DETECTED' ? 'success' : 'error'}">${tenant}</span></p>
+                    <p><strong>URL Pathname:</strong> ${window.location.pathname}</p>
+                    <p><strong>Path Segments:</strong> [${pathSegments.join(', ')}]</p>
+                    <p><strong>Device Type:</strong> <span class="status ${isMobileDevice ? 'success' : 'warning'}">${isMobileDevice ? 'Mobile' : 'Desktop'}</span></p>
+                    <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+                </div>
+            `;
+        }
+
+        // Test Mobile Features
+        function testMobileFeatures() {
+            const resultsDiv = document.getElementById('results-content');
+            const isMobileDevice = isMobile();
+            const hasTouch = 'ontouchstart' in window;
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            resultsDiv.innerHTML = `
+                <div class="info">
+                    <h4>📱 Mobile Features Test</h4>
+                    <p><strong>Mobile Detection:</strong> <span class="status ${isMobileDevice ? 'success' : 'error'}">${isMobileDevice ? 'Mobile' : 'Desktop'}</span></p>
+                    <p><strong>Touch Support:</strong> <span class="status ${hasTouch ? 'success' : 'error'}">${hasTouch ? 'Yes' : 'No'}</span></p>
+                    <p><strong>Screen Size:</strong> ${screenWidth}x${screenHeight}</p>
+                    <p><strong>Viewport Size:</strong> ${viewportWidth}x${viewportHeight}</p>
+                    <p><strong>Device Pixel Ratio:</strong> ${window.devicePixelRatio}</p>
+                    <p><strong>Orientation:</strong> ${screenWidth > screenHeight ? 'Landscape' : 'Portrait'}</p>
+                </div>
+            `;
+        }
+
+        // Clear Cache and Reload
+        function clearCache() {
+            const resultsDiv = document.getElementById('results-content');
+            resultsDiv.innerHTML = '<div class="info">🔄 Clearing cache and reloading...</div>';
+            
+            // Clear various caches
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                });
+            }
+            
+            // Reload with cache busting
+            setTimeout(() => {
+                window.location.href = window.location.href + '?v=' + Date.now();
+            }, 1000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDebugPanel();
+            
+            // Auto-run basic tests
+            setTimeout(() => {
+                testTenantDetection();
+            }, 500);
+            
+            // Update debug panel every 5 seconds
+            setInterval(updateDebugPanel, 5000);
+        });
+
+        // Log to console for debugging
+        console.log('📱 Mobile Debug Test Loaded');
+        console.log('Device Info:', {
+            isMobile: isMobile(),
+            userAgent: navigator.userAgent,
+            url: window.location.href,
+            pathname: window.location.pathname
+        });
+    </script>
+</body>
+</html>
