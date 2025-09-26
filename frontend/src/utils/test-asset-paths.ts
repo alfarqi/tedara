@@ -1,6 +1,9 @@
 // Test script for asset path generation
 // This can be run in the browser console to test asset path generation
 
+import { getAssetPath } from './assets';
+import { getUserAvatar } from './authUtils';
+
 export const testAssetPaths = () => {
   console.log('🧪 Testing Asset Path Generation');
   console.log('================================');
@@ -31,7 +34,7 @@ export const testAssetPaths = () => {
   ];
   
   testUsers.forEach(user => {
-    const avatar = getUserAvatar(user.avatar);
+    const avatar = getUserAvatar(user, user.avatar);
     console.log(`User: ${user.name}`);
     console.log(`Avatar: ${avatar}`);
     console.log('---');
