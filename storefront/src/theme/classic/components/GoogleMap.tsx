@@ -17,8 +17,8 @@ interface GoogleMapProps {
 
 const MapComponent: React.FC<GoogleMapProps> = ({ center, zoom, onLocationSelect, className }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
+  const [map, setMap] = useState<any>(null);
+  const [marker, setMarker] = useState<any>(null);
 
   useEffect(() => {
     if (ref.current && !map) {
@@ -39,7 +39,7 @@ const MapComponent: React.FC<GoogleMapProps> = ({ center, zoom, onLocationSelect
       });
 
       // Add click listener to map
-      newMap.addListener('click', (event: google.maps.MapMouseEvent) => {
+      newMap.addListener('click', (event: any) => {
         if (event.latLng) {
           const lat = event.latLng.lat();
           const lng = event.latLng.lng();
@@ -91,7 +91,7 @@ const MapComponent: React.FC<GoogleMapProps> = ({ center, zoom, onLocationSelect
   return <div ref={ref} className={className} />;
 };
 
-const render = (status: Status): JSX.Element => {
+const render = (status: Status): React.ReactElement => {
   switch (status) {
     case Status.LOADING:
       return (

@@ -58,7 +58,7 @@ export class GeocodingService {
       throw new Error('Google Maps not loaded');
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.geocoder!.geocode({ location: { lat, lng } }, (results: any, status: any) => {
         if (status === 'OK' && results && results.length > 0) {
           const result = results[0];

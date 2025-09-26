@@ -118,7 +118,7 @@ export function Order() {
         };
 
         // Add to cart with the same quantity
-        addItem(product as any, item.quantity);
+        addItem(product as any, item.quantity as any);
       }
 
       // Navigate to cart
