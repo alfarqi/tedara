@@ -107,6 +107,7 @@
         <div class="test-section">
             <h3>🧪 Manual Tests</h3>
             <button onclick="testAPI()">Test API Endpoint</button>
+            <button onclick="testSSL()">Test SSL/HTTPS</button>
             <button onclick="testTenantDetection()">Test Tenant Detection</button>
             <button onclick="testMobileFeatures()">Test Mobile Features</button>
             <button onclick="clearCache()">Clear Cache & Reload</button>
@@ -149,7 +150,9 @@
             const tenant = (qsTenant && qsTenant.trim()) ? qsTenant.trim() : defaultTenant;
             
             const candidates = [
+                `http://api.tedara.com/backend/public/api/storefront/${tenant}/theme`,
                 `https://api.tedara.com/backend/public/api/storefront/${tenant}/theme`,
+                `http://api.tedara.com/api/storefront/${tenant}/theme`,
                 `https://api.tedara.com/api/storefront/${tenant}/theme`
             ];
             
@@ -222,6 +225,56 @@
                     <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
                 </div>
             `;
+        }
+
+        // Test SSL/HTTPS
+        async function testSSL() {
+            const resultsDiv = document.getElementById('results-content');
+            resultsDiv.innerHTML = '<div class="info">🔄 Testing SSL/HTTPS...</div>';
+            
+            const tests = [
+                { name: 'HTTP API Test', url: 'http://api.tedara.com/backend/public/api/test' },
+                { name: 'HTTPS API Test', url: 'https://api.tedara.com/backend/public/api/test' },
+                { name: 'HTTP CORS Test', url: 'http://api.tedara.com/backend/public/cors-test.php' },
+                { name: 'HTTPS CORS Test', url: 'https://api.tedara.com/backend/public/cors-test.php' }
+            ];
+            
+            let results = [];
+            for (const test of tests) {
+                try {
+                    const start = Date.now();
+                    const response = await fetch(test.url, { method: 'GET' });
+                    const elapsed = Date.now() - start;
+                    const text = await response.text();
+                    results.push({
+                        name: test.name,
+                        url: test.url,
+                        status: response.status,
+                        ok: response.ok,
+                        elapsed: elapsed,
+                        success: true,
+                        error: null
+                    });
+                } catch (error) {
+                    results.push({
+                        name: test.name,
+                        url: test.url,
+                        success: false,
+                        error: error.message
+                    });
+                }
+            }
+            
+            let html = '<div class="info"><h4>🔒 SSL/HTTPS Test Results</h4>';
+            results.forEach(result => {
+                const statusClass = result.success && result.ok ? 'success' : 'error';
+                html += `<p><strong>${result.name}:</strong> <span class="status ${statusClass}">${result.success ? (result.ok ? 'SUCCESS' : `FAILED (${result.status})`) : 'ERROR'}</span></p>`;
+                if (result.error) {
+                    html += `<p style="font-size: 12px; color: #666;">Error: ${result.error}</p>`;
+                }
+            });
+            html += '</div><details><summary>Full Results</summary><pre>' + JSON.stringify(results, null, 2) + '</pre></details>';
+            resultsDiv.innerHTML = html;
         }
 
         // Test Mobile Features
